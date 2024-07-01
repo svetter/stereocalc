@@ -4,24 +4,12 @@ import matplotlib.pyplot as plt
 
 
 
-approximator_to_use = 'sigmoid'
-
 def sigmoid(x, out_scale, out_min, growth_rate, in_midpoint):
 	return out_scale / (1 + np.exp(-growth_rate * (x - in_midpoint))) + out_min
 
-def sinoid(x, out_scale, out_center, rate, in_zeropoint):
-	return out_scale * np.sin(rate * x - in_zeropoint) + out_center
-
-if approximator_to_use == 'sigmoid':
-	approximator = sigmoid
-	p0 = [-250, 200, 0.07, 25]
-	fit_param_names = ['out_scale', 'out_min', 'growth_rate', 'in_midpoint']
-elif approximator_to_use == 'sinoid':
-	approximator = sinoid
-	p0 = [50, 80, 0.04, 25]
-	fit_param_names = ['out_scale', 'out_center', 'rate', 'in_zeropoint']
-else:
-	exit("Invalid approximator selected")
+approximator = sigmoid
+p0 = [-250, 200, 0.07, 25]
+fit_param_names = ['out_scale', 'out_min', 'growth_rate', 'in_midpoint']
 
 
 
@@ -278,5 +266,17 @@ fig_reconstruct.set_size_inches(15, 10)
 fig_reconstruct.subplots_adjust(left=0.05, right=0.98, top=0.98, bottom=0.05)
 
 
+
+# Print all constants necessary for the app
+
+print("Second-level approximation parameters")
+print("=====================================")
+print("Fifth-order polynomial coefficients (from x^5 to x^0) for each of the four first-level approximation parameters")
+for i in range(4):
+	print("static final double[] " + fit_param_names[i] + "_poly_coeffs\t= {" + ', '.join(str(x) for x in meta_fit_params[i]) + "};")
+
+
+
+# Show the plots
 
 plt.show()
