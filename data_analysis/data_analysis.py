@@ -17,7 +17,6 @@ original_data_img_path = '../../Data source/sra_cardioid_ext_cropped.png'
 def sigmoid(x, out_scale, out_min, growth_rate, in_midpoint):
 	return out_scale / (1 + np.exp(-growth_rate * (x - in_midpoint))) + out_min
 
-approximator = sigmoid
 p0 = [-250, 200, 0.07, 25]
 fit_param_names = ['out_scale', 'out_min', 'growth_rate', 'in_midpoint']
 
@@ -29,13 +28,13 @@ for hra in range(30, 100, 10):
 	data_select = data[data[:, 0] == hra][:, [2, 1]]
 	
 	# Use curve_fit to find the optimal parameters
-	popt = curve_fit(approximator, data_select[:, 0], data_select[:, 1], p0=p0)[0]
+	popt = curve_fit(sigmoid, data_select[:, 0], data_select[:, 1], p0=p0)[0]
 	fit_params[hra] = popt
 	
 	#print("Optimal parameters for ±" + str(hra) + "°:")
 	#print(f"\tout_scale: {popt[0]}, out_min: {popt[1]}, growth_rate: {popt[2]}, in_midpoint: {popt[3]}")
 
-lower_reverb_border_fit_params = curve_fit(approximator, data_lower_reverb_border[:, 1], data_lower_reverb_border[:, 0], p0=p0)[0]
+lower_reverb_border_fit_params = curve_fit(sigmoid, data_lower_reverb_border[:, 1], data_lower_reverb_border[:, 0], p0=p0)[0]
 
 
 
@@ -55,31 +54,33 @@ for hra in range(30, 100, 10):
 	data_select = data[data[:, 0] == hra][:, [2, 1]]
 	params = fit_params[hra]
 	ax_data.scatter(data_select[:, 0], data_select[:, 1], label='± ' + str(hra) + '°')
-	ax_data.plot(curves_x_steps, approximator(curves_x_steps, params[0], params[1], params[2], params[3]))
+	ax_data.plot(curves_x_steps, sigmoid(curves_x_steps, params[0], params[1], params[2], params[3]))
 	
 	# Plot errors
-	error_data = data_select[:, 1] - approximator(data_select[:, 0], params[0], params[1], params[2], params[3])
+	error_data = data_select[:, 1] - sigmoid(data_select[:, 0], params[0], params[1], params[2], params[3])
 	total_abs_error += np.sum(np.abs(error_data))
 	ax_error.plot(data_select[:, 0], error_data, marker='o', label='± ' + str(hra) + '°')
 
 ax_data.scatter(data_lower_reverb_border[:, 1], data_lower_reverb_border[:, 0], label='Lower reverb border', color='gray')
-ax_data.plot(curves_x_steps, approximator(curves_x_steps, *lower_reverb_border_fit_params), color='gray')
+ax_data.plot(curves_x_steps, sigmoid(curves_x_steps, *lower_reverb_border_fit_params), color='gray')
 
 if os.path.isfile(original_data_img_path):
 	original_data_img = plt.imread(original_data_img_path)
 	ax_data.imshow(original_data_img, extent=[0, 50, 0, 180])
 	ax_data.set_aspect('auto')
 
-ax_data.set_xlabel("Microphone Distance [cm]")
-ax_data.set_ylabel("Microphone Angle [°]")
+ax_data.set_title("Original data points and fitted curves".format(total_abs_error))
+ax_data.set_xlabel("Microphone distance [cm]")
+ax_data.set_ylabel("Microphone angle [°]")
 ax_data.legend()
+ax_data.legend(loc='lower left')
 ax_data.set_xlim(0, 50)
 ax_data.set_ylim(0, 180)
 fig_data.set_size_inches(15, 10)
-fig_data.subplots_adjust(left=0.05, right=0.98, top=0.98, bottom=0.05)
+fig_data.subplots_adjust(left=0.05, right=0.98, top=0.97, bottom=0.05)
 
 ax_error.set_title("Total absolute error: {:.3f}".format(total_abs_error))
-ax_error.set_xlabel("Microphone Distance [cm]")
+ax_error.set_xlabel("Microphone distance [cm]")
 ax_error.set_ylabel("Error [°]")
 ax_error.legend()
 ax_error.set_xlim(0, 50)
@@ -111,7 +112,7 @@ for i in range(4):
 	ax_fit.plot(fit_params_x_steps, poly_function(fit_params_x_steps, *popt))
 
 ax_fit.set_title("Fitting parameter values relative to respective average")
-ax_fit.set_xlabel("Half Recording Angle [°]")
+ax_fit.set_xlabel("Half recording angle [°]")
 ax_fit.set_ylabel("Relative parameter value")
 ax_fit.legend()
 ax_fit.set_xlim(18, 92)
@@ -131,7 +132,7 @@ def interpolate_fit_params(hra):
 
 def interpolate_data(hra, md):
 	fit_params = interpolate_fit_params(hra)
-	return approximator(md, fit_params[0], fit_params[1], fit_params[2], fit_params[3])
+	return sigmoid(md, fit_params[0], fit_params[1], fit_params[2], fit_params[3])
 
 for hra in range(20, 95, 5):
 	curves_x_steps = np.linspace(-100, 300, 1000)
@@ -145,13 +146,15 @@ if os.path.isfile(original_data_img_path):
 	ax_reconstruct.imshow(original_data_img, extent=[0, 50, 0, 180])
 	ax_reconstruct.set_aspect('auto')
 
-ax_reconstruct.set_xlabel("Microphone Distance [cm]")
-ax_reconstruct.set_ylabel("Microphone Angle [°]")
+ax_reconstruct.set_title("Reconstructed and interpolated data".format(total_abs_error))
+ax_reconstruct.set_xlabel("Microphone distance [cm]")
+ax_reconstruct.set_ylabel("Microphone angle [°]")
 ax_reconstruct.legend()
+ax_reconstruct.legend(loc='lower left')
 ax_reconstruct.set_xlim(0, 50)
 ax_reconstruct.set_ylim(0, 180)
 fig_reconstruct.set_size_inches(15, 10)
-fig_reconstruct.subplots_adjust(left=0.05, right=0.98, top=0.98, bottom=0.05)
+fig_reconstruct.subplots_adjust(left=0.05, right=0.98, top=0.97, bottom=0.05)
 
 
 
