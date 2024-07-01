@@ -1,6 +1,14 @@
+import os
 import numpy as np
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
+
+
+
+# Figure 9 from "The Stereophonic Zoom"
+# https://www.gracedesign.com/support/StereoZoom10.pdf
+# Page 10, Figure 9, cropped to the outside border of the graph area
+original_data_img_path = '../../Data source/sra_cardioid_ext_cropped.png'
 
 
 
@@ -179,9 +187,10 @@ for hra in range(30, 100, 10):
 ax_data.scatter(data_lower_reverb_border[:, 1], data_lower_reverb_border[:, 0], label='Lower reverb border', color='gray')
 ax_data.plot(curves_x_steps, approximator(curves_x_steps, *lower_reverb_border_fit_params), color='gray')
 
-original_data_img = plt.imread('../../Data source/Cropped.png')
-ax_data.imshow(original_data_img, extent=[0, 50, 0, 180])
-ax_data.set_aspect('auto')
+if os.path.isfile(original_data_img_path):
+	original_data_img = plt.imread(original_data_img_path)
+	ax_data.imshow(original_data_img, extent=[0, 50, 0, 180])
+	ax_data.set_aspect('auto')
 
 ax_data.set_xlabel("Microphone Distance [cm]")
 ax_data.set_ylabel("Microphone Angle [°]")
@@ -254,8 +263,9 @@ for hra in range(20, 95, 5):
 	# Plot the interpolated data
 	ax_reconstruct.plot(curves_x_steps, interpolated_data, label='± ' + str(hra) + '°')
 
-ax_reconstruct.imshow(original_data_img, extent=[0, 50, 0, 180])
-ax_reconstruct.set_aspect('auto')
+if os.path.isfile(original_data_img_path):
+	ax_reconstruct.imshow(original_data_img, extent=[0, 50, 0, 180])
+	ax_reconstruct.set_aspect('auto')
 
 ax_reconstruct.set_xlabel("Microphone Distance [cm]")
 ax_reconstruct.set_ylabel("Microphone Angle [°]")
