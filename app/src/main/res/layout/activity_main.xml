@@ -1,19 +1,567 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/main"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	tools:context=".MainActivity">
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:id="@+id/mainLayout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		tools:context=".MainActivity">
 	
 	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="Hello World!"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
-
+			android:id="@+id/unitsSettingLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="16dp"
+			android:text="Units"
+			app:layout_constraintBottom_toBottomOf="@+id/metricLabel"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/metricLabel" />
+	
+	<TextView
+			android:id="@+id/metricLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="8dp"
+			android:text="Metric"
+			app:layout_constraintBottom_toBottomOf="@+id/unitsSwitch"
+			app:layout_constraintEnd_toStartOf="@+id/unitsSwitch"
+			app:layout_constraintTop_toTopOf="@+id/unitsSwitch" />
+	
+	<Switch
+			android:id="@+id/unitsSwitch"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="16dp"
+			android:layout_marginEnd="8dp"
+			app:layout_constraintEnd_toStartOf="@+id/imperialLabel"
+			app:layout_constraintTop_toTopOf="parent" />
+	
+	<TextView
+			android:id="@+id/imperialLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="16dp"
+			android:text="Imperial"
+			app:layout_constraintBottom_toBottomOf="@+id/unitsSwitch"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/unitsSwitch" />
+	
+	<TextView
+			android:id="@+id/anglesSettingLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="16dp"
+			android:text="Angles"
+			app:layout_constraintBottom_toBottomOf="@+id/fullAnglesLabel"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/fullAnglesLabel" />
+	
+	<TextView
+			android:id="@+id/fullAnglesLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="8dp"
+			android:text="Full"
+			app:layout_constraintBottom_toBottomOf="@+id/halfAnglesSwitch"
+			app:layout_constraintEnd_toStartOf="@+id/halfAnglesSwitch"
+			app:layout_constraintTop_toTopOf="@+id/halfAnglesSwitch" />
+	
+	<Switch
+			android:id="@+id/halfAnglesSwitch"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:layout_constraintEnd_toEndOf="@+id/unitsSwitch"
+			app:layout_constraintStart_toStartOf="@+id/unitsSwitch"
+			app:layout_constraintTop_toBottomOf="@+id/unitsSwitch" />
+	
+	<TextView
+			android:id="@+id/halfAnglesLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:text="Half (±)"
+			app:layout_constraintBottom_toBottomOf="@+id/halfAnglesSwitch"
+			app:layout_constraintStart_toEndOf="@+id/halfAnglesSwitch"
+			app:layout_constraintTop_toTopOf="@+id/halfAnglesSwitch" />
+	
+	<TextView
+			android:id="@+id/micTypeSettingLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="16dp"
+			android:text="Microphone type"
+			app:layout_constraintBottom_toBottomOf="@+id/cardioidLabel"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/cardioidLabel" />
+	
+	<TextView
+			android:id="@+id/cardioidLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="8dp"
+			android:text="Cardioid"
+			app:layout_constraintBottom_toBottomOf="@+id/micTypeSwitch"
+			app:layout_constraintEnd_toStartOf="@+id/micTypeSwitch"
+			app:layout_constraintTop_toTopOf="@+id/micTypeSwitch" />
+	
+	<Switch
+			android:id="@+id/micTypeSwitch"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:layout_constraintEnd_toEndOf="@+id/unitsSwitch"
+			app:layout_constraintStart_toStartOf="@+id/unitsSwitch"
+			app:layout_constraintTop_toBottomOf="@+id/halfAnglesSwitch" />
+	
+	<TextView
+			android:id="@+id/omniLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:text="Omni"
+			app:layout_constraintBottom_toBottomOf="@+id/micTypeSwitch"
+			app:layout_constraintStart_toEndOf="@+id/micTypeSwitch"
+			app:layout_constraintTop_toTopOf="@+id/micTypeSwitch" />
+	
+	<View
+			android:id="@+id/settingsDivider"
+			android:layout_width="0dp"
+			android:layout_height="1dp"
+			android:layout_marginStart="16dp"
+			android:layout_marginTop="8dp"
+			android:layout_marginEnd="16dp"
+			android:background="?android:attr/listDivider"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/micTypeSwitch" />
+	
+	<TextView
+			android:id="@+id/recAngleLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="16dp"
+			android:text="Recording angle"
+			android:textSize="20sp"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/calcRecAngleButton" />
+	
+	<Button
+			android:id="@+id/calcRecAngleButton"
+			android:layout_width="wrap_content"
+			android:layout_height="40dp"
+			android:layout_marginTop="8dp"
+			android:layout_marginEnd="16dp"
+			android:backgroundTint="@color/design_default_color_primary_dark"
+			android:text="RA calculator"
+			android:textColor="@color/white"
+			app:cornerRadius="5dp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/settingsDivider" />
+	
+	<EditText
+			android:id="@+id/recAngleEdit"
+			android:layout_width="50dp"
+			android:layout_height="48dp"
+			android:layout_marginStart="16dp"
+			android:layout_marginTop="8dp"
+			android:ems="10"
+			android:inputType="number"
+			android:singleLine="true"
+			android:textAlignment="textEnd"
+			android:textSize="24sp"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/recAngleLabel"
+			tools:text="90" />
+	
+	<TextView
+			android:id="@+id/recAngleDegreeLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="°"
+			android:textSize="24sp"
+			app:layout_constraintBottom_toBottomOf="@+id/recAngleEdit"
+			app:layout_constraintStart_toEndOf="@+id/recAngleEdit"
+			app:layout_constraintTop_toTopOf="@+id/recAngleEdit"
+			app:layout_constraintVertical_bias="0.3" />
+	
+	<SeekBar
+			android:id="@+id/recAngleSlider"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="16dp"
+			android:layout_marginEnd="8dp"
+			android:max="140"
+			android:progress="50"
+			app:layout_constraintBottom_toBottomOf="@+id/recAngleEdit"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.0"
+			app:layout_constraintStart_toEndOf="@+id/recAngleDegreeLabel" />
+	
+	<TextView
+			android:id="@+id/recAngleSliderTick40Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:text="40°"
+			android:textSize="12sp"
+			app:layout_constraintBottom_toTopOf="@+id/recAngleSlider"
+			app:layout_constraintStart_toStartOf="@+id/recAngleSlider" />
+	
+	<TextView
+			android:id="@+id/recAngleSliderTick60Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:layout_marginEnd="8dp"
+			android:text="60°"
+			android:textSize="12sp"
+			app:layout_constraintBottom_toTopOf="@+id/recAngleSlider"
+			app:layout_constraintEnd_toEndOf="@+id/recAngleSlider"
+			app:layout_constraintHorizontal_bias="0.14285714285714285714285714285714"
+			app:layout_constraintStart_toStartOf="@+id/recAngleSlider" />
+	
+	<TextView
+			android:id="@+id/recAngleSliderTick90Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:layout_marginEnd="8dp"
+			android:text="90°"
+			android:textSize="12sp"
+			app:layout_constraintBottom_toTopOf="@+id/recAngleSlider"
+			app:layout_constraintEnd_toEndOf="@+id/recAngleSlider"
+			app:layout_constraintHorizontal_bias="0.35714285714285714285714285714286"
+			app:layout_constraintStart_toStartOf="@+id/recAngleSlider" />
+	
+	<TextView
+			android:id="@+id/recAngleSliderTick120Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:layout_marginEnd="8dp"
+			android:text="120°"
+			android:textSize="12sp"
+			app:layout_constraintBottom_toTopOf="@+id/recAngleSlider"
+			app:layout_constraintEnd_toEndOf="@+id/recAngleSlider"
+			app:layout_constraintHorizontal_bias="0.57142857142857142857142857142857"
+			app:layout_constraintStart_toStartOf="@+id/recAngleSlider" />
+	
+	<TextView
+			android:id="@+id/recAngleSliderTick150Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:layout_marginEnd="8dp"
+			android:text="150°"
+			android:textSize="12sp"
+			app:layout_constraintBottom_toTopOf="@+id/recAngleSlider"
+			app:layout_constraintEnd_toEndOf="@+id/recAngleSlider"
+			app:layout_constraintHorizontal_bias="0.78571428571428571428571428571429"
+			app:layout_constraintStart_toStartOf="@+id/recAngleSlider" />
+	
+	<TextView
+			android:id="@+id/recAngleSliderTick180Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="8dp"
+			android:text="180°"
+			android:textSize="12sp"
+			app:layout_constraintBottom_toTopOf="@+id/recAngleSlider"
+			app:layout_constraintEnd_toEndOf="@+id/recAngleSlider" />
+	
+	<View
+			android:id="@+id/angleDivider"
+			android:layout_width="0dp"
+			android:layout_height="1dp"
+			android:layout_marginStart="16dp"
+			android:layout_marginTop="8dp"
+			android:layout_marginEnd="16dp"
+			android:background="?android:attr/listDivider"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/recAngleEdit" />
+	
+	<SurfaceView
+			android:id="@+id/surfaceView"
+			android:layout_width="0dp"
+			android:layout_height="300dp"
+			android:layout_marginStart="16dp"
+			android:layout_marginTop="8dp"
+			android:layout_marginEnd="16dp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/angleDivider" />
+	
+	<View
+			android:id="@+id/graphicsDivider"
+			android:layout_width="0dp"
+			android:layout_height="1dp"
+			android:layout_marginStart="16dp"
+			android:layout_marginTop="8dp"
+			android:layout_marginEnd="16dp"
+			android:background="?android:attr/listDivider"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/surfaceView" />
+	
+	<TextView
+			android:id="@+id/stereoConfigLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="16dp"
+			android:layout_marginTop="8dp"
+			android:text="Stereo configuration"
+			android:textSize="20sp"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/graphicsDivider" />
+	
+	<TextView
+			android:id="@+id/micDistanceLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="16dp"
+			android:text="Distance"
+			android:textSize="16sp"
+			app:layout_constraintBottom_toBottomOf="@+id/micDistanceValueLabel"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/micDistanceValueLabel" />
+	
+	<TextView
+			android:id="@+id/micDistanceValueLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="16dp"
+			android:layout_marginTop="12dp"
+			android:textSize="20sp"
+			app:layout_constraintStart_toEndOf="@+id/micDistanceLabel"
+			app:layout_constraintTop_toBottomOf="@+id/stereoConfigLabel"
+			tools:text="25cm" />
+	
+	<SeekBar
+			android:id="@+id/micDistanceSlider"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:layout_marginEnd="8dp"
+			android:max="500"
+			android:progress="250"
+			app:layout_constraintBottom_toBottomOf="@+id/micDistanceValueLabel"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@+id/micDistanceValueLabel" />
+	
+	<TextView
+			android:id="@+id/micDistanceSliderTick0"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:text="0cm"
+			android:textSize="8sp"
+			app:layout_constraintBottom_toTopOf="@+id/micDistanceSlider"
+			app:layout_constraintStart_toStartOf="@+id/micDistanceSlider" />
+	
+	<TextView
+			android:id="@+id/micDistanceSliderTick10Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:layout_marginEnd="8dp"
+			android:text="10cm"
+			android:textSize="8sp"
+			app:layout_constraintBottom_toTopOf="@+id/micDistanceSlider"
+			app:layout_constraintEnd_toEndOf="@+id/micDistanceSlider"
+			app:layout_constraintHorizontal_bias="0.2"
+			app:layout_constraintStart_toStartOf="@+id/micDistanceSlider" />
+	
+	<TextView
+			android:id="@+id/micDistanceSliderTick20Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:layout_marginEnd="8dp"
+			android:text="20cm"
+			android:textSize="8sp"
+			app:layout_constraintBottom_toTopOf="@+id/micDistanceSlider"
+			app:layout_constraintEnd_toEndOf="@+id/micDistanceSlider"
+			app:layout_constraintHorizontal_bias="0.4"
+			app:layout_constraintStart_toStartOf="@+id/micDistanceSlider" />
+	
+	<TextView
+			android:id="@+id/micDistanceSliderTick30Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:layout_marginEnd="8dp"
+			android:text="30cm"
+			android:textSize="8sp"
+			app:layout_constraintBottom_toTopOf="@+id/micDistanceSlider"
+			app:layout_constraintEnd_toEndOf="@+id/micDistanceSlider"
+			app:layout_constraintHorizontal_bias="0.6"
+			app:layout_constraintStart_toStartOf="@+id/micDistanceSlider" />
+	
+	<TextView
+			android:id="@+id/micDistanceSliderTick40Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:layout_marginEnd="8dp"
+			android:text="40cm"
+			android:textSize="8sp"
+			app:layout_constraintBottom_toTopOf="@+id/micDistanceSlider"
+			app:layout_constraintEnd_toEndOf="@+id/micDistanceSlider"
+			app:layout_constraintHorizontal_bias="0.80"
+			app:layout_constraintStart_toStartOf="@+id/micDistanceSlider" />
+	
+	<TextView
+			android:id="@+id/micDistanceSliderTickLabel50"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="8dp"
+			android:text="50cm"
+			android:textSize="8sp"
+			app:layout_constraintBottom_toTopOf="@+id/micDistanceSlider"
+			app:layout_constraintEnd_toEndOf="@+id/micDistanceSlider" />
+	
+	<TextView
+			android:id="@+id/micAngleLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="16dp"
+			android:text="Angle"
+			android:textSize="16sp"
+			app:layout_constraintBottom_toBottomOf="@+id/micAngleValueLabel"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/micAngleValueLabel" />
+	
+	<TextView
+			android:id="@+id/micAngleValueLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="8dp"
+			android:textSize="20sp"
+			app:layout_constraintEnd_toEndOf="@+id/micDistanceValueLabel"
+			app:layout_constraintTop_toBottomOf="@+id/micDistanceValueLabel"
+			tools:text="± 30°" />
+	
+	<SeekBar
+			android:id="@+id/micAngleSlider"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="8dp"
+			android:max="90"
+			android:progress="30"
+			app:layout_constraintBottom_toBottomOf="@+id/micAngleValueLabel"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="@+id/micDistanceSlider" />
+	
+	<TextView
+			android:id="@+id/micAngleSliderTick0"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:text="±0°"
+			android:textSize="8sp"
+			app:layout_constraintBottom_toTopOf="@+id/micAngleSlider"
+			app:layout_constraintStart_toStartOf="@+id/micAngleSlider" />
+	
+	<TextView
+			android:id="@+id/micAngleSliderTick30Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:layout_marginEnd="8dp"
+			android:text="±30°"
+			android:textSize="8sp"
+			app:layout_constraintBottom_toTopOf="@+id/micAngleSlider"
+			app:layout_constraintEnd_toEndOf="@+id/micAngleSlider"
+			app:layout_constraintHorizontal_bias="0.33333333333333333333333333333333"
+			app:layout_constraintStart_toStartOf="@+id/micAngleSlider" />
+	
+	<TextView
+			android:id="@+id/micAngleSliderTick60Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:layout_marginEnd="8dp"
+			android:text="±60°"
+			android:textSize="8sp"
+			app:layout_constraintBottom_toTopOf="@+id/micAngleSlider"
+			app:layout_constraintEnd_toEndOf="@+id/micAngleSlider"
+			app:layout_constraintHorizontal_bias="0.66666666666666666666666666666667"
+			app:layout_constraintStart_toStartOf="@+id/micAngleSlider" />
+	
+	<TextView
+			android:id="@+id/micAngleSliderTick90Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="8dp"
+			android:text="±90°"
+			android:textSize="8sp"
+			app:layout_constraintBottom_toTopOf="@+id/micAngleSlider"
+			app:layout_constraintEnd_toEndOf="@+id/micAngleSlider" />
+	
+	<TextView
+			android:id="@+id/angularDistLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="16dp"
+			android:text="Angular distortion"
+			app:layout_constraintBottom_toBottomOf="@+id/angularDistValueLabel"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/angularDistValueLabel" />
+	
+	<TextView
+			android:id="@+id/angularDistValueLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="16dp"
+			app:layout_constraintStart_toStartOf="@+id/micAngleSliderTick0"
+			app:layout_constraintTop_toBottomOf="@+id/micAngleValueLabel"
+			tools:text="≤ 4°" />
+	
+	<ProgressBar
+			android:id="@+id/angularDistIndicator"
+			style="?android:attr/progressBarStyleHorizontal"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="16dp"
+			android:layout_marginEnd="16dp"
+			android:max="10"
+			android:progress="4"
+			android:progressTint="#FFEB3B"
+			app:layout_constraintBottom_toBottomOf="@+id/angularDistValueLabel"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@+id/angularDistValueLabel"
+			app:layout_constraintTop_toTopOf="@+id/angularDistValueLabel" />
+	
+	<TextView
+			android:id="@+id/reverbLimitsLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="16dp"
+			android:text="Reverberation limits"
+			app:layout_constraintBottom_toBottomOf="@+id/reverbLimitsWarningLabel"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/reverbLimitsWarningLabel" />
+	
+	<TextView
+			android:id="@+id/reverbLimitsWarningLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="8dp"
+			android:textColor="#4CAF50"
+			app:layout_constraintStart_toStartOf="@+id/angularDistValueLabel"
+			app:layout_constraintTop_toBottomOf="@+id/angularDistValueLabel"
+			tools:text="Okay/Excessive in center/on sides" />
+	
+	<View
+			android:id="@+id/bottomDivider"
+			android:layout_width="0dp"
+			android:layout_height="1dp"
+			android:layout_marginStart="16dp"
+			android:layout_marginTop="8dp"
+			android:layout_marginEnd="16dp"
+			android:background="?android:attr/listDivider"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/reverbLimitsWarningLabel" />
+	
 </androidx.constraintlayout.widget.ConstraintLayout>
