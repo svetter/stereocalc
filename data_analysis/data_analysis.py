@@ -162,7 +162,7 @@ fig_reconstruct.subplots_adjust(left=0.05, right=0.98, top=0.97, bottom=0.05)
 
 print("Kotlin code: Second-level approximation parameters")
 print("=====================================")
-print("Fifth-order polynomial coefficients (from x^5 to x^0) for each of the four first-level approximation parameters\n")
+print("Fifth-order polynomial coefficients (from x^0 to x^5) for each of the four first-level approximation parameters\n")
 for i in range(4):
 	camelCaseParamName = fit_param_names[i].replace('_', ' ').title().replace(' ', '')
 	camelCaseParamName = camelCaseParamName[0].lower() + camelCaseParamName[1:]
