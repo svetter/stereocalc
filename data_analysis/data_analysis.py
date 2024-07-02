@@ -160,11 +160,13 @@ fig_reconstruct.subplots_adjust(left=0.05, right=0.98, top=0.97, bottom=0.05)
 
 # Print all constants necessary for the app
 
-print("Second-level approximation parameters")
+print("Kotlin code: Second-level approximation parameters")
 print("=====================================")
-print("Fifth-order polynomial coefficients (from x^5 to x^0) for each of the four first-level approximation parameters")
+print("Fifth-order polynomial coefficients (from x^5 to x^0) for each of the four first-level approximation parameters\n")
 for i in range(4):
-	print("static final double[] " + fit_param_names[i] + "_poly_coeffs\t= {" + ', '.join(str(x) for x in meta_fit_params[i]) + "};")
+	camelCaseParamName = fit_param_names[i].replace('_', ' ').title().replace(' ', '')
+	camelCaseParamName = camelCaseParamName[0].lower() + camelCaseParamName[1:]
+	print("val " + camelCaseParamName + "PolyCoeffs = doubleArrayOf(\n\t" + ',\n\t'.join(str(x) for x in meta_fit_params[i]) + "\n)")
 
 
 
