@@ -92,10 +92,10 @@ fig_error.subplots_adjust(left=0.1, right=0.98, top=0.92, bottom=0.14)
 
 # Approximate fitting parameter curves
 
-def poly_function(x, coeff5, coeff4, coeff3, coeff2, coeff1, coeff0):
+def poly_function(x, coeff0, coeff1, coeff2, coeff3, coeff4, coeff5):
 	if np.isscalar(x):
 		x = np.array(x)
-	return coeff5 * np.pow(x, 5) + coeff4 * np.pow(x, 4) + coeff3 * np.pow(x, 3) + coeff2 * np.pow(x, 2) + coeff1 * x + coeff0
+	return coeff0 + coeff1 * x + coeff2 * np.pow(x, 2) + coeff3 * np.pow(x, 3) + coeff4 * np.pow(x, 4) + coeff5 * np.pow(x, 5)
 
 average_params = np.mean(list(fit_params.values()), axis=0)
 
