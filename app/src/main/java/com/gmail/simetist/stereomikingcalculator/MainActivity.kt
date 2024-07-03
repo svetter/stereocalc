@@ -2,13 +2,18 @@ package com.gmail.simetist.stereomikingcalculator
 
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.Switch
@@ -18,7 +23,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-
 
 
 private const val TAG = "MainActivity"
@@ -46,6 +50,7 @@ class MainActivity : AppCompatActivity() {
 	private lateinit var recAngleSlider:				SeekBar
 	private lateinit var recAngleSliderTickLabels:		Array<Pair<Int, TextView>>
 	
+	private lateinit var graphicsFrameLayout:			FrameLayout
 	private lateinit var graphicsView:					StereoConfigView
 	
 	private lateinit var micDistanceValueLabel:			TextView
@@ -86,6 +91,7 @@ class MainActivity : AppCompatActivity() {
 			180	to findViewById(R.id.recAngleSliderTick180Label)
 		)
 		
+		graphicsFrameLayout			= findViewById(R.id.graphicsFrameLayout)
 		graphicsView				= findViewById(R.id.graphicsView)
 		
 		micDistanceValueLabel		= findViewById(R.id.micDistanceValueLabel)
@@ -394,6 +400,8 @@ class MainActivity : AppCompatActivity() {
 		})
 	}
 	
+	
+	
 	override fun onSaveInstanceState(outState: Bundle) {
 		super.onSaveInstanceState(outState)
 		outState.putBoolean("useInches",		useInches)
@@ -403,5 +411,51 @@ class MainActivity : AppCompatActivity() {
 		outState.putInt("recAngle",				recAngleSlider.progress)
 		outState.putInt("micDistance",			micDistanceSlider.progress)
 		outState.putInt("micAngle",				micAngleSlider.progress)
+	}
+	
+	// Saved layout states during landscape orientation
+	private var portraitGraphicsFrameHeight			= 0
+	private var portraitGraphicsFrameTopToBottom	= 0
+	private var portraitGraphicsFrameStartToStart	= 0
+	private var portraitGraphicsFrameEndToEnd		= 0
+	private var portraitGraphicsFrameTopMargin		= 0
+	private var portraitGraphicsFrameLeftMargin		= 0
+	private var portraitGraphicsFrameRightMargin	= 0
+	
+	override fun onConfigurationChanged(newConfig: Configuration) {
+		super.onConfigurationChanged(newConfig)
+		
+		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+			// Restore graphicsFrame's constraints
+			(graphicsFrameLayout.layoutParams as ConstraintLayout.LayoutParams).apply {
+				height			= portraitGraphicsFrameHeight
+				topToBottom		= portraitGraphicsFrameTopToBottom
+				startToStart	= portraitGraphicsFrameStartToStart
+				endToEnd		= portraitGraphicsFrameEndToEnd
+				topMargin		= portraitGraphicsFrameTopMargin
+				leftMargin		= portraitGraphicsFrameLeftMargin
+				rightMargin		= portraitGraphicsFrameRightMargin
+			}
+			// Remove background color for graphicsFrameLayout
+			graphicsFrameLayout.setBackgroundColor(Color.TRANSPARENT)
+		}
+		else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			// Save layout values
+			portraitGraphicsFrameHeight			= graphicsFrameLayout.height
+			portraitGraphicsFrameTopToBottom	= (graphicsFrameLayout.layoutParams as ConstraintLayout.LayoutParams).topToBottom
+			portraitGraphicsFrameStartToStart	= (graphicsFrameLayout.layoutParams as ConstraintLayout.LayoutParams).startToStart
+			portraitGraphicsFrameEndToEnd		= (graphicsFrameLayout.layoutParams as ConstraintLayout.LayoutParams).endToEnd
+			portraitGraphicsFrameTopMargin		= (graphicsFrameLayout.layoutParams as ConstraintLayout.LayoutParams).topMargin
+			portraitGraphicsFrameLeftMargin		= (graphicsFrameLayout.layoutParams as ConstraintLayout.LayoutParams).leftMargin
+			portraitGraphicsFrameRightMargin	= (graphicsFrameLayout.layoutParams as ConstraintLayout.LayoutParams).rightMargin
+			
+			// Make graphicsFrame take up the whole layout
+			graphicsFrameLayout.layoutParams = FrameLayout.LayoutParams(
+				ViewGroup.LayoutParams.MATCH_PARENT,
+				ViewGroup.LayoutParams.MATCH_PARENT
+			)
+			// Set background color for graphicsFrameLayout
+			graphicsFrameLayout.setBackgroundColor(Color.BLACK)
+		}
 	}
 }

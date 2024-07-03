@@ -570,6 +570,7 @@
 	
 	<FrameLayout
 			android:id="@+id/graphicsFrameLayout"
+			android:translationZ="1dp"
 			android:layout_width="0dp"
 			android:layout_height="250dp"
 			android:layout_marginStart="16dp"
@@ -581,8 +582,9 @@
 		
 		<com.gmail.simetist.stereomikingcalculator.StereoConfigView
 				android:id="@+id/graphicsView"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent" />
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:translationZ="1dp" />
 	</FrameLayout>
 	
 	<Switch

@@ -7,8 +7,10 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
+import kotlin.math.min
 import kotlin.math.tan
 
 
@@ -18,6 +20,11 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	
 	private val cardioidMicVector:	Drawable? = ContextCompat.getDrawable(context!!, R.drawable.microphone_cardioid)
 	private val omniMicVector:		Drawable? = ContextCompat.getDrawable(context!!, R.drawable.microphone_omni)
+	
+	private val micHeightCm			= 8f
+	private val micWidthCm			= 2f
+	private val maxMicDistanceCm	= 50f
+	private val halfCircleRadiusCm	= maxMicDistanceCm / 2f
 	
 	private var useOmni = false
 	private var micVector: Drawable? = cardioidMicVector
@@ -45,11 +52,14 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	override fun onDraw(canvas: Canvas) {
 		super.onDraw(canvas)
 		
-		val picturedWidth	= 50 + 2 * 1.5f	// 50cm max capsule distance + sqrt(2) for each mic when at max distance and 45°
+		val picturedWidth	= maxMicDistanceCm + micWidthCm * 1.5f		// Max mic distance (center to center) + sqrt(2) for each mic when at max distance and 45°
+		val picturedHeight	= halfCircleRadiusCm + micHeightCm - 1 + 1	// Circle radius + mic length - 1cm for the top of the mic + 1cm buffer
+//		val pixelPerCm		= min(width / picturedWidth, height / picturedHeight)
 		val pixelPerCm		= width / picturedWidth
-		val micWidth		= 2 * pixelPerCm
-		val micLength		= 8 * pixelPerCm
-		val halfMicDistance	= micDistance * pixelPerCm / 2.0f
+		
+		val micWidth		= micWidthCm * pixelPerCm
+		val micLength		= micHeightCm * pixelPerCm
+		val halfMicDistance	= micDistance * pixelPerCm / 2f
 		
 		val centerX		= width / 2f
 		val centerY		= height - 8.5f * pixelPerCm
@@ -74,7 +84,7 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		val halfAngleWithXAxisRad = halfAngleWithXAxisDeg * Math.PI.toFloat() / 180
 		val halfRecAngleLineY = centerY - tan(halfAngleWithXAxisRad) * centerX
 		
-		val circleRadius = 25 * pixelPerCm
+		val circleRadius = halfCircleRadiusCm * pixelPerCm
 		
 		canvas.drawPath(Path().apply {
 			moveTo(centerX, centerY)
@@ -95,16 +105,20 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 			canvas.drawLine(x, centerY, x, if (i % 2 == 0) longTickBottomY else shortTickBottomY, linesPaint)
 		}
 		
+		// Angle lines
 		canvas.drawLine(centerX, centerY, left, recAngleLineY, linesPaint)
 		canvas.drawLine(centerX, centerY, right, recAngleLineY, linesPaint)
 		canvas.drawLine(centerX, centerY, left, halfRecAngleLineY, linesPaint)
 		canvas.drawLine(centerX, centerY, right, halfRecAngleLineY, linesPaint)
 		
-		canvas.drawArc(
-			centerX - circleRadius, centerY - circleRadius,
-			centerX + circleRadius, centerY + circleRadius,
-			180f, 180f, false, linesPaint
-		)
+		if (height >= picturedHeight * pixelPerCm) {
+			// Half circle
+			canvas.drawArc(
+				centerX - circleRadius, centerY - circleRadius,
+				centerX + circleRadius, centerY + circleRadius,
+				180f, 180f, false, linesPaint
+			)
+		}
 		
 		micVector?.let {
 			canvas.save()
@@ -120,6 +134,20 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 			canvas.restore()
 		}
 	}
+	
+	override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+		performClick()
+		return true
+	}
+	
+	override fun performClick(): Boolean {
+		Log.i("StereoConfigView", "performClick")
+		// TODO
+		
+		return super.performClick()
+	}
+	
+	
 	
 	fun setUseOmni(useOmni: Boolean) {
 		this.useOmni = useOmni
