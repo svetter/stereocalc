@@ -38,7 +38,7 @@
       android:layout_marginEnd="16dp"
       android:autoLink="web"
       android:linksClickable="true"
-      android:text="Copyright 2024 Simon Vetter\n\nThe full source code of this App is available on GitHub:\nhttps://github.com/svetter/stereocalc\n\nFull credit for the data underlying this app goes to Michael Williams and his paper &quot;The stereophonic zoom&quot; from 2010, available here:\nhttps://api.semanticscholar.org/CorpusID:202598177\nThis is a short and very interesting read, recommended for every user of this app. Indeed, the app is not intended to replace the knowledge from the paper, but to facilitate implementing it in a faster and easier way."
+      android:text="Copyright 2024 Simon Vetter\n\nThe full source code of this App is available on GitHub:\nhttps://github.com/svetter/stereocalc\n\nFull credit for the data underlying this app goes to Michael Williams and his paper &quot;The stereophonic zoom&quot; from 2010, available here:\nhttps://www.gracedesign.com/support/StereoZoom10.pdf\nThis is a short and very interesting read, recommended for every user of this app. Indeed, the app is not intended to replace the knowledge from the paper, but to facilitate implementing it in a faster and easier way."
       android:textSize="16sp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.0"

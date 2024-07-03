@@ -1,12 +1,11 @@
 package com.gmail.simetist.stereomikingcalculator
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
-import android.view.SurfaceHolder
-import android.view.SurfaceView
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -368,6 +367,14 @@ class MainActivity : AppCompatActivity() {
 		
 		angularDistValueLabel.text = "%.1f°".format(angularDistortion)
 		angularDistIndicator.progress = (angularDistortion * 100).toInt()
+		
+		// Set progress color based on the value
+		val progressRatio = angularDistIndicator.progress / angularDistIndicator.max.toFloat()
+		val color = when {
+			progressRatio < 0.5	-> Color.rgb(((-0.5f + progressRatio * 3f) * 255f).toInt().coerceAtLeast(0), 255, 0)
+			else				-> Color.rgb(255, ((2.5f - progressRatio * 3f) * 255f).toInt().coerceAtLeast(0), 0)
+		}
+		angularDistIndicator.progressTintList = ColorStateList.valueOf(color)
 	}
 	
 	fun recalculateReverbLimits() {

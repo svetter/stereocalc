@@ -1,8 +1,6 @@
 package com.gmail.simetist.stereomikingcalculator
 
-import kotlin.math.exp
-import kotlin.math.ln
-import kotlin.math.pow
+import kotlin.math.*
 
 
 
@@ -85,9 +83,7 @@ fun calculateOmniMicDistance(recordingAngle: Double): Double {
 }
 
 fun calculateAngularDistortion(micDistance: Double, micAngle: Double): Double {
-	// TODO
-	
-	return 4.5
+	return AngularDistortionNN.predict(micDistance, micAngle).toDouble()
 }
 
 fun calculateReverbLimitExceeded(micDistance: Double, micAngle: Double): Pair<Boolean, Boolean> {
@@ -97,4 +93,81 @@ fun calculateReverbLimitExceeded(micDistance: Double, micAngle: Double): Pair<Bo
 	val sideExceeds = micAngle <= sidesReverbLimit
 	
 	return centerExceeds to sideExceeds
+}
+
+
+
+object AngularDistortionNN {
+	private fun denseLayer(inputs: DoubleArray, weights: Array<DoubleArray>, bias: DoubleArray): DoubleArray {
+		val output = DoubleArray(bias.size)
+		for (i in bias.indices) {
+			output[i] = bias[i]
+			for (j in inputs.indices) {
+				output[i] += inputs[j] * weights[j][i]
+			}
+		}
+		return output
+	}
+	
+	private fun applyActivation(inputs: DoubleArray, activation: String): DoubleArray {
+		val output = DoubleArray(inputs.size)
+		for (i in inputs.indices) {
+			output[i] = when (activation) {
+				"relu" -> max(0.0, inputs[i])
+				"sigmoid" -> (1.0 / (1.0 + exp(-inputs[i])))
+				else -> inputs[i]
+			}
+		}
+		return output
+	}
+	
+	private val denseWeights = arrayOf(
+		doubleArrayOf(0.050552114844322205, -0.621399462223053, 0.7947633862495422, 0.47630852460861206, 0.5214497447013855, -0.689803957939148, -0.14295123517513275, -0.5771496295928955, 0.5864160656929016, 0.29007992148399353),
+		doubleArrayOf(-0.6147325038909912, -0.28008368611335754, 1.3294757604599, 1.6732933521270752, -0.9143111705780029, -0.14986711740493774, 0.07585252076387405, -0.1127011775970459, 1.0455999374389648, 0.8773002624511719),
+	)
+	private val denseBiases = doubleArrayOf(-0.04911422356963158, 0.0, -0.279000461101532, -0.657450258731842, 0.0015515354461967945, 0.0, -0.08693814277648926, 0.0, -0.3828710913658142, 0.07013881206512451)
+	
+	private val dense1Weights = arrayOf(
+		doubleArrayOf(-0.06669402122497559, -0.41437506675720215, 0.4012371599674225, 0.33698707818984985, -0.4580766558647156),
+		doubleArrayOf(-0.07378596067428589, -0.06178539991378784, -0.3827940821647644, -0.5364109873771667, -0.25290656089782715),
+		doubleArrayOf(-0.45742174983024597, -0.33134815096855164, 0.7989304661750793, -0.5234515070915222, 0.12709927558898926),
+		doubleArrayOf(-0.5485283732414246, -0.46154189109802246, -0.30033057928085327, 1.4351824522018433, 1.1702848672866821),
+		doubleArrayOf(-0.25804170966148376, -0.6322087049484253, -0.9339739084243774, 0.5020516514778137, 0.9352903366088867),
+		doubleArrayOf(-0.009140372276306152, -0.3127635419368744, -0.5524733662605286, -0.23470979928970337, 0.2438488006591797),
+		doubleArrayOf(-0.4871237277984619, -0.4629260003566742, -0.08642063289880753, -0.40860357880592346, -0.3502930998802185),
+		doubleArrayOf(-0.4464275538921356, -0.2328273355960846, -0.19553989171981812, -0.49484264850616455, 0.3188565969467163),
+		doubleArrayOf(-0.15538626909255981, 0.3766717314720154, -0.02138102427124977, -1.1788495779037476, -0.9573598504066467),
+		doubleArrayOf(0.11749958992004395, 0.08343648910522461, 0.7223596572875977, 0.03965410590171814, 0.281604528427124),
+	)
+	private val dense1Biases = doubleArrayOf(0.0, 0.0, -0.0802600085735321, 0.1806495487689972, 0.14349153637886047)
+	
+	private val dense2Weights = arrayOf(
+		doubleArrayOf(0.19079256057739258),
+		doubleArrayOf(-0.9104411602020264),
+		doubleArrayOf(-1.5485447645187378),
+		doubleArrayOf(1.6872438192367554),
+		doubleArrayOf(1.3242930173873901),
+	)
+	private val dense2Biases = doubleArrayOf(0.0980764701962471)
+	
+	private const val X_MIN = 0
+	private const val X_MAX = 50
+	private const val Y_MIN = 0
+	private const val Y_MAX = 180
+	private const val Z_MIN = 0
+	private const val Z_MAX = 12
+	
+	fun predict(x: Double, y: Double): Double {
+		val xNormalized = (x - X_MIN) / (X_MAX - X_MIN)
+		val yNormalized = (y - Y_MIN) / (Y_MAX - Y_MIN)
+		val inputs = doubleArrayOf(xNormalized, yNormalized)
+		val denseOutput = denseLayer(inputs, denseWeights, denseBiases)
+		val denseActivated = applyActivation(denseOutput, "relu")
+		val dense1Output = denseLayer(denseActivated, dense1Weights, dense1Biases)
+		val dense1Activated = applyActivation(dense1Output, "relu")
+		val dense2Output = denseLayer(dense1Activated, dense2Weights, dense2Biases)
+		val dense2Activated = applyActivation(dense2Output, "sigmoid")
+		val z = dense2Activated[0] * (Z_MAX - Z_MIN) + Z_MIN
+		return z
+	}
 }
