@@ -166,7 +166,7 @@ print("Fifth-order polynomial coefficients (from x^0 to x^5) for each of the fou
 for i in range(4):
 	camelCaseParamName = fit_param_names[i].replace('_', ' ').title().replace(' ', '')
 	camelCaseParamName = camelCaseParamName[0].lower() + camelCaseParamName[1:]
-	print("val " + camelCaseParamName + "PolyCoeffs = doubleArrayOf(\n\t" + ',\n\t'.join(str(x) for x in meta_fit_params[i]) + "\n)")
+	print("val " + camelCaseParamName + "PolyCoefficients = doubleArrayOf(\n\t" + ',\n\t'.join(str(x) for x in meta_fit_params[i]) + "\n)")
 
 
 
