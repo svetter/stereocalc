@@ -3,7 +3,7 @@ import numpy as np
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
-from raw_data import data, data_upper_reverb_border, data_lower_reverb_border
+from raw_data import data, data_angular_distortion, upper_reverb_border, data_lower_reverb_border
 
 
 
@@ -64,6 +64,8 @@ for hra in range(30, 100, 10):
 ax_data.scatter(data_lower_reverb_border[:, 1], data_lower_reverb_border[:, 0], label='Lower reverb border', color='gray')
 ax_data.plot(curves_x_steps, sigmoid(curves_x_steps, *lower_reverb_border_fit_params), color='gray')
 
+ax_data.scatter(data_angular_distortion[:, 0], data_angular_distortion[:, 1], s=200, marker='+', color='red')
+
 if os.path.isfile(original_data_img_path):
 	original_data_img = plt.imread(original_data_img_path)
 	ax_data.imshow(original_data_img, extent=[0, 50, 0, 180])
@@ -95,7 +97,7 @@ fig_error.subplots_adjust(left=0.1, right=0.98, top=0.92, bottom=0.14)
 def poly_function(x, coeff0, coeff1, coeff2, coeff3, coeff4, coeff5):
 	if np.isscalar(x):
 		x = np.array(x)
-	return coeff0 + coeff1 * x + coeff2 * np.pow(x, 2) + coeff3 * np.pow(x, 3) + coeff4 * np.pow(x, 4) + coeff5 * np.pow(x, 5)
+	return coeff0 + coeff1 * x + coeff2 * np.power(x, 2) + coeff3 * np.power(x, 3) + coeff4 * np.power(x, 4) + coeff5 * np.power(x, 5)
 
 average_params = np.mean(list(fit_params.values()), axis=0)
 
@@ -168,7 +170,7 @@ for i in range(4):
 	camelCaseParamName = camelCaseParamName[0].lower() + camelCaseParamName[1:]
 	print("val " + camelCaseParamName + "PolyCoefficients = doubleArrayOf(\n\t" + ',\n\t'.join(str(x) for x in meta_fit_params[i]) + "\n)")
 print("\nReverberation limits:")
-print("val centerReverbLimitMicAngle\t= {:.1f}".format(data_upper_reverb_border))
+print("val centerReverbLimitMicAngle\t= {:.1f}".format(upper_reverb_border))
 for i in range(4):
 	camelCaseParamName = fit_param_names[i].replace('_', ' ').title().replace(' ', '')
 	print("val sidesReverbLimitFit" + camelCaseParamName + "\t= " + str(lower_reverb_border_fit_params[i]))
