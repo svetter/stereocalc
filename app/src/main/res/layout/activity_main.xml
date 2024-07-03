@@ -5,6 +5,7 @@
 		android:id="@+id/mainLayout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:layout_gravity="center"
 		tools:context=".MainActivity">
 	
 	<TextView
@@ -150,8 +151,8 @@
 			android:layout_height="40dp"
 			android:layout_marginTop="8dp"
 			android:layout_marginEnd="16dp"
-			android:backgroundTint="@color/design_default_color_primary_dark"
-			android:text="RA calculator"
+			android:backgroundTint="#9A8C0000"
+			android:text="Calculate"
 			android:textColor="@color/white"
 			app:cornerRadius="5dp"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -161,14 +162,13 @@
 			android:id="@+id/recAngleEdit"
 			android:layout_width="50dp"
 			android:layout_height="48dp"
-			android:layout_marginStart="16dp"
 			android:layout_marginTop="8dp"
 			android:ems="10"
 			android:inputType="number"
 			android:singleLine="true"
 			android:textAlignment="textEnd"
 			android:textSize="24sp"
-			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintStart_toEndOf="@+id/recAnglePlusMinusLabel"
 			app:layout_constraintTop_toBottomOf="@+id/recAngleLabel"
 			tools:text="90" />
 	
@@ -280,17 +280,6 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/recAngleEdit" />
 	
-	<SurfaceView
-			android:id="@+id/surfaceView"
-			android:layout_width="0dp"
-			android:layout_height="300dp"
-			android:layout_marginStart="16dp"
-			android:layout_marginTop="8dp"
-			android:layout_marginEnd="16dp"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/angleDivider" />
-	
 	<View
 			android:id="@+id/graphicsDivider"
 			android:layout_width="0dp"
@@ -301,7 +290,7 @@
 			android:background="?android:attr/listDivider"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/surfaceView" />
+			app:layout_constraintTop_toBottomOf="@+id/graphicsFrameLayout" />
 	
 	<TextView
 			android:id="@+id/stereoConfigLabel"
@@ -327,14 +316,15 @@
 	
 	<TextView
 			android:id="@+id/micDistanceValueLabel"
-			android:layout_width="wrap_content"
+			android:layout_width="75dp"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="16dp"
+			android:layout_marginStart="8dp"
 			android:layout_marginTop="12dp"
+			android:textAlignment="textEnd"
 			android:textSize="20sp"
 			app:layout_constraintStart_toEndOf="@+id/micDistanceLabel"
 			app:layout_constraintTop_toBottomOf="@+id/stereoConfigLabel"
-			tools:text="25cm" />
+			tools:text="22.5cm" />
 	
 	<SeekBar
 			android:id="@+id/micDistanceSlider"
@@ -349,7 +339,7 @@
 			app:layout_constraintStart_toEndOf="@+id/micDistanceValueLabel" />
 	
 	<TextView
-			android:id="@+id/micDistanceSliderTick0"
+			android:id="@+id/micDistanceSliderTick0Label"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="8dp"
@@ -411,7 +401,7 @@
 			app:layout_constraintStart_toStartOf="@+id/micDistanceSlider" />
 	
 	<TextView
-			android:id="@+id/micDistanceSliderTickLabel50"
+			android:id="@+id/micDistanceSliderTick50Label"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="8dp"
@@ -433,46 +423,35 @@
 	
 	<TextView
 			android:id="@+id/micAngleValueLabel"
-			android:layout_width="wrap_content"
+			android:layout_width="75dp"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="8dp"
+			android:textAlignment="textEnd"
 			android:textSize="20sp"
 			app:layout_constraintEnd_toEndOf="@+id/micDistanceValueLabel"
 			app:layout_constraintTop_toBottomOf="@+id/micDistanceValueLabel"
-			tools:text="± 30°" />
+			tools:text="60°" />
 	
 	<SeekBar
 			android:id="@+id/micAngleSlider"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="8dp"
-			android:max="90"
-			android:progress="30"
+			android:max="1800"
+			android:progress="600"
 			app:layout_constraintBottom_toBottomOf="@+id/micAngleValueLabel"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="@+id/micDistanceSlider" />
 	
 	<TextView
-			android:id="@+id/micAngleSliderTick0"
+			android:id="@+id/micAngleSliderTick0Label"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="8dp"
-			android:text="±0°"
+			android:layout_marginStart="12dp"
+			android:gravity="center_horizontal"
+			android:text="0°"
 			android:textSize="8sp"
 			app:layout_constraintBottom_toTopOf="@+id/micAngleSlider"
-			app:layout_constraintStart_toStartOf="@+id/micAngleSlider" />
-	
-	<TextView
-			android:id="@+id/micAngleSliderTick30Label"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="8dp"
-			android:layout_marginEnd="8dp"
-			android:text="±30°"
-			android:textSize="8sp"
-			app:layout_constraintBottom_toTopOf="@+id/micAngleSlider"
-			app:layout_constraintEnd_toEndOf="@+id/micAngleSlider"
-			app:layout_constraintHorizontal_bias="0.33333333333333333333333333333333"
 			app:layout_constraintStart_toStartOf="@+id/micAngleSlider" />
 	
 	<TextView
@@ -481,7 +460,20 @@
 			android:layout_height="wrap_content"
 			android:layout_marginStart="8dp"
 			android:layout_marginEnd="8dp"
-			android:text="±60°"
+			android:text="60°"
+			android:textSize="8sp"
+			app:layout_constraintBottom_toTopOf="@+id/micAngleSlider"
+			app:layout_constraintEnd_toEndOf="@+id/micAngleSlider"
+			app:layout_constraintHorizontal_bias="0.33333333333333333333333333333333"
+			app:layout_constraintStart_toStartOf="@+id/micAngleSlider" />
+	
+	<TextView
+			android:id="@+id/micAngleSliderTick120Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:layout_marginEnd="8dp"
+			android:text="120°"
 			android:textSize="8sp"
 			app:layout_constraintBottom_toTopOf="@+id/micAngleSlider"
 			app:layout_constraintEnd_toEndOf="@+id/micAngleSlider"
@@ -489,11 +481,11 @@
 			app:layout_constraintStart_toStartOf="@+id/micAngleSlider" />
 	
 	<TextView
-			android:id="@+id/micAngleSliderTick90Label"
+			android:id="@+id/micAngleSliderTick180Label"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="8dp"
-			android:text="±90°"
+			android:text="180°"
 			android:textSize="8sp"
 			app:layout_constraintBottom_toTopOf="@+id/micAngleSlider"
 			app:layout_constraintEnd_toEndOf="@+id/micAngleSlider" />
@@ -513,7 +505,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="16dp"
-			app:layout_constraintStart_toStartOf="@+id/micAngleSliderTick0"
+			app:layout_constraintStart_toStartOf="@+id/micDistanceSliderTick0Label"
 			app:layout_constraintTop_toBottomOf="@+id/micAngleValueLabel"
 			tools:text="≤ 4°" />
 	
@@ -524,8 +516,8 @@
 			android:layout_height="wrap_content"
 			android:layout_marginStart="16dp"
 			android:layout_marginEnd="16dp"
-			android:max="10"
-			android:progress="4"
+			android:max="1000"
+			android:progress="400"
 			android:progressTint="#FFEB3B"
 			app:layout_constraintBottom_toBottomOf="@+id/angularDistValueLabel"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -538,12 +530,12 @@
 			android:layout_height="wrap_content"
 			android:layout_marginStart="16dp"
 			android:text="Reverberation limits"
-			app:layout_constraintBottom_toBottomOf="@+id/reverbLimitsWarningLabel"
+			app:layout_constraintBottom_toBottomOf="@+id/reverbLimitsWarnLabel"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="@+id/reverbLimitsWarningLabel" />
+			app:layout_constraintTop_toTopOf="@+id/reverbLimitsWarnLabel" />
 	
 	<TextView
-			android:id="@+id/reverbLimitsWarningLabel"
+			android:id="@+id/reverbLimitsWarnLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="8dp"
@@ -562,6 +554,46 @@
 			android:background="?android:attr/listDivider"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/reverbLimitsWarningLabel" />
+			app:layout_constraintTop_toBottomOf="@+id/reverbLimitsWarnLabel" />
 	
+	<TextView
+			android:id="@+id/recAnglePlusMinusLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="16dp"
+			android:textSize="24sp"
+			app:layout_constraintBottom_toBottomOf="@+id/recAngleEdit"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/recAngleEdit"
+			app:layout_constraintVertical_bias="0.312"
+			tools:text="±" />
+	
+	<FrameLayout
+			android:id="@+id/graphicsFrameLayout"
+			android:layout_width="0dp"
+			android:layout_height="250dp"
+			android:layout_marginStart="16dp"
+			android:layout_marginTop="8dp"
+			android:layout_marginEnd="16dp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/angleDivider">
+		
+		<com.gmail.simetist.stereomikingcalculator.StereoConfigView
+				android:id="@+id/graphicsView"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent" />
+	</FrameLayout>
+	
+	<Switch
+			android:id="@+id/holdRecAngleSwitch"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="-3dp"
+			android:checked="true"
+			android:text="Hold"
+			app:layout_constraintBottom_toBottomOf="@+id/recAngleLabel"
+			app:layout_constraintEnd_toStartOf="@+id/calcRecAngleButton"
+			app:layout_constraintStart_toEndOf="@+id/recAngleLabel" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
