@@ -39,3 +39,4 @@ jobs:
       - name: Run the code
         run: |
           python data_analysis.py
+          nn_to_kotlin.py
