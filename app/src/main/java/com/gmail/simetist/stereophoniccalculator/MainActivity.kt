@@ -1,4 +1,4 @@
-package com.gmail.simetist.stereomikingcalculator
+package com.gmail.simetist.stereophoniccalculator
 
 import android.content.Intent
 import android.content.res.ColorStateList

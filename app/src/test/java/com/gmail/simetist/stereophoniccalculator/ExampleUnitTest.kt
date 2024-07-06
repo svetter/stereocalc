@@ -1,4 +1,4 @@
-package com.gmail.simetist.stereomikingcalculator
+package com.gmail.simetist.stereophoniccalculator
 
 import org.junit.Test
 

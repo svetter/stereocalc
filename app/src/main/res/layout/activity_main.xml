@@ -599,7 +599,7 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/angleDivider">
 		
-		<com.gmail.simetist.stereomikingcalculator.StereoConfigView
+		<com.gmail.simetist.stereophoniccalculator.StereoConfigView
 				android:id="@+id/graphicsView"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"

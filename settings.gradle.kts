@@ -19,5 +19,5 @@ dependencyResolutionManagement {
 	}
 }
 
-rootProject.name = "Stereo Miking Calculator"
+rootProject.name = "Stereophonic Calculator"
 include(":app")

@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-	namespace = "com.gmail.simetist.stereomikingcalculator"
+	namespace = "com.gmail.simetist.stereophoniccalculator"
 	compileSdk = 34
 	
 	defaultConfig {
-		applicationId = "com.gmail.simetist.stereomikingcalculator"
+		applicationId = "com.gmail.simetist.stereophoniccalculator"
 		minSdk = 24
 		targetSdk = 34
 		versionCode = 1

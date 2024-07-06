@@ -1,4 +1,4 @@
-package com.gmail.simetist.stereomikingcalculator
+package com.gmail.simetist.stereophoniccalculator
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
 	fun useAppContext() {
 		// Context of the app under test.
 		val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-		assertEquals("com.gmail.simetist.stereomikingcalculator", appContext.packageName)
+		assertEquals("com.gmail.simetist.stereophoniccalculator", appContext.packageName)
 	}
 }
