@@ -152,6 +152,18 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="@+id/calcRecAngleButton" />
 	
+	<Switch
+			android:id="@+id/holdRecAngleSwitch"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="8dp"
+			android:layout_marginBottom="-3dp"
+			android:checked="true"
+			android:text="Hold"
+			app:layout_constraintBottom_toBottomOf="@+id/recAngleLabel"
+			app:layout_constraintEnd_toStartOf="@+id/calcRecAngleButton"
+			app:layout_constraintStart_toEndOf="@+id/recAngleLabel" />
+	
 	<Button
 			android:id="@+id/calcRecAngleButton"
 			android:layout_width="wrap_content"
@@ -594,15 +606,53 @@
 				android:translationZ="1dp" />
 	</FrameLayout>
 	
-	<Switch
-			android:id="@+id/holdRecAngleSwitch"
+	<TextView
+			android:id="@+id/presetsLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="-3dp"
-			android:checked="true"
-			android:text="Hold"
-			app:layout_constraintBottom_toBottomOf="@+id/recAngleLabel"
-			app:layout_constraintEnd_toStartOf="@+id/calcRecAngleButton"
-			app:layout_constraintStart_toEndOf="@+id/recAngleLabel" />
+			android:layout_marginStart="16dp"
+			android:layout_marginTop="8dp"
+			android:text="Presets"
+			android:textSize="16sp"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/bottomDivider" />
+	
+	<Button
+			android:id="@+id/ortfButton"
+			android:layout_width="wrap_content"
+			android:layout_height="40dp"
+			android:layout_marginTop="4dp"
+			android:backgroundTint="#9A8C0000"
+			android:text="ORTF"
+			android:textColor="@color/white"
+			app:cornerRadius="0dp"
+			app:layout_constraintStart_toStartOf="@+id/presetsLabel"
+			app:layout_constraintTop_toBottomOf="@+id/presetsLabel" />
+	
+	<Button
+			android:id="@+id/nosButton"
+			android:layout_width="wrap_content"
+			android:layout_height="40dp"
+			android:layout_marginStart="16dp"
+			android:backgroundTint="#9A8C0000"
+			android:text="NOS"
+			android:textColor="@color/white"
+			app:cornerRadius="0dp"
+			app:layout_constraintBottom_toBottomOf="@+id/ortfButton"
+			app:layout_constraintStart_toEndOf="@+id/ortfButton"
+			app:layout_constraintTop_toTopOf="@+id/ortfButton" />
+	
+	<Button
+			android:id="@+id/dinButton"
+			android:layout_width="wrap_content"
+			android:layout_height="40dp"
+			android:layout_marginStart="16dp"
+			android:backgroundTint="#9A8C0000"
+			android:text="DIN"
+			android:textColor="@color/white"
+			app:cornerRadius="0dp"
+			app:layout_constraintBottom_toBottomOf="@+id/nosButton"
+			app:layout_constraintStart_toEndOf="@+id/nosButton"
+			app:layout_constraintTop_toTopOf="@+id/nosButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

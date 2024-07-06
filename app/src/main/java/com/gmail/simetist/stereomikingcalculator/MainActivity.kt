@@ -4,13 +4,11 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
-import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -23,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import kotlin.math.roundToInt
 
 
 private const val TAG = "MainActivity"
@@ -66,6 +65,10 @@ class MainActivity : AppCompatActivity() {
 	private lateinit var angularDistValueLabel:			TextView
 	private lateinit var angularDistIndicator:			ProgressBar
 	private lateinit var reverbLimitsWarnLabel: 		TextView
+	
+	private lateinit var ortfButton:					Button
+	private lateinit var nosButton:						Button
+	private lateinit var dinButton:						Button
 	
 	
 	
@@ -121,6 +124,11 @@ class MainActivity : AppCompatActivity() {
 		angularDistValueLabel		= findViewById(R.id.angularDistValueLabel)
 		angularDistIndicator		= findViewById(R.id.angularDistIndicator)
 		reverbLimitsWarnLabel		= findViewById(R.id.reverbLimitsWarnLabel)
+		
+		ortfButton					= findViewById(R.id.ortfButton)
+		nosButton					= findViewById(R.id.nosButton)
+		dinButton					= findViewById(R.id.dinButton)
+		
 		
 		
 		// Set default recAngle values
@@ -288,6 +296,18 @@ class MainActivity : AppCompatActivity() {
 			override fun onStopTrackingTouch(p0: SeekBar?) {}
 		})
 		
+		ortfButton.setOnClickListener {
+			applyNearCoincidentPreset(17, 110)
+		}
+		
+		nosButton.setOnClickListener {
+			applyNearCoincidentPreset(30, 90)
+		}
+		
+		dinButton.setOnClickListener {
+			applyNearCoincidentPreset(20, 90)
+		}
+		
 		
 		
 		if (savedInstanceState != null) {
@@ -348,7 +368,7 @@ class MainActivity : AppCompatActivity() {
 		}
 		
 		ignoreSliderListeners = true
-		micDistanceSlider.progress = (micDistance * 10).toInt()
+		micDistanceSlider.progress = (micDistance * 10).roundToInt()
 		ignoreSliderListeners = false
 		updateMicDistanceLabel()
 		graphicsView.updateMicDistance(micDistance)
@@ -363,7 +383,7 @@ class MainActivity : AppCompatActivity() {
 		val micAngle = calculateCardioidMicAngle(recAngle, micDistance)
 		
 		ignoreSliderListeners = true
-		micAngleSlider.progress = (micAngle * 10).toInt()
+		micAngleSlider.progress = (micAngle * 10).roundToInt()
 		ignoreSliderListeners = false
 		updateMicAngleLabel()
 		graphicsView.updateMicAngle(micAngle)
@@ -376,13 +396,13 @@ class MainActivity : AppCompatActivity() {
 		val angularDistortion = calculateAngularDistortion(micDistance, micAngle)
 		
 		angularDistValueLabel.text = "%.1f°".format(angularDistortion)
-		angularDistIndicator.progress = (angularDistortion * 100).toInt()
+		angularDistIndicator.progress = (angularDistortion * 100).roundToInt()
 		
 		// Set progress color based on the value
 		val progressRatio = angularDistIndicator.progress / angularDistIndicator.max.toFloat()
 		val color = when {
-			progressRatio < 0.5	-> Color.rgb(((-0.5f + progressRatio * 3f) * 255f).toInt().coerceAtLeast(0), 255, 0)
-			else				-> Color.rgb(255, ((2.5f - progressRatio * 3f) * 255f).toInt().coerceAtLeast(0), 0)
+			progressRatio < 0.5	-> Color.rgb(((-0.5f + progressRatio * 3f) * 255f).roundToInt().coerceAtLeast(0), 255, 0)
+			else				-> Color.rgb(255, ((2.5f - progressRatio * 3f) * 255f).roundToInt().coerceAtLeast(0), 0)
 		}
 		angularDistIndicator.progressTintList = ColorStateList.valueOf(color)
 	}
@@ -402,6 +422,25 @@ class MainActivity : AppCompatActivity() {
 			centerExceeds || sidesExceed	-> Color.rgb(200, 0, 0)
 			else							-> Color.rgb(0, 200, 0)
 		})
+	}
+	
+	
+	
+	fun applyNearCoincidentPreset(micDistanceCm: Int, micAngle: Int) {
+		if (useOmni) micTypeSwitch.performClick()
+		
+		val recAngle = calculateCardioidRecordingAngle(micDistanceCm.toDouble(), micAngle.toDouble())
+		
+		ignoreSliderListeners = true
+		recAngleSlider.progress = recAngle.roundToInt() - recAngleLowerBound
+		micDistanceSlider.progress = micDistanceCm * 10
+		micAngleSlider.progress = micAngle * 10
+		ignoreSliderListeners = false
+		
+		updateRecAngleEdit()
+		updateMicDistanceLabel()
+		updateMicAngleLabel()
+		graphicsView.updateAll(recAngle, micDistanceCm.toDouble(), micAngle.toDouble())
 	}
 	
 	

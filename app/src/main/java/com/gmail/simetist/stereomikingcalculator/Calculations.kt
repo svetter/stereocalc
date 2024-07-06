@@ -45,7 +45,7 @@ val sidesReverbLimitFitInMidpoint	= 17.618201102680768
 
 
 
-fun calculate5thOrderPolynomial(coefficients: DoubleArray, x: Double): Double {
+private fun calculate5thOrderPolynomial(coefficients: DoubleArray, x: Double): Double {
 	if (coefficients.size != 6) {
 		throw IllegalArgumentException("Function expects 6 coefficients")
 	}
@@ -55,7 +55,7 @@ fun calculate5thOrderPolynomial(coefficients: DoubleArray, x: Double): Double {
 	}
 }
 
-fun calculateFittingParams(recordingAngle: Double): DoubleArray {
+private fun calculateFittingParams(recordingAngle: Double): DoubleArray {
 	val hra = recordingAngle / 2.0
 	
 	val outScale	= calculate5thOrderPolynomial(outScalePolyCoefficients,		hra)
@@ -76,6 +76,17 @@ fun calculateCardioidMicDistance(recordingAngle: Double, micAngle: Double): Doub
 	val (outScale, outMin, growthRate, inMidpoint) = calculateFittingParams(recordingAngle)
 	
 	return inMidpoint - ln(- outScale / (outMin - micAngle) - 1) / growthRate
+}
+
+fun calculateCardioidRecordingAngle(micDistance: Double, micAngle: Double): Double {
+	// temporary
+	when {
+		micDistance == 17.0 && micAngle == 110.0	-> return 96.0
+		micDistance == 30.0 && micAngle == 90.0		-> return 80.0
+		micDistance == 20.0 && micAngle == 90.0		-> return 51.0
+	}
+	// TODO
+	return 0.0
 }
 
 fun calculateOmniMicDistance(recordingAngle: Double): Double {
