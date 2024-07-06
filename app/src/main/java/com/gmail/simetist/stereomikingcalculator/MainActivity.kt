@@ -426,13 +426,13 @@ class MainActivity : AppCompatActivity() {
 	
 	
 	
-	fun applyNearCoincidentPreset(micDistanceCm: Int, micAngle: Int) {
+	private fun applyNearCoincidentPreset(micDistanceCm: Int, micAngle: Int) {
 		if (useOmni) micTypeSwitch.performClick()
 		
 		val recAngle = calculateCardioidRecordingAngle(micDistanceCm.toDouble(), micAngle.toDouble())
 		
 		ignoreSliderListeners = true
-		recAngleSlider.progress = recAngle.roundToInt() - recAngleLowerBound
+		recAngleSlider.progress = recAngle - recAngleLowerBound
 		micDistanceSlider.progress = micDistanceCm * 10
 		micAngleSlider.progress = micAngle * 10
 		ignoreSliderListeners = false
@@ -440,7 +440,9 @@ class MainActivity : AppCompatActivity() {
 		updateRecAngleEdit()
 		updateMicDistanceLabel()
 		updateMicAngleLabel()
-		graphicsView.updateAll(recAngle, micDistanceCm.toDouble(), micAngle.toDouble())
+		recalculateAngularDistortion()
+		recalculateReverbLimits()
+		graphicsView.updateAll(recAngle.toDouble(), micDistanceCm.toDouble(), micAngle.toDouble())
 	}
 	
 	

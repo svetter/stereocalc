@@ -37,11 +37,11 @@ val inMidpointPolyCoefficients = doubleArrayOf(
 	-1.363129960341988e-08
 )
 
-val centerReverbLimitMicAngle		= 120.0
-val sidesReverbLimitFitOutScale		= -118.6927869351978
-val sidesReverbLimitFitOutMin		= 103.27731071204713
-val sidesReverbLimitFitGrowthRate	= 0.07139444632383811
-val sidesReverbLimitFitInMidpoint	= 17.618201102680768
+const val centerReverbLimitMicAngle		= 120.0
+const val sidesReverbLimitFitOutScale	= -118.6927869351978
+const val sidesReverbLimitFitOutMin		= 103.27731071204713
+const val sidesReverbLimitFitGrowthRate	= 0.07139444632383811
+const val sidesReverbLimitFitInMidpoint	= 17.618201102680768
 
 
 
@@ -78,15 +78,27 @@ fun calculateCardioidMicDistance(recordingAngle: Double, micAngle: Double): Doub
 	return inMidpoint - ln(- outScale / (outMin - micAngle) - 1) / growthRate
 }
 
-fun calculateCardioidRecordingAngle(micDistance: Double, micAngle: Double): Double {
-	// temporary
-	when {
-		micDistance == 17.0 && micAngle == 110.0	-> return 96.0
-		micDistance == 30.0 && micAngle == 90.0		-> return 80.0
-		micDistance == 20.0 && micAngle == 90.0		-> return 51.0
+fun calculateCardioidRecordingAngle(micDistance: Double, micAngle: Double): Int {
+	// Make very rough first approximation
+	var recAngle = (270.0 - 4.0 * micDistance - 1.0 * micAngle).toInt()
+	
+	var bestRecAngle		= recAngle
+	var bestMicAngleError	= 361.0
+	var micAngleError		= 360.0
+	// Determine step direction
+	val increment = if (calculateCardioidMicAngle(recAngle.toDouble(), micDistance) > micAngle) 1 else -1
+	
+	// Step until the lowest error has been passed
+	while (micAngleError < bestMicAngleError) {
+		bestRecAngle = recAngle
+		bestMicAngleError = micAngleError
+		
+		recAngle += increment
+		val calculatedMicAngle = calculateCardioidMicAngle(recAngle.toDouble(), micDistance)
+		micAngleError = abs(calculatedMicAngle - micAngle)
 	}
-	// TODO
-	return 0.0
+	
+	return bestRecAngle
 }
 
 fun calculateOmniMicDistance(recordingAngle: Double): Double {
@@ -94,7 +106,7 @@ fun calculateOmniMicDistance(recordingAngle: Double): Double {
 }
 
 fun calculateAngularDistortion(micDistance: Double, micAngle: Double): Double {
-	return AngularDistortionNN.predict(micDistance, micAngle).toDouble()
+	return AngularDistortionNN.predict(micDistance, micAngle)
 }
 
 fun calculateReverbLimitExceeded(micDistance: Double, micAngle: Double): Pair<Boolean, Boolean> {
