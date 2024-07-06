@@ -8,6 +8,19 @@
 		android:layout_gravity="center"
 		tools:context=".MainActivity">
 	
+	<Button
+			android:id="@+id/aboutButton"
+			android:layout_width="wrap_content"
+			android:layout_height="40dp"
+			android:layout_marginStart="16dp"
+			android:layout_marginTop="8dp"
+			android:backgroundTint="#9A8C0000"
+			android:text="About"
+			android:textColor="@color/white"
+			app:cornerRadius="5dp"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+	
 	<TextView
 			android:id="@+id/unitsSettingLabel"
 			android:layout_width="wrap_content"
@@ -32,10 +45,10 @@
 			android:id="@+id/unitsSwitch"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="16dp"
+			android:layout_marginTop="8dp"
 			android:layout_marginEnd="8dp"
 			app:layout_constraintEnd_toStartOf="@+id/imperialLabel"
-			app:layout_constraintTop_toTopOf="parent" />
+			app:layout_constraintTop_toBottomOf="@+id/aboutButton" />
 	
 	<TextView
 			android:id="@+id/imperialLabel"
@@ -51,20 +64,18 @@
 			android:id="@+id/anglesSettingLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="16dp"
 			android:text="Angles"
 			app:layout_constraintBottom_toBottomOf="@+id/fullAnglesLabel"
-			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintStart_toStartOf="@+id/unitsSettingLabel"
 			app:layout_constraintTop_toTopOf="@+id/fullAnglesLabel" />
 	
 	<TextView
 			android:id="@+id/fullAnglesLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="8dp"
 			android:text="Full"
 			app:layout_constraintBottom_toBottomOf="@+id/halfAnglesSwitch"
-			app:layout_constraintEnd_toStartOf="@+id/halfAnglesSwitch"
+			app:layout_constraintEnd_toEndOf="@+id/metricLabel"
 			app:layout_constraintTop_toTopOf="@+id/halfAnglesSwitch" />
 	
 	<Switch
@@ -79,30 +90,27 @@
 			android:id="@+id/halfAnglesLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="8dp"
 			android:text="Half (±)"
 			app:layout_constraintBottom_toBottomOf="@+id/halfAnglesSwitch"
-			app:layout_constraintStart_toEndOf="@+id/halfAnglesSwitch"
+			app:layout_constraintStart_toStartOf="@+id/imperialLabel"
 			app:layout_constraintTop_toTopOf="@+id/halfAnglesSwitch" />
 	
 	<TextView
 			android:id="@+id/micTypeSettingLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="16dp"
 			android:text="Microphone type"
 			app:layout_constraintBottom_toBottomOf="@+id/cardioidLabel"
-			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintStart_toStartOf="@+id/anglesSettingLabel"
 			app:layout_constraintTop_toTopOf="@+id/cardioidLabel" />
 	
 	<TextView
 			android:id="@+id/cardioidLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="8dp"
 			android:text="Cardioid"
 			app:layout_constraintBottom_toBottomOf="@+id/micTypeSwitch"
-			app:layout_constraintEnd_toStartOf="@+id/micTypeSwitch"
+			app:layout_constraintEnd_toEndOf="@+id/fullAnglesLabel"
 			app:layout_constraintTop_toTopOf="@+id/micTypeSwitch" />
 	
 	<Switch
@@ -117,10 +125,9 @@
 			android:id="@+id/omniLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="8dp"
 			android:text="Omni"
 			app:layout_constraintBottom_toBottomOf="@+id/micTypeSwitch"
-			app:layout_constraintStart_toEndOf="@+id/micTypeSwitch"
+			app:layout_constraintStart_toStartOf="@+id/halfAnglesLabel"
 			app:layout_constraintTop_toTopOf="@+id/micTypeSwitch" />
 	
 	<View

@@ -39,6 +39,8 @@ class MainActivity : AppCompatActivity() {
 	
 	var ignoreSliderListeners	= false
 	
+	private lateinit var aboutButton:					Button
+	
 	private lateinit var unitsSwitch:					Switch
 	private lateinit var halfAnglesSwitch:				Switch
 	private lateinit var micTypeSwitch:					Switch
@@ -72,6 +74,8 @@ class MainActivity : AppCompatActivity() {
 		enableEdgeToEdge()
 		setContentView(R.layout.activity_main)
 		
+		
+		aboutButton					= findViewById(R.id.aboutButton)
 		
 		unitsSwitch					= findViewById(R.id.unitsSwitch)
 		halfAnglesSwitch			= findViewById(R.id.halfAnglesSwitch)
@@ -220,7 +224,7 @@ class MainActivity : AppCompatActivity() {
 			}
 		}
 		
-		calcRecAngleButton.setOnClickListener {
+		aboutButton.setOnClickListener {
 			startActivity(Intent(this, AboutActivity::class.java))
 		}
 		

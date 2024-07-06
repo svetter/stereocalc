@@ -6,43 +6,113 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
   
-  <TextView
-      android:id="@+id/textView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+  <ImageView
+      android:id="@+id/logoView"
+      android:layout_width="128dp"
+      android:layout_height="128dp"
       android:layout_marginStart="16dp"
       android:layout_marginTop="16dp"
-      android:text="About this App"
-      android:textSize="20sp"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
-  
-  <View
-      android:id="@+id/divider"
-      android:layout_width="0dp"
-      android:layout_height="1dp"
-      android:layout_marginStart="16dp"
-      android:layout_marginTop="8dp"
-      android:layout_marginEnd="16dp"
-      android:background="?android:attr/listDivider"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/textView" />
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@drawable/logo_1024" />
   
   <TextView
-      android:id="@+id/textView2"
+      android:id="@+id/appNameLabel"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="16dp"
-      android:layout_marginTop="8dp"
       android:layout_marginEnd="16dp"
-      android:autoLink="web"
-      android:linksClickable="true"
-      android:text="Copyright 2024 Simon Vetter\n\nThe full source code of this App is available on GitHub:\nhttps://github.com/svetter/stereocalc\n\nFull credit for the data underlying this app goes to Michael Williams and his paper &quot;The stereophonic zoom&quot; from 2010, available here:\nhttps://www.gracedesign.com/support/StereoZoom10.pdf\nThis is a short and very interesting read, recommended for every user of this app. Indeed, the app is not intended to replace the knowledge from the paper, but to facilitate implementing it in a faster and easier way."
-      android:textSize="16sp"
+      android:layout_marginBottom="4dp"
+      android:text="Stereophonic Calculator"
+      android:textSize="24sp"
+      app:layout_constraintBottom_toTopOf="@+id/versionLabel"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toEndOf="@+id/logoView" />
+  
+  <TextView
+      android:id="@+id/versionLabel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="8dp"
+      android:text="Version 0.1"
+      android:textSize="16sp"
+      app:layout_constraintBottom_toTopOf="@+id/logoDivider"
+      app:layout_constraintStart_toStartOf="@+id/appNameLabel" />
+  
+  <View
+      android:id="@+id/logoDivider"
+      android:layout_width="0dp"
+      android:layout_height="1dp"
+      android:layout_marginEnd="16dp"
+      android:background="?android:attr/listDivider"
+      app:layout_constraintBottom_toBottomOf="@+id/logoView"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toStartOf="@+id/appNameLabel" />
+  
+  <ScrollView
+      android:id="@+id/textscrollView"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginEnd="16dp"
+      android:layout_marginBottom="8dp"
+      app:layout_constraintBottom_toTopOf="@+id/backButton"
+      app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/divider" />
+      app:layout_constraintTop_toBottomOf="@+id/logoView">
+    
+    <LinearLayout
+        android:id="@+id/textScrollLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+      
+      <TextView
+          android:id="@+id/appCreditText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:autoLink="web"
+          android:linksClickable="true"
+          android:text="Copyright 2024 Simon Vetter\n\nThe full source code of this App is available on GitHub:\nhttps://github.com/svetter/stereocalc"
+          android:textSize="16sp" />
+      
+      <TextView
+          android:id="@+id/dataCreditText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="24dp"
+          android:autoLink="web"
+          android:linksClickable="true"
+          android:text="Full credit for the data underlying this app goes to Michael Williams and his paper &quot;The stereophonic zoom&quot;, available here:\nhttps://www.gracedesign.com/support/StereoZoom10.pdf\nThis is a short and very interesting read, recommended for every user of this app. It is the best way to fully understand what functionality this app provides and how to use it."
+          android:textSize="16sp" />
+      
+      <TextView
+          android:id="@+id/licenseText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="24dp"
+          android:autoLink="web"
+          android:linksClickable="true"
+          android:text="This app is available under license X. TODO"
+          android:textSize="16sp" />
+    
+    </LinearLayout>
+  </ScrollView>
+  
+  <Button
+      android:id="@+id/backButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="8dp"
+      android:backgroundTint="#9A8C0000"
+      android:text="Back"
+      android:textColor="@color/white"
+      app:cornerRadius="5dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="@+id/textscrollView"
+      app:layout_constraintStart_toStartOf="@+id/textscrollView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
