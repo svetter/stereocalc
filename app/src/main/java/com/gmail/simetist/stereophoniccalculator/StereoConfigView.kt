@@ -180,4 +180,5 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		this.micDistance = micDistance.toFloat()
 		this.micAngle = micAngle.toFloat()
 		invalidate()
+	}
 }
