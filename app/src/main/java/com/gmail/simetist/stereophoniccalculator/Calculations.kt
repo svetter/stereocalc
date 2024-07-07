@@ -78,13 +78,13 @@ fun calculateCardioidMicDistance(recordingAngle: Double, micAngle: Double): Doub
 	return inMidpoint - ln(- outScale / (outMin - micAngle) - 1) / growthRate
 }
 
-fun calculateCardioidRecordingAngle(micDistance: Double, micAngle: Double): Int {
+fun calculateCardioidRecordingAngle(micDistance: Double, micAngle: Double): Double {
 	// Make very rough first approximation
-	var recAngle = (270.0 - 4.0 * micDistance - 1.0 * micAngle).toInt()
+	var recAngle = (270.0 - 4.0 * micDistance - 1.0 * micAngle).toInt().coerceIn(40, 180)
 	
 	var bestRecAngle		= recAngle
-	var bestMicAngleError	= 361.0
-	var micAngleError		= 360.0
+	var bestMicAngleError	= Double.MAX_VALUE
+	var micAngleError		= bestMicAngleError.nextDown()
 	// Determine step direction
 	val increment = if (calculateCardioidMicAngle(recAngle.toDouble(), micDistance) > micAngle) 1 else -1
 	
@@ -98,7 +98,7 @@ fun calculateCardioidRecordingAngle(micDistance: Double, micAngle: Double): Int 
 		micAngleError = abs(calculatedMicAngle - micAngle)
 	}
 	
-	return bestRecAngle
+	return bestRecAngle.toDouble()
 }
 
 fun calculateOmniMicDistance(recordingAngle: Double): Double {

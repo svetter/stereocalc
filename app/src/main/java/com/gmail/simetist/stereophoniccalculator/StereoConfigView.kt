@@ -14,6 +14,7 @@ import kotlin.math.min
 import kotlin.math.tan
 
 
+
 class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
 	private val linesPaint:	Paint = Paint()
 	private val areaPaint:	Paint = Paint()
@@ -176,9 +177,9 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	}
 	
 	fun updateAll(recAngle: Double, micDistance: Double, micAngle: Double) {
-		this.recAngle = recAngle.toFloat()
-		this.micDistance = micDistance.toFloat()
-		this.micAngle = micAngle.toFloat()
+		this.recAngle		= recAngle.toFloat()
+		this.micDistance	= micDistance.toFloat()
+		this.micAngle		= micAngle.toFloat()
 		invalidate()
 	}
 }
