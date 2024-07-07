@@ -174,4 +174,10 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		this.micAngle = micAngle.toFloat()
 		invalidate()
 	}
+	
+	fun updateAll(recAngle: Double, micDistance: Double, micAngle: Double) {
+		this.recAngle = recAngle.toFloat()
+		this.micDistance = micDistance.toFloat()
+		this.micAngle = micAngle.toFloat()
+		invalidate()
 }
