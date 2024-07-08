@@ -1,6 +1,7 @@
 package com.gmail.simetist.stereophoniccalculator
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
@@ -45,6 +46,9 @@ class MainActivity : AppCompatActivity() {
 	
 	private var ignoreSliderListeners	= false
 	
+	
+	private lateinit var mainLayout:					ConstraintLayout
+	
 	private lateinit var aboutButton:					Button
 	
 	private lateinit var unitsSwitch:					Switch
@@ -84,6 +88,8 @@ class MainActivity : AppCompatActivity() {
 		enableEdgeToEdge()
 		setContentView(R.layout.activity_main)
 		
+		
+		mainLayout					= findViewById(R.id.mainLayout)
 		
 		aboutButton					= findViewById(R.id.aboutButton)
 		
@@ -162,28 +168,30 @@ class MainActivity : AppCompatActivity() {
 			insets
 		}
 		
+		// Wait until layout is finished to unlock orientation
+		mainLayout.post {
+			requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+		}
+		
 		
 		
 		// Set up listeners
 		
+		aboutButton.setOnClickListener {
+			startActivity(Intent(this, AboutActivity::class.java))
+		}
+		
 		unitsSwitch.setOnCheckedChangeListener { _, isChecked ->
 			changeUnitsSetting(isChecked)
 		}
-		
 		halfAnglesSwitch.setOnCheckedChangeListener { _, isChecked ->
 			changeHalfAnglesSetting(isChecked)
 		}
-		
 		micTypeSwitch.setOnCheckedChangeListener { _, isChecked ->
 			changeMicTypeSetting(isChecked)
 		}
-		
 		holdRecAngleSwitch.setOnCheckedChangeListener { _, isChecked ->
 			changeHoldRecAngleSetting(isChecked)
-		}
-		
-		aboutButton.setOnClickListener {
-			startActivity(Intent(this, AboutActivity::class.java))
 		}
 		
 		recAngleEdit.setOnKeyListener(object: View.OnKeyListener {
@@ -195,7 +203,6 @@ class MainActivity : AppCompatActivity() {
 				return true
 			}
 		})
-		
 		recAngleSlider.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
 			override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
 				if (ignoreSliderListeners) return
@@ -204,7 +211,6 @@ class MainActivity : AppCompatActivity() {
 			override fun onStartTrackingTouch(p0: SeekBar?) {}
 			override fun onStopTrackingTouch(p0: SeekBar?) {}
 		})
-		
 		micDistanceSlider.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
 			override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
 				if (ignoreSliderListeners) return
@@ -213,7 +219,6 @@ class MainActivity : AppCompatActivity() {
 			override fun onStartTrackingTouch(p0: SeekBar?) {}
 			override fun onStopTrackingTouch(p0: SeekBar?) {}
 		})
-		
 		micAngleSlider.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
 			override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
 				if (ignoreSliderListeners) return
@@ -226,11 +231,9 @@ class MainActivity : AppCompatActivity() {
 		ortfButton.setOnClickListener {
 			applyNearCoincidentPreset(17, 110)
 		}
-		
 		nosButton.setOnClickListener {
 			applyNearCoincidentPreset(30, 90)
 		}
-		
 		dinButton.setOnClickListener {
 			applyNearCoincidentPreset(20, 90)
 		}

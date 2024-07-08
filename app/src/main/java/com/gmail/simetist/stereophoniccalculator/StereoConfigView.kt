@@ -65,7 +65,7 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		val halfMicDistance	= micDistance * pixelPerCm / 2f
 		
 		val centerX		= width / 2f
-		val centerY		= height - 8.5f * pixelPerCm
+		val centerY		= height - 8f * pixelPerCm
 		val left		= 0f
 		val right		= width.toFloat()
 		val top			= 0f
