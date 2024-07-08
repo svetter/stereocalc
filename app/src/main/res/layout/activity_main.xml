@@ -179,7 +179,7 @@
 	
 	<EditText
 			android:id="@+id/recAngleEdit"
-			android:layout_width="50dp"
+			android:layout_width="60dp"
 			android:layout_height="48dp"
 			android:layout_marginTop="8dp"
 			android:ems="10"
@@ -654,5 +654,5 @@
 			app:layout_constraintBottom_toBottomOf="@+id/nosButton"
 			app:layout_constraintStart_toEndOf="@+id/nosButton"
 			app:layout_constraintTop_toTopOf="@+id/nosButton" />
-
+	
 </androidx.constraintlayout.widget.ConstraintLayout>

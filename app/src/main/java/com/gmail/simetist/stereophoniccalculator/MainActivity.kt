@@ -318,9 +318,9 @@ class MainActivity : AppCompatActivity() {
 	private fun updateRecAngleEdit() {
 		val recAngle = getCurrentRecAngle()
 		if (useHalfAngles) {
-			recAngleEdit.setText((recAngle / 2).toString())
+			recAngleEdit.setText("%.1f".format(recAngle / 2))
 		} else {
-			recAngleEdit.setText(recAngle.toString())
+			recAngleEdit.setText(recAngle.roundToInt().toString())
 		}
 	}
 	
