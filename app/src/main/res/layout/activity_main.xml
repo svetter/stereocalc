@@ -533,19 +533,19 @@
 	
 	<TextView
 			android:id="@+id/angularDistValueLabel"
-			android:layout_width="wrap_content"
+			android:layout_width="40dp"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="16dp"
 			app:layout_constraintStart_toStartOf="@+id/micDistanceSliderTick0Label"
 			app:layout_constraintTop_toBottomOf="@+id/micAngleValueLabel"
-			tools:text="≤ 4°" />
+			tools:text="≤ 4.5°" />
 	
 	<ProgressBar
 			android:id="@+id/angularDistIndicator"
 			style="?android:attr/progressBarStyleHorizontal"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="16dp"
+			android:layout_marginStart="8dp"
 			android:layout_marginEnd="16dp"
 			android:max="1000"
 			android:progress="400"
