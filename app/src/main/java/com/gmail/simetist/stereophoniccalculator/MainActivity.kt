@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.gmail.simetist.stereophoniccalculator.MainActivity.PrimaryValue.*
 import kotlin.math.roundToInt
 
 
@@ -241,16 +242,16 @@ class MainActivity : AppCompatActivity() {
 	
 	private fun getLowerBound(what: PrimaryValue): Double {
 		return when (what) {
-			PrimaryValue.REC_ANGLE		-> recAngleLowerBound
-			PrimaryValue.MIC_DISTANCE	-> micDistanceLowerBound
-			PrimaryValue.MIC_ANGLE		-> micAngleLowerBound
+			REC_ANGLE		-> recAngleLowerBound
+			MIC_DISTANCE	-> micDistanceLowerBound
+			MIC_ANGLE		-> micAngleLowerBound
 		}
 	}
 	private fun getUpperBound(what: PrimaryValue): Double {
 		return when (what) {
-			PrimaryValue.REC_ANGLE		-> recAngleUpperBound
-			PrimaryValue.MIC_DISTANCE	-> micDistanceUpperBound
-			PrimaryValue.MIC_ANGLE		-> micAngleUpperBound
+			REC_ANGLE		-> recAngleUpperBound
+			MIC_DISTANCE	-> micDistanceUpperBound
+			MIC_ANGLE		-> micAngleUpperBound
 		}
 	}
 	
@@ -290,16 +291,16 @@ class MainActivity : AppCompatActivity() {
 	
 	private fun getCurrentValue(what: PrimaryValue): Double {
 		return when (what) {
-			PrimaryValue.REC_ANGLE		-> getCurrentRecAngle()
-			PrimaryValue.MIC_DISTANCE	-> getCurrentMicDistance()
-			PrimaryValue.MIC_ANGLE		-> getCurrentMicAngle()
+			REC_ANGLE		-> getCurrentRecAngle()
+			MIC_DISTANCE	-> getCurrentMicDistance()
+			MIC_ANGLE		-> getCurrentMicAngle()
 		}
 	}
 	private fun setCurrentValue(what: PrimaryValue, value: Double, doNotNotify: Boolean = false) {
 		when (what) {
-			PrimaryValue.REC_ANGLE		-> setCurrentRecAngle	(value, doNotNotify)
-			PrimaryValue.MIC_DISTANCE	-> setCurrentMicDistance(value, doNotNotify)
-			PrimaryValue.MIC_ANGLE		-> setCurrentMicAngle	(value, doNotNotify)
+			REC_ANGLE		-> setCurrentRecAngle	(value, doNotNotify)
+			MIC_DISTANCE	-> setCurrentMicDistance(value, doNotNotify)
+			MIC_ANGLE		-> setCurrentMicAngle	(value, doNotNotify)
 		}
 	}
 	
@@ -341,9 +342,9 @@ class MainActivity : AppCompatActivity() {
 	
 	private fun calculateValueCardioid(what: PrimaryValue, values: Map<PrimaryValue, Double>): Double {
 		return when (what) {
-			PrimaryValue.REC_ANGLE		-> calculateCardioidRecordingAngle	(values[PrimaryValue.MIC_DISTANCE]!!,	values[PrimaryValue.MIC_ANGLE]!!)
-			PrimaryValue.MIC_DISTANCE	-> calculateCardioidMicDistance		(values[PrimaryValue.REC_ANGLE]!!,		values[PrimaryValue.MIC_ANGLE]!!)
-			PrimaryValue.MIC_ANGLE		-> calculateCardioidMicAngle		(values[PrimaryValue.REC_ANGLE]!!,		values[PrimaryValue.MIC_DISTANCE]!!)
+			REC_ANGLE		-> calculateCardioidRecordingAngle	(values[MIC_DISTANCE]!!,	values[MIC_ANGLE]!!)
+			MIC_DISTANCE	-> calculateCardioidMicDistance		(values[REC_ANGLE]!!,		values[MIC_ANGLE]!!)
+			MIC_ANGLE		-> calculateCardioidMicAngle		(values[REC_ANGLE]!!,		values[MIC_DISTANCE]!!)
 		}
 	}
 	
@@ -388,15 +389,15 @@ class MainActivity : AppCompatActivity() {
 	
 	private fun updateUIElements(what: PrimaryValue) {
 		when (what) {
-			PrimaryValue.REC_ANGLE -> {
+			REC_ANGLE -> {
 				updateRecAngleEdit()
 				graphicsView.updateRecAngle(getCurrentRecAngle())
 			}
-			PrimaryValue.MIC_DISTANCE -> {
+			MIC_DISTANCE -> {
 				updateMicDistanceLabel()
 				graphicsView.updateMicDistance(getCurrentMicDistance())
 			}
-			PrimaryValue.MIC_ANGLE -> {
+			MIC_ANGLE -> {
 				updateMicAngleLabel()
 				graphicsView.updateMicAngle(getCurrentMicAngle())
 			}
@@ -442,12 +443,12 @@ class MainActivity : AppCompatActivity() {
 	
 	// HANDLING USER CHANGES
 	
-	private var lastChangedPrimValue:			PrimaryValue = PrimaryValue.MIC_ANGLE
-	private var secondToLastChangedPrimValue:	PrimaryValue = PrimaryValue.MIC_DISTANCE
+	private var lastChangedPrimValue:			PrimaryValue = MIC_ANGLE
+	private var secondToLastChangedPrimValue:	PrimaryValue = MIC_DISTANCE
 	
 	private fun handlePrimaryValueChangeByUser(changed: PrimaryValue) {
-		val stationary = if (holdRecAngle && changed != PrimaryValue.REC_ANGLE) {
-			PrimaryValue.REC_ANGLE
+		val stationary = if (holdRecAngle && changed != REC_ANGLE) {
+			REC_ANGLE
 		}
 		else {	// !holdRecAngle || changed == PrimaryValue.REC_ANGLE
 			if (lastChangedPrimValue != changed) lastChangedPrimValue else secondToLastChangedPrimValue
@@ -571,14 +572,6 @@ class MainActivity : AppCompatActivity() {
 	
 	private fun changeHoldRecAngleSetting(enable: Boolean) {
 		holdRecAngle = enable
-		
-		if (holdRecAngle) {
-			Log.i(TAG, "Hold rec angle on")
-			// TODO
-		} else {
-			Log.i(TAG, "Hold rec angle off")
-			// TODO
-		}
 	}
 	
 	private fun updateAfterRecAngleEditChanged() {
@@ -593,30 +586,15 @@ class MainActivity : AppCompatActivity() {
 	}
 	
 	private fun updateAfterRecAngleSliderMoved() {
-		//updateRecAngleEdit()
-		//recalculateMicDistance()
-		//recalculateAngularDistortion()
-		//recalculateReverbLimits()
-		//graphicsView.updateRecAngle(getCurrentRecAngle())
-		handlePrimaryValueChangeByUser(PrimaryValue.REC_ANGLE)
+		handlePrimaryValueChangeByUser(REC_ANGLE)
 	}
 	
 	private fun updateAfterMicDistanceSliderMoved() {
-		//updateMicDistanceLabel()
-		//recalculateMicAngle()
-		//recalculateAngularDistortion()
-		//recalculateReverbLimits()
-		//graphicsView.updateMicDistance(getCurrentMicDistance())
-		handlePrimaryValueChangeByUser(PrimaryValue.MIC_DISTANCE)
+		handlePrimaryValueChangeByUser(MIC_DISTANCE)
 	}
 	
 	private fun updateAfterMicAngleSliderMoved() {
-		//updateMicAngleLabel()
-		//recalculateMicDistance()
-		//recalculateAngularDistortion()
-		//recalculateReverbLimits()
-		//graphicsView.updateMicAngle(getCurrentMicAngle())
-		handlePrimaryValueChangeByUser(PrimaryValue.MIC_ANGLE)
+		handlePrimaryValueChangeByUser(MIC_ANGLE)
 	}
 	
 	
