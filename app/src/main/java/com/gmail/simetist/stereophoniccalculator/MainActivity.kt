@@ -25,24 +25,25 @@ import com.gmail.simetist.stereophoniccalculator.MainActivity.PrimaryValue.*
 import kotlin.math.roundToInt
 
 
+
 private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
-	val recAngleLowerBound		= 40.0
-	val recAngleUpperBound		= 180.0
-	val recAngleDefault			= 90.0
-	val micDistanceLowerBound	= 0.0
-	val micDistanceUpperBound	= 50.0
-	val micDistanceDefault		= 30.0
-	val micAngleLowerBound		= 0.0
-	val micAngleUpperBound		= 180.0
+	private val recAngleLowerBound		= 40.0
+	private val recAngleUpperBound		= 180.0
+	private val recAngleDefault			= 90.0
+	private val micDistanceLowerBound	= 0.0
+	private val micDistanceUpperBound	= 50.0
+	private val micDistanceDefault		= 30.0
+	private val micAngleLowerBound		= 0.0
+	private val micAngleUpperBound		= 180.0
 	
-	var useInches 				= false
-	var useHalfAngles 			= false
-	var useOmni					= false
-	var holdRecAngle			= true
+	private var useInches 				= false
+	private var useHalfAngles 			= false
+	private var useOmni					= false
+	private var holdRecAngle			= true
 	
-	var ignoreSliderListeners	= false
+	private var ignoreSliderListeners	= false
 	
 	private lateinit var aboutButton:					Button
 	
@@ -145,13 +146,12 @@ class MainActivity : AppCompatActivity() {
 			Log.i(TAG, "Using default values")
 			setCurrentRecAngle(recAngleDefault, true)
 			updateRecAngleEdit()
-			graphicsView.updateRecAngle(recAngleDefault)
 			setCurrentMicDistance(micDistanceDefault, true)
 			updateMicDistanceLabel()
-			graphicsView.updateMicDistance(getCurrentMicDistance())
 			recalculateMicAngle()
 			recalculateAngularDistortion()
 			recalculateReverbLimits()
+			updateGraphicsView()
 		}
 		
 		
@@ -260,7 +260,7 @@ class MainActivity : AppCompatActivity() {
 	// GET / SET SLIDER VALUES
 	
 	private fun getCurrentRecAngle(): Double {
-		return (recAngleLowerBound + recAngleSlider.progress).toDouble()
+		return (recAngleLowerBound + recAngleSlider.progress)
 	}
 	private fun setCurrentRecAngle(recAngle: Double, doNotNotify: Boolean = false) {
 		val listenersIgnored = ignoreSliderListeners
@@ -304,6 +304,10 @@ class MainActivity : AppCompatActivity() {
 		}
 	}
 	
+	private fun getCurrentAngularDistortion(): Double {
+		return angularDistIndicator.progress / 100.0
+	}
+	
 	
 	
 	// UPDATE VALUE WIDGETS (EDIT/LABEL)
@@ -336,6 +340,15 @@ class MainActivity : AppCompatActivity() {
 		}
 	}
 	
+	private fun updateGraphicsView() {
+		graphicsView.updateParams(
+			getCurrentRecAngle(),
+			getCurrentMicDistance(),
+			getCurrentMicAngle(),
+			getCurrentAngularDistortion()
+		)
+	}
+	
 	
 	
 	// RECALCULATE VALUES AFTER CHANGES
@@ -356,7 +369,7 @@ class MainActivity : AppCompatActivity() {
 		
 		setCurrentRecAngle(recAngle, true)
 		updateRecAngleEdit()
-		graphicsView.updateRecAngle(recAngle)
+		updateGraphicsView()
 	}
 	
 	private fun recalculateMicDistance() {
@@ -371,7 +384,7 @@ class MainActivity : AppCompatActivity() {
 		
 		setCurrentMicDistance(micDistance, true)
 		updateMicDistanceLabel()
-		graphicsView.updateMicDistance(micDistance)
+		updateGraphicsView()
 	}
 	
 	private fun recalculateMicAngle() {
@@ -384,24 +397,16 @@ class MainActivity : AppCompatActivity() {
 		
 		setCurrentMicAngle(micAngle, true)
 		updateMicAngleLabel()
-		graphicsView.updateMicAngle(micAngle)
+		updateGraphicsView()
 	}
 	
 	private fun updateUIElements(what: PrimaryValue) {
 		when (what) {
-			REC_ANGLE -> {
-				updateRecAngleEdit()
-				graphicsView.updateRecAngle(getCurrentRecAngle())
-			}
-			MIC_DISTANCE -> {
-				updateMicDistanceLabel()
-				graphicsView.updateMicDistance(getCurrentMicDistance())
-			}
-			MIC_ANGLE -> {
-				updateMicAngleLabel()
-				graphicsView.updateMicAngle(getCurrentMicAngle())
-			}
+			REC_ANGLE		-> updateRecAngleEdit()
+			MIC_DISTANCE	-> updateMicDistanceLabel()
+			MIC_ANGLE		-> updateMicAngleLabel()
 		}
+		updateGraphicsView()
 	}
 	
 	private fun recalculateAngularDistortion() {
@@ -420,6 +425,8 @@ class MainActivity : AppCompatActivity() {
 			else				-> Color.rgb(255, ((2.5f - progressRatio * 3f) * 255f).roundToInt().coerceAtLeast(0), 0)
 		}
 		angularDistIndicator.progressTintList = ColorStateList.valueOf(color)
+		
+		updateGraphicsView()
 	}
 	
 	private fun recalculateReverbLimits() {
@@ -615,7 +622,7 @@ class MainActivity : AppCompatActivity() {
 		updateMicAngleLabel()
 		recalculateAngularDistortion()
 		recalculateReverbLimits()
-		graphicsView.updateAll(recAngle.toDouble(), micDistance.toDouble(), micAngle.toDouble())
+		updateGraphicsView()
 	}
 	
 	
@@ -678,7 +685,7 @@ class MainActivity : AppCompatActivity() {
 		outState.putBoolean("useHalfAngles",	useHalfAngles)
 		outState.putBoolean("useOmni",			useOmni)
 		outState.putBoolean("holdRecAngle",		holdRecAngle)
-		outState.putDouble("recAngle",			getCurrentRecAngle().toDouble())
+		outState.putDouble("recAngle",			getCurrentRecAngle())
 		outState.putDouble("micDistance",		getCurrentMicDistance())
 		outState.putDouble("micAngle",			getCurrentMicAngle())
 	}

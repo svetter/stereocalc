@@ -33,6 +33,8 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	private var recAngle	= 0.0f
 	private var micDistance	= 0.0f
 	private var micAngle	= 0.0f
+	private var angularDist	= 0.0f
+	
 	
 	init {
 		init()
@@ -81,7 +83,7 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		val angleWithXAxisDeg = 90 - recAngle / 2
 		val angleWithXAxisRad = angleWithXAxisDeg * Math.PI.toFloat() / 180
 		val recAngleLineY = centerY - tan(angleWithXAxisRad) * centerX
-		val halfAngleWithXAxisDeg = 90 - recAngle / 4
+		val halfAngleWithXAxisDeg = 90 - recAngle * (0.25f + angularDist / 60f)
 		val halfAngleWithXAxisRad = halfAngleWithXAxisDeg * Math.PI.toFloat() / 180
 		val halfRecAngleLineY = centerY - tan(halfAngleWithXAxisRad) * centerX
 		
@@ -161,25 +163,11 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		invalidate()
 	}
 	
-	fun updateRecAngle(recAngle: Double) {
-		this.recAngle = recAngle.toFloat()
-		invalidate()
-	}
-	
-	fun updateMicDistance(micDistance: Double) {
-		this.micDistance = micDistance.toFloat()
-		invalidate()
-	}
-	
-	fun updateMicAngle(micAngle: Double) {
-		this.micAngle = micAngle.toFloat()
-		invalidate()
-	}
-	
-	fun updateAll(recAngle: Double, micDistance: Double, micAngle: Double) {
+	fun updateParams(recAngle: Double, micDistance: Double, micAngle: Double, angularDist: Double) {
 		this.recAngle		= recAngle.toFloat()
 		this.micDistance	= micDistance.toFloat()
 		this.micAngle		= micAngle.toFloat()
+		this.angularDist	= angularDist.toFloat()
 		invalidate()
 	}
 }
