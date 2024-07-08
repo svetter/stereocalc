@@ -355,7 +355,7 @@
 			android:textSize="20sp"
 			app:layout_constraintStart_toEndOf="@+id/micDistanceLabel"
 			app:layout_constraintTop_toBottomOf="@+id/stereoConfigLabel"
-			tools:text="22.5cm" />
+			tools:text="30.0cm" />
 	
 	<SeekBar
 			android:id="@+id/micDistanceSlider"
@@ -461,7 +461,7 @@
 			android:textSize="20sp"
 			app:layout_constraintEnd_toEndOf="@+id/micDistanceValueLabel"
 			app:layout_constraintTop_toBottomOf="@+id/micDistanceValueLabel"
-			tools:text="60°" />
+			tools:text="68°" />
 	
 	<SeekBar
 			android:id="@+id/micAngleSlider"

@@ -247,7 +247,7 @@ class MainActivity : AppCompatActivity() {
 		
 		val angularDistortion = calculateAngularDistortion(micDistance, micAngle)
 		
-		angularDistValueLabel.text = "%.1f°".format(angularDistortion)
+		angularDistValueLabel.text = "≤ %.1f°".format(angularDistortion)
 		angularDistIndicator.progress = (angularDistortion * 100).roundToInt()
 		
 		// Set progress color based on the value
