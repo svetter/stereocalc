@@ -150,14 +150,11 @@ class MainActivity : AppCompatActivity() {
 		}
 		else {
 			Log.i(TAG, "Using default values")
-			setCurrentRecAngle(recAngleDefault, true)
-			updateRecAngleEdit()
-			setCurrentMicDistance(micDistanceDefault, true)
-			updateMicDistanceLabel()
+			setCurrentRecAngle(recAngleDefault)
+			setCurrentMicDistance(micDistanceDefault)
 			recalculateMicAngle()
 			recalculateAngularDistortion()
 			recalculateReverbLimits()
-			updateGraphicsView()
 		}
 		
 		
@@ -265,50 +262,58 @@ class MainActivity : AppCompatActivity() {
 	private fun getCurrentRecAngle(): Double {
 		return (recAngleLowerBound + recAngleSlider.progress)
 	}
-	private fun setCurrentRecAngle(recAngle: Double, doNotNotify: Boolean = false) {
-		val listenersIgnored = ignoreSliderListeners
-		if (doNotNotify) ignoreSliderListeners = true
+	private fun setCurrentRecAngleSlider(recAngle: Double) {
+		ignoreSliderListeners = true
 		recAngleSlider.progress = (recAngle - recAngleLowerBound).roundToInt()
-		if (doNotNotify) ignoreSliderListeners = listenersIgnored
+		ignoreSliderListeners = false
+	}
+	private fun setCurrentRecAngle(recAngle: Double) {
+		setCurrentRecAngleSlider(recAngle)
+		updateRecAngleEdit()
+		graphicsView.setRecAngle(recAngle)
 	}
 	
 	private fun getCurrentMicDistance(): Double {
 		return micDistanceSlider.progress / 10.0
 	}
-	private fun setCurrentMicDistance(micDistance: Double, doNotNotify: Boolean = false) {
-		val listenersIgnored = ignoreSliderListeners
-		if (doNotNotify) ignoreSliderListeners = true
+	private fun setCurrentMicDistanceSlider(micDistance: Double) {
+		ignoreSliderListeners = true
 		micDistanceSlider.progress = (micDistance * 10.0).roundToInt()
-		if (doNotNotify) ignoreSliderListeners = listenersIgnored
+		ignoreSliderListeners = false
+	}
+	private fun setCurrentMicDistance(micDistance: Double) {
+		setCurrentMicDistanceSlider(micDistance)
+		updateMicDistanceLabel()
+		graphicsView.setMicDistance(micDistance)
 	}
 	
 	private fun getCurrentMicAngle(): Double {
 		return micAngleSlider.progress / 10.0
 	}
-	private fun setCurrentMicAngle(micAngle: Double, doNotNotify: Boolean = false) {
-		val listenersIgnored = ignoreSliderListeners
-		if (doNotNotify) ignoreSliderListeners = true
+	private fun setCurrentMicAngleSlider(micAngle: Double) {
+		ignoreSliderListeners = true
 		micAngleSlider.progress = (micAngle * 10.0).roundToInt()
-		if (doNotNotify) ignoreSliderListeners = listenersIgnored
+		ignoreSliderListeners = false
+	}
+	private fun setCurrentMicAngle(micAngle: Double) {
+		setCurrentMicAngleSlider(micAngle)
+		updateMicAngleLabel()
+		graphicsView.setMicAngle(micAngle)
 	}
 	
-	private fun getCurrentValue(what: PrimaryValue): Double {
+	private fun getCurrent(what: PrimaryValue): Double {
 		return when (what) {
 			REC_ANGLE		-> getCurrentRecAngle()
 			MIC_DISTANCE	-> getCurrentMicDistance()
 			MIC_ANGLE		-> getCurrentMicAngle()
 		}
 	}
-	private fun setCurrentValue(what: PrimaryValue, value: Double, doNotNotify: Boolean = false) {
+	private fun setCurrent(what: PrimaryValue, value: Double) {
 		when (what) {
-			REC_ANGLE		-> setCurrentRecAngle	(value, doNotNotify)
-			MIC_DISTANCE	-> setCurrentMicDistance(value, doNotNotify)
-			MIC_ANGLE		-> setCurrentMicAngle	(value, doNotNotify)
+			REC_ANGLE		-> setCurrentRecAngle	(value)
+			MIC_DISTANCE	-> setCurrentMicDistance(value)
+			MIC_ANGLE		-> setCurrentMicAngle	(value)
 		}
-	}
-	
-	private fun getCurrentAngularDistortion(): Double {
-		return angularDistIndicator.progress / 100.0
 	}
 	
 	
@@ -337,19 +342,10 @@ class MainActivity : AppCompatActivity() {
 	private fun updateMicAngleLabel() {
 		val micAngle = getCurrentMicAngle()
 		if (useHalfAngles) {
-			micAngleValueLabel.text = "± %.0f°".format(micAngle / 2)
+			micAngleValueLabel.text = "± %.1f°".format(micAngle.roundToInt() / 2.0)
 		} else {
 			micAngleValueLabel.text = "%.0f°".format(micAngle)
 		}
-	}
-	
-	private fun updateGraphicsView() {
-		graphicsView.updateParams(
-			getCurrentRecAngle(),
-			getCurrentMicDistance(),
-			getCurrentMicAngle(),
-			getCurrentAngularDistortion()
-		)
 	}
 	
 	
@@ -370,9 +366,7 @@ class MainActivity : AppCompatActivity() {
 		
 		val recAngle = calculateCardioidRecordingAngle(micDistance, micAngle)
 		
-		setCurrentRecAngle(recAngle, true)
-		updateRecAngleEdit()
-		updateGraphicsView()
+		setCurrentRecAngle(recAngle)
 	}
 	
 	private fun recalculateMicDistance() {
@@ -385,9 +379,7 @@ class MainActivity : AppCompatActivity() {
 			calculateCardioidMicDistance(recAngle, micAngle)
 		}
 		
-		setCurrentMicDistance(micDistance, true)
-		updateMicDistanceLabel()
-		updateGraphicsView()
+		setCurrentMicDistance(micDistance)
 	}
 	
 	private fun recalculateMicAngle() {
@@ -398,18 +390,7 @@ class MainActivity : AppCompatActivity() {
 		
 		val micAngle = calculateCardioidMicAngle(recAngle, micDistance)
 		
-		setCurrentMicAngle(micAngle, true)
-		updateMicAngleLabel()
-		updateGraphicsView()
-	}
-	
-	private fun updateUIElements(what: PrimaryValue) {
-		when (what) {
-			REC_ANGLE		-> updateRecAngleEdit()
-			MIC_DISTANCE	-> updateMicDistanceLabel()
-			MIC_ANGLE		-> updateMicAngleLabel()
-		}
-		updateGraphicsView()
+		setCurrentMicAngle(micAngle)
 	}
 	
 	private fun recalculateAngularDistortion() {
@@ -429,7 +410,7 @@ class MainActivity : AppCompatActivity() {
 		}
 		angularDistIndicator.progressTintList = ColorStateList.valueOf(color)
 		
-		updateGraphicsView()
+		graphicsView.setAngularDist(angularDistortion)
 	}
 	
 	private fun recalculateReverbLimits() {
@@ -467,8 +448,8 @@ class MainActivity : AppCompatActivity() {
 		assert(mobile != stationary && mobile != changed && stationary != changed)
 		
 		// Calculate new value for mobile
-		val changedValue		= getCurrentValue(changed)
-		var stationaryValue		= getCurrentValue(stationary)
+		val changedValue		= getCurrent(changed)
+		var stationaryValue		= getCurrent(stationary)
 		val mobileCalcInputs	= mapOf(changed to changedValue, stationary to stationaryValue)
 		var mobileValue = calculateValueCardioid(mobile, mobileCalcInputs)
 		
@@ -486,12 +467,9 @@ class MainActivity : AppCompatActivity() {
 		}
 		
 		// Perform updates
-		updateUIElements(changed)
-		setCurrentValue(mobile, mobileValue, true)
-		updateUIElements(mobile)
+		setCurrent(mobile, mobileValue)
 		if (stationaryWasChanged) {
-			setCurrentValue(stationary, stationaryValue, true)
-			updateUIElements(stationary)
+			setCurrent(stationary, stationaryValue)
 		}
 		recalculateAngularDistortion()
 		recalculateReverbLimits()
@@ -571,7 +549,7 @@ class MainActivity : AppCompatActivity() {
 		micDistanceSlider.isEnabled	= !useOmni
 		micAngleSlider.isEnabled	= !useOmni
 		if (useOmni) {
-			setCurrentMicAngle(0.0, true)
+			setCurrentMicAngle(0.0)
 			updateMicAngleLabel()
 			recalculateMicDistance()	// TODO choice of recalculated value should depend on most recently changed
 		}
@@ -596,14 +574,17 @@ class MainActivity : AppCompatActivity() {
 	}
 	
 	private fun updateAfterRecAngleSliderMoved() {
+		updateRecAngleEdit()
 		handlePrimaryValueChangeByUser(REC_ANGLE)
 	}
 	
 	private fun updateAfterMicDistanceSliderMoved() {
+		updateMicDistanceLabel()
 		handlePrimaryValueChangeByUser(MIC_DISTANCE)
 	}
 	
 	private fun updateAfterMicAngleSliderMoved() {
+		updateMicAngleLabel()
 		handlePrimaryValueChangeByUser(MIC_ANGLE)
 	}
 	
@@ -616,16 +597,12 @@ class MainActivity : AppCompatActivity() {
 		
 		val recAngle = calculateCardioidRecordingAngle(micDistance.toDouble(), micAngle.toDouble())
 		
-		setCurrentRecAngle		(recAngle,					true)
-		setCurrentMicDistance	(micDistance.toDouble(),	true)
-		setCurrentMicAngle		(micAngle.toDouble(),		true)
+		setCurrentRecAngle		(recAngle)
+		setCurrentMicDistance	(micDistance.toDouble())
+		setCurrentMicAngle		(micAngle.toDouble())
 		
-		updateRecAngleEdit()
-		updateMicDistanceLabel()
-		updateMicAngleLabel()
 		recalculateAngularDistortion()
 		recalculateReverbLimits()
-		updateGraphicsView()
 	}
 	
 	
@@ -705,9 +682,12 @@ class MainActivity : AppCompatActivity() {
 		micTypeSwitch.isChecked			= useOmni
 		holdRecAngleSwitch.isChecked	= holdRecAngle
 		
-		setCurrentRecAngle		(savedInstanceState.getDouble("recAngle"),		true)
-		setCurrentMicDistance	(savedInstanceState.getDouble("micDistance"),	true)
-		setCurrentMicAngle		(savedInstanceState.getDouble("micAngle"),		true)
+		setCurrentRecAngle		(savedInstanceState.getDouble("recAngle"))
+		setCurrentMicDistance	(savedInstanceState.getDouble("micDistance"))
+		setCurrentMicAngle		(savedInstanceState.getDouble("micAngle"))
+		
+		recalculateAngularDistortion()
+		recalculateReverbLimits()
 	}
 	
 	

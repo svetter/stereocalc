@@ -163,11 +163,23 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		invalidate()
 	}
 	
-	fun updateParams(recAngle: Double, micDistance: Double, micAngle: Double, angularDist: Double) {
-		this.recAngle		= recAngle.toFloat()
-		this.micDistance	= micDistance.toFloat()
-		this.micAngle		= micAngle.toFloat()
-		this.angularDist	= angularDist.toFloat()
+	fun setRecAngle(recAngle: Double) {
+		this.recAngle = recAngle.toFloat()
+		invalidate()
+	}
+	
+	fun setMicDistance(micDistance: Double) {
+		this.micDistance = micDistance.toFloat()
+		invalidate()
+	}
+	
+	fun setMicAngle(micAngle: Double) {
+		this.micAngle = micAngle.toFloat()
+		invalidate()
+	}
+	
+	fun setAngularDist(angularDist: Double) {
+		this.angularDist = angularDist.toFloat()
 		invalidate()
 	}
 }
