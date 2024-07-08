@@ -152,17 +152,29 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="@+id/calcRecAngleButton" />
 	
-	<Switch
-			android:id="@+id/holdRecAngleSwitch"
+	<LinearLayout
+			android:id="@+id/recAngleHoldLayout"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="8dp"
-			android:layout_marginBottom="-3dp"
-			android:checked="true"
-			android:text="Hold"
+			android:orientation="horizontal"
 			app:layout_constraintBottom_toBottomOf="@+id/recAngleLabel"
 			app:layout_constraintEnd_toStartOf="@+id/calcRecAngleButton"
-			app:layout_constraintStart_toEndOf="@+id/recAngleLabel" />
+			app:layout_constraintHorizontal_bias="0.4"
+			app:layout_constraintStart_toEndOf="@+id/recAngleLabel">
+		
+		<Switch
+				android:id="@+id/holdRecAngleSwitch"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="-3dp" />
+		
+		<TextView
+				android:id="@+id/recAngleHoldLabel"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Hold" />
+	</LinearLayout>
 	
 	<Button
 			android:id="@+id/calcRecAngleButton"

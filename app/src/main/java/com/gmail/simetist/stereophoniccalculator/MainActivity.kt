@@ -42,9 +42,9 @@ class MainActivity : AppCompatActivity() {
 	private var useInches 				= false
 	private var useHalfAngles 			= false
 	private var useOmni					= false
-	private var holdRecAngle			= true
+	private var holdRecAngle			= false
 	
-	private var ignoreSliderListeners	= false
+	private var ignoreListeners	= false
 	
 	
 	private lateinit var mainLayout:					ConstraintLayout
@@ -88,61 +88,7 @@ class MainActivity : AppCompatActivity() {
 		enableEdgeToEdge()
 		setContentView(R.layout.activity_main)
 		
-		
-		mainLayout					= findViewById(R.id.mainLayout)
-		
-		aboutButton					= findViewById(R.id.aboutButton)
-		
-		unitsSwitch					= findViewById(R.id.unitsSwitch)
-		halfAnglesSwitch			= findViewById(R.id.halfAnglesSwitch)
-		micTypeSwitch				= findViewById(R.id.micTypeSwitch)
-		
-		holdRecAngleSwitch			= findViewById(R.id.holdRecAngleSwitch)
-		calcRecAngleButton			= findViewById(R.id.calcRecAngleButton)
-		recAnglePlusMinusLabel		= findViewById(R.id.recAnglePlusMinusLabel)
-		recAngleEdit				= findViewById(R.id.recAngleEdit)
-		recAngleSlider				= findViewById(R.id.recAngleSlider)
-		recAngleSliderTickLabels = arrayOf(
-			40	to findViewById(R.id.recAngleSliderTick40Label),
-			60	to findViewById(R.id.recAngleSliderTick60Label),
-			90	to findViewById(R.id.recAngleSliderTick90Label),
-			120	to findViewById(R.id.recAngleSliderTick120Label),
-			150	to findViewById(R.id.recAngleSliderTick150Label),
-			180	to findViewById(R.id.recAngleSliderTick180Label)
-		)
-		
-		graphicsFrameLayout			= findViewById(R.id.graphicsFrameLayout)
-		graphicsView				= findViewById(R.id.graphicsView)
-		
-		micDistanceValueLabel		= findViewById(R.id.micDistanceValueLabel)
-		micDistanceSlider			= findViewById(R.id.micDistanceSlider)
-		micDistanceSliderTickLabels = arrayOf(
-			(0	to 0)	to findViewById(R.id.micDistanceSliderTick0Label),
-			(10	to 5)	to findViewById(R.id.micDistanceSliderTick10Label),
-			(20	to 10)	to findViewById(R.id.micDistanceSliderTick20Label),
-			(30	to 15)	to findViewById(R.id.micDistanceSliderTick30Label),
-			(40	to -1)	to findViewById(R.id.micDistanceSliderTick40Label),
-			(50	to -1)	to findViewById(R.id.micDistanceSliderTick50Label)
-		)
-		
-		micAngleValueLabel			= findViewById(R.id.micAngleValueLabel)
-		micAngleSlider				= findViewById(R.id.micAngleSlider)
-		micAngleSliderTickLabels = arrayOf(
-			0	to findViewById(R.id.micAngleSliderTick0Label),
-			60	to findViewById(R.id.micAngleSliderTick60Label),
-			120	to findViewById(R.id.micAngleSliderTick120Label),
-			180	to findViewById(R.id.micAngleSliderTick180Label)
-		)
-		
-		angularDistValueLabel		= findViewById(R.id.angularDistValueLabel)
-		angularDistIndicator		= findViewById(R.id.angularDistIndicator)
-		reverbLimitsWarnLabel		= findViewById(R.id.reverbLimitsWarnLabel)
-		
-		ortfButton					= findViewById(R.id.ortfButton)
-		nosButton					= findViewById(R.id.nosButton)
-		dinButton					= findViewById(R.id.dinButton)
-		
-		
+		populateUIElementMembers()
 		
 		if (savedInstanceState != null) {
 			Log.i(TAG, "Restoring saved state")
@@ -152,12 +98,10 @@ class MainActivity : AppCompatActivity() {
 			Log.i(TAG, "Using default values")
 			setCurrentRecAngle(recAngleDefault)
 			setCurrentMicDistance(micDistanceDefault)
-			recalculateMicAngle()
+			setCurrentMicAngle(calculateCardioidMicAngle(recAngleDefault, micDistanceDefault))
 			recalculateAngularDistortion()
 			recalculateReverbLimits()
 		}
-		
-		
 		
 		ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout)) { v, insets ->
 			val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -170,70 +114,7 @@ class MainActivity : AppCompatActivity() {
 			requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 		}
 		
-		
-		
-		// Set up listeners
-		
-		aboutButton.setOnClickListener {
-			startActivity(Intent(this, AboutActivity::class.java))
-		}
-		
-		unitsSwitch.setOnCheckedChangeListener { _, isChecked ->
-			changeUnitsSetting(isChecked)
-		}
-		halfAnglesSwitch.setOnCheckedChangeListener { _, isChecked ->
-			changeHalfAnglesSetting(isChecked)
-		}
-		micTypeSwitch.setOnCheckedChangeListener { _, isChecked ->
-			changeMicTypeSetting(isChecked)
-		}
-		holdRecAngleSwitch.setOnCheckedChangeListener { _, isChecked ->
-			changeHoldRecAngleSetting(isChecked)
-		}
-		
-		recAngleEdit.setOnKeyListener(object: View.OnKeyListener {
-			override fun onKey(p0: View?, p1: Int, p2: KeyEvent?): Boolean {
-				if (p2?.action != KeyEvent.ACTION_UP || p2.keyCode != KeyEvent.KEYCODE_ENTER) {
-					return false
-				}
-				updateAfterRecAngleEditChanged()
-				return true
-			}
-		})
-		recAngleSlider.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
-			override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-				if (ignoreSliderListeners) return
-				updateAfterRecAngleSliderMoved()
-			}
-			override fun onStartTrackingTouch(p0: SeekBar?) {}
-			override fun onStopTrackingTouch(p0: SeekBar?) {}
-		})
-		micDistanceSlider.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
-			override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-				if (ignoreSliderListeners) return
-				updateAfterMicDistanceSliderMoved()
-			}
-			override fun onStartTrackingTouch(p0: SeekBar?) {}
-			override fun onStopTrackingTouch(p0: SeekBar?) {}
-		})
-		micAngleSlider.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
-			override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-				if (ignoreSliderListeners) return
-				updateAfterMicAngleSliderMoved()
-			}
-			override fun onStartTrackingTouch(p0: SeekBar?) {}
-			override fun onStopTrackingTouch(p0: SeekBar?) {}
-		})
-		
-		ortfButton.setOnClickListener {
-			applyNearCoincidentPreset(17, 110)
-		}
-		nosButton.setOnClickListener {
-			applyNearCoincidentPreset(30, 90)
-		}
-		dinButton.setOnClickListener {
-			applyNearCoincidentPreset(20, 90)
-		}
+		setupUIListeners()
 	}
 	
 	
@@ -263,9 +144,9 @@ class MainActivity : AppCompatActivity() {
 		return (recAngleLowerBound + recAngleSlider.progress)
 	}
 	private fun setCurrentRecAngleSlider(recAngle: Double) {
-		ignoreSliderListeners = true
+		ignoreListeners = true
 		recAngleSlider.progress = (recAngle - recAngleLowerBound).roundToInt()
-		ignoreSliderListeners = false
+		ignoreListeners = false
 	}
 	private fun setCurrentRecAngle(recAngle: Double) {
 		setCurrentRecAngleSlider(recAngle)
@@ -277,9 +158,9 @@ class MainActivity : AppCompatActivity() {
 		return micDistanceSlider.progress / 10.0
 	}
 	private fun setCurrentMicDistanceSlider(micDistance: Double) {
-		ignoreSliderListeners = true
+		ignoreListeners = true
 		micDistanceSlider.progress = (micDistance * 10.0).roundToInt()
-		ignoreSliderListeners = false
+		ignoreListeners = false
 	}
 	private fun setCurrentMicDistance(micDistance: Double) {
 		setCurrentMicDistanceSlider(micDistance)
@@ -291,9 +172,9 @@ class MainActivity : AppCompatActivity() {
 		return micAngleSlider.progress / 10.0
 	}
 	private fun setCurrentMicAngleSlider(micAngle: Double) {
-		ignoreSliderListeners = true
+		ignoreListeners = true
 		micAngleSlider.progress = (micAngle * 10.0).roundToInt()
-		ignoreSliderListeners = false
+		ignoreListeners = false
 	}
 	private fun setCurrentMicAngle(micAngle: Double) {
 		setCurrentMicAngleSlider(micAngle)
@@ -360,39 +241,6 @@ class MainActivity : AppCompatActivity() {
 		}
 	}
 	
-	private fun recalculateRecordingAngle() {
-		val micDistance = getCurrentMicDistance()
-		val micAngle = getCurrentMicAngle()
-		
-		val recAngle = calculateCardioidRecordingAngle(micDistance, micAngle)
-		
-		setCurrentRecAngle(recAngle)
-	}
-	
-	private fun recalculateMicDistance() {
-		val recAngle = recAngleEdit.text.toString().toDouble()
-		val micAngle = getCurrentMicAngle()
-		
-		val micDistance = if (useOmni) {
-			calculateOmniMicDistance(recAngle)
-		} else {
-			calculateCardioidMicDistance(recAngle, micAngle)
-		}
-		
-		setCurrentMicDistance(micDistance)
-	}
-	
-	private fun recalculateMicAngle() {
-		if (useOmni) return
-		
-		val recAngle = getCurrentRecAngle()
-		val micDistance = getCurrentMicDistance()
-		
-		val micAngle = calculateCardioidMicAngle(recAngle, micDistance)
-		
-		setCurrentMicAngle(micAngle)
-	}
-	
 	private fun recalculateAngularDistortion() {
 		val micDistance = getCurrentMicDistance()
 		val micAngle = getCurrentMicAngle()
@@ -438,6 +286,14 @@ class MainActivity : AppCompatActivity() {
 	private var secondToLastChangedPrimValue:	PrimaryValue = MIC_DISTANCE
 	
 	private fun handlePrimaryValueChangeByUser(changed: PrimaryValue) {
+		return if (useOmni) {
+			handlePrimaryValueChangeByUserForOmni(changed)
+		} else {
+			handlePrimaryValueChangeByUserForCardioid(changed)
+		}
+	}
+	
+	private fun handlePrimaryValueChangeByUserForCardioid(changed: PrimaryValue) {
 		val stationary = if (holdRecAngle && changed != REC_ANGLE) {
 			REC_ANGLE
 		}
@@ -480,11 +336,48 @@ class MainActivity : AppCompatActivity() {
 		}
 	}
 	
+	private fun handlePrimaryValueChangeByUserForOmni(changed: PrimaryValue) {
+		if (changed == REC_ANGLE) {
+			var recAngle = getCurrentRecAngle()
+			var micDistance = calculateOmniMicDistance(recAngle)
+			
+			if (micDistance < micDistanceLowerBound || micDistance > micDistanceUpperBound) {
+				micDistance = micDistance.coerceIn(micDistanceLowerBound, micDistanceUpperBound)
+				recAngle = calculateOmniRecordingAngle(micDistance)
+				setCurrentRecAngle(recAngle)
+			}
+			
+			setCurrentMicDistance(micDistance)
+		} else {
+			assert(changed == MIC_DISTANCE)
+			
+			var micDistance = getCurrentMicDistance()
+			var recAngle = calculateOmniRecordingAngle(micDistance)
+			
+			if (recAngle < recAngleLowerBound || recAngle > recAngleUpperBound) {
+				recAngle = recAngle.coerceIn(recAngleLowerBound, recAngleUpperBound)
+				micDistance = calculateOmniMicDistance(recAngle)
+				setCurrentMicDistance(micDistance)
+			}
+			
+			setCurrentRecAngle(recAngle)
+		}
+		
+		// Perform updates
+		recalculateAngularDistortion()
+		recalculateReverbLimits()
+		
+		if (changed != lastChangedPrimValue) {
+			secondToLastChangedPrimValue = lastChangedPrimValue
+			lastChangedPrimValue = changed
+		}
+	}
+	
 	
 	
 	// LISTENER FUNCTIONS
 	
-	private fun changeUnitsSetting(imperialNotMetric: Boolean) {
+	private fun setUnitsSetting(imperialNotMetric: Boolean) {
 		useInches = imperialNotMetric
 		
 		// Update the mic distance slider ticks
@@ -515,7 +408,7 @@ class MainActivity : AppCompatActivity() {
 		updateMicDistanceLabel()
 	}
 	
-	private fun changeHalfAnglesSetting(halfNotFull: Boolean) {
+	private fun setHalfAnglesSetting(halfNotFull: Boolean) {
 		useHalfAngles = halfNotFull
 		
 		// Update the rec angle slider ticks
@@ -542,23 +435,27 @@ class MainActivity : AppCompatActivity() {
 		updateMicAngleLabel()
 	}
 	
-	private fun changeMicTypeSetting(omniNotCardioid: Boolean) {
+	private fun setMicTypeSetting(omniNotCardioid: Boolean) {
 		useOmni = omniNotCardioid
 		
-		// Disable mic angle slider if using omni
-		micDistanceSlider.isEnabled	= !useOmni
-		micAngleSlider.isEnabled	= !useOmni
+		// Disable mic angle slider and hold rec angle switch if using omni
+		micAngleSlider		.isEnabled = !useOmni
+		holdRecAngleSwitch	.isEnabled = !useOmni
+		ignoreListeners = true
+		holdRecAngleSwitch.isChecked = if (useOmni) false else holdRecAngle
+		ignoreListeners = false
+		
 		if (useOmni) {
 			setCurrentMicAngle(0.0)
-			updateMicAngleLabel()
-			recalculateMicDistance()	// TODO choice of recalculated value should depend on most recently changed
+			val lastChangedRAorMD = if (lastChangedPrimValue != MIC_ANGLE) lastChangedPrimValue else secondToLastChangedPrimValue
+			handlePrimaryValueChangeByUserForOmni(lastChangedRAorMD)
 		}
 		
 		// Update the graphics view
 		graphicsView.setUseOmni(useOmni)
 	}
 	
-	private fun changeHoldRecAngleSetting(enable: Boolean) {
+	private fun setHoldRecAngleSetting(enable: Boolean) {
 		holdRecAngle = enable
 	}
 	
@@ -575,16 +472,19 @@ class MainActivity : AppCompatActivity() {
 	
 	private fun updateAfterRecAngleSliderMoved() {
 		updateRecAngleEdit()
+		graphicsView.setRecAngle(getCurrentRecAngle())
 		handlePrimaryValueChangeByUser(REC_ANGLE)
 	}
 	
 	private fun updateAfterMicDistanceSliderMoved() {
 		updateMicDistanceLabel()
+		graphicsView.setMicDistance(getCurrentMicDistance())
 		handlePrimaryValueChangeByUser(MIC_DISTANCE)
 	}
 	
 	private fun updateAfterMicAngleSliderMoved() {
 		updateMicAngleLabel()
+		graphicsView.setMicAngle(getCurrentMicAngle())
 		handlePrimaryValueChangeByUser(MIC_ANGLE)
 	}
 	
@@ -691,6 +591,131 @@ class MainActivity : AppCompatActivity() {
 	}
 	
 	
+	
+	// UI INITIALIZATION
+	
+	private fun populateUIElementMembers() {
+		mainLayout					= findViewById(R.id.mainLayout)
+		
+		aboutButton					= findViewById(R.id.aboutButton)
+		
+		unitsSwitch					= findViewById(R.id.unitsSwitch)
+		halfAnglesSwitch			= findViewById(R.id.halfAnglesSwitch)
+		micTypeSwitch				= findViewById(R.id.micTypeSwitch)
+		
+		holdRecAngleSwitch			= findViewById(R.id.holdRecAngleSwitch)
+		calcRecAngleButton			= findViewById(R.id.calcRecAngleButton)
+		recAnglePlusMinusLabel		= findViewById(R.id.recAnglePlusMinusLabel)
+		recAngleEdit				= findViewById(R.id.recAngleEdit)
+		recAngleSlider				= findViewById(R.id.recAngleSlider)
+		recAngleSliderTickLabels = arrayOf(
+			40	to findViewById(R.id.recAngleSliderTick40Label),
+			60	to findViewById(R.id.recAngleSliderTick60Label),
+			90	to findViewById(R.id.recAngleSliderTick90Label),
+			120	to findViewById(R.id.recAngleSliderTick120Label),
+			150	to findViewById(R.id.recAngleSliderTick150Label),
+			180	to findViewById(R.id.recAngleSliderTick180Label)
+		)
+		
+		graphicsFrameLayout			= findViewById(R.id.graphicsFrameLayout)
+		graphicsView				= findViewById(R.id.graphicsView)
+		
+		micDistanceValueLabel		= findViewById(R.id.micDistanceValueLabel)
+		micDistanceSlider			= findViewById(R.id.micDistanceSlider)
+		micDistanceSliderTickLabels = arrayOf(
+			(0	to 0)	to findViewById(R.id.micDistanceSliderTick0Label),
+			(10	to 5)	to findViewById(R.id.micDistanceSliderTick10Label),
+			(20	to 10)	to findViewById(R.id.micDistanceSliderTick20Label),
+			(30	to 15)	to findViewById(R.id.micDistanceSliderTick30Label),
+			(40	to -1)	to findViewById(R.id.micDistanceSliderTick40Label),
+			(50	to -1)	to findViewById(R.id.micDistanceSliderTick50Label)
+		)
+		
+		micAngleValueLabel			= findViewById(R.id.micAngleValueLabel)
+		micAngleSlider				= findViewById(R.id.micAngleSlider)
+		micAngleSliderTickLabels = arrayOf(
+			0	to findViewById(R.id.micAngleSliderTick0Label),
+			60	to findViewById(R.id.micAngleSliderTick60Label),
+			120	to findViewById(R.id.micAngleSliderTick120Label),
+			180	to findViewById(R.id.micAngleSliderTick180Label)
+		)
+		
+		angularDistValueLabel		= findViewById(R.id.angularDistValueLabel)
+		angularDistIndicator		= findViewById(R.id.angularDistIndicator)
+		reverbLimitsWarnLabel		= findViewById(R.id.reverbLimitsWarnLabel)
+		
+		ortfButton					= findViewById(R.id.ortfButton)
+		nosButton					= findViewById(R.id.nosButton)
+		dinButton					= findViewById(R.id.dinButton)
+	}
+	
+	private fun setupUIListeners() {
+		aboutButton.setOnClickListener {
+			startActivity(Intent(this, AboutActivity::class.java))
+		}
+		
+		unitsSwitch.setOnCheckedChangeListener { _, isChecked ->
+			if (!ignoreListeners) return@setOnCheckedChangeListener
+			setUnitsSetting(isChecked)
+		}
+		halfAnglesSwitch.setOnCheckedChangeListener { _, isChecked ->
+			if (ignoreListeners) return@setOnCheckedChangeListener
+			setHalfAnglesSetting(isChecked)
+		}
+		micTypeSwitch.setOnCheckedChangeListener { _, isChecked ->
+			if (ignoreListeners) return@setOnCheckedChangeListener
+			setMicTypeSetting(isChecked)
+		}
+		holdRecAngleSwitch.setOnCheckedChangeListener { _, isChecked ->
+			if (ignoreListeners) return@setOnCheckedChangeListener
+			setHoldRecAngleSetting(isChecked)
+		}
+		
+		recAngleEdit.setOnKeyListener(object: View.OnKeyListener {
+			override fun onKey(p0: View?, p1: Int, p2: KeyEvent?): Boolean {
+				if (p2?.action != KeyEvent.ACTION_UP || p2.keyCode != KeyEvent.KEYCODE_ENTER) {
+					return false
+				}
+				if (ignoreListeners) return true
+				updateAfterRecAngleEditChanged()
+				return true
+			}
+		})
+		recAngleSlider.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+			override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+				if (ignoreListeners) return
+				updateAfterRecAngleSliderMoved()
+			}
+			override fun onStartTrackingTouch(p0: SeekBar?) {}
+			override fun onStopTrackingTouch(p0: SeekBar?) {}
+		})
+		micDistanceSlider.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+			override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+				if (ignoreListeners) return
+				updateAfterMicDistanceSliderMoved()
+			}
+			override fun onStartTrackingTouch(p0: SeekBar?) {}
+			override fun onStopTrackingTouch(p0: SeekBar?) {}
+		})
+		micAngleSlider.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+			override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+				if (ignoreListeners) return
+				updateAfterMicAngleSliderMoved()
+			}
+			override fun onStartTrackingTouch(p0: SeekBar?) {}
+			override fun onStopTrackingTouch(p0: SeekBar?) {}
+		})
+		
+		ortfButton.setOnClickListener {
+			applyNearCoincidentPreset(17, 110)
+		}
+		nosButton.setOnClickListener {
+			applyNearCoincidentPreset(30, 90)
+		}
+		dinButton.setOnClickListener {
+			applyNearCoincidentPreset(20, 90)
+		}
+	}
 	
 	private enum class PrimaryValue {
 		REC_ANGLE,

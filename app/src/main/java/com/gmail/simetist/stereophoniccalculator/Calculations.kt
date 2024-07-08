@@ -105,6 +105,10 @@ fun calculateOmniMicDistance(recordingAngle: Double): Double {
 	return calculateCardioidMicDistance(recordingAngle, 0.0)
 }
 
+fun calculateOmniRecordingAngle(micDistance: Double): Double {
+	return calculateCardioidRecordingAngle(micDistance, 0.0)
+}
+
 fun calculateAngularDistortion(micDistance: Double, micAngle: Double): Double {
 	return AngularDistortionNN.predict(micDistance, micAngle)
 }
