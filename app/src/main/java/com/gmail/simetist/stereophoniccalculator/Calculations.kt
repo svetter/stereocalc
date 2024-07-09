@@ -80,13 +80,13 @@ fun calculateCardioidMicDistance(recordingAngle: Double, micAngle: Double): Doub
 
 fun calculateCardioidRecordingAngle(micDistance: Double, micAngle: Double): Double {
 	// Make very rough first approximation
-	var recAngle = (270.0 - 4.0 * micDistance - 1.0 * micAngle).toInt().coerceIn(40, 180)
+	var recAngle = (270.0 - 4.0 * micDistance - 1.0 * micAngle).coerceIn(40.0, 180.0)
 	
 	var bestRecAngle		= recAngle
 	var bestMicAngleError	= Double.MAX_VALUE
 	var micAngleError		= bestMicAngleError.nextDown()
 	// Determine step direction
-	val increment = if (calculateCardioidMicAngle(recAngle.toDouble(), micDistance) > micAngle) 1 else -1
+	val increment = if (calculateCardioidMicAngle(recAngle, micDistance) > micAngle) 0.1 else -0.1
 	
 	// Step until the lowest error has been passed
 	while (micAngleError < bestMicAngleError) {
@@ -94,11 +94,11 @@ fun calculateCardioidRecordingAngle(micDistance: Double, micAngle: Double): Doub
 		bestMicAngleError = micAngleError
 		
 		recAngle += increment
-		val calculatedMicAngle = calculateCardioidMicAngle(recAngle.toDouble(), micDistance)
+		val calculatedMicAngle = calculateCardioidMicAngle(recAngle, micDistance)
 		micAngleError = abs(calculatedMicAngle - micAngle)
 	}
 	
-	return bestRecAngle.toDouble()
+	return bestRecAngle
 }
 
 fun calculateOmniMicDistance(recordingAngle: Double): Double {
@@ -113,10 +113,14 @@ fun calculateAngularDistortion(micDistance: Double, micAngle: Double): Double {
 	return AngularDistortionNN.predict(micDistance, micAngle)
 }
 
+fun calculateSidesReverbLimit(micDistance: Double): Double {
+	return sidesReverbLimitFitOutScale / (1 + exp(-sidesReverbLimitFitGrowthRate * (micDistance - sidesReverbLimitFitInMidpoint))) + sidesReverbLimitFitOutMin
+}
+
 fun calculateReverbLimitExceeded(micDistance: Double, micAngle: Double): Pair<Boolean, Boolean> {
 	val centerExceeds = micAngle >= centerReverbLimitMicAngle
 	
-	val sidesReverbLimit = sidesReverbLimitFitOutScale / (1 + exp(-sidesReverbLimitFitGrowthRate * (micDistance - sidesReverbLimitFitInMidpoint))) + sidesReverbLimitFitOutMin
+	val sidesReverbLimit = calculateSidesReverbLimit(micDistance)
 	val sideExceeds = micAngle <= sidesReverbLimit
 	
 	return centerExceeds to sideExceeds

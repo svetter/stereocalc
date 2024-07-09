@@ -300,7 +300,7 @@
 			app:layout_constraintEnd_toEndOf="@+id/recAngleSlider" />
 	
 	<View
-			android:id="@+id/angleDivider"
+			android:id="@+id/recAngleDivider"
 			android:layout_width="0dp"
 			android:layout_height="1dp"
 			android:layout_marginStart="16dp"
@@ -310,6 +310,54 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/recAngleEdit" />
+	
+	<FrameLayout
+			android:id="@+id/graphicsFrameLayout"
+			android:translationZ="1dp"
+			android:layout_width="0dp"
+			android:layout_height="250dp"
+			android:layout_marginStart="16dp"
+			android:layout_marginTop="8dp"
+			android:layout_marginEnd="16dp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/recAngleDivider">
+		
+		<com.gmail.simetist.stereophoniccalculator.StereoConfigView
+				android:id="@+id/graphicsView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:translationZ="1dp" />
+	</FrameLayout>
+	
+	<TextView
+			android:id="@+id/microphoneViewLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="8dp"
+			android:text="Microphone view"
+			app:layout_constraintBottom_toBottomOf="@+id/graphicsViewModeSwitch"
+			app:layout_constraintEnd_toStartOf="@+id/graphicsViewModeSwitch"
+			app:layout_constraintTop_toTopOf="@+id/graphicsViewModeSwitch" />
+	
+	<Switch
+			android:id="@+id/graphicsViewModeSwitch"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="4dp"
+			app:layout_constraintEnd_toEndOf="@+id/graphicsFrameLayout"
+			app:layout_constraintStart_toStartOf="@+id/graphicsFrameLayout"
+			app:layout_constraintTop_toBottomOf="@+id/graphicsFrameLayout" />
+	
+	<TextView
+			android:id="@+id/graphModeLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:text="Graph view"
+			app:layout_constraintBottom_toBottomOf="@+id/graphicsViewModeSwitch"
+			app:layout_constraintStart_toEndOf="@+id/graphicsViewModeSwitch"
+			app:layout_constraintTop_toTopOf="@+id/graphicsViewModeSwitch" />
 	
 	<View
 			android:id="@+id/graphicsDivider"
@@ -321,7 +369,7 @@
 			android:background="?android:attr/listDivider"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/graphicsFrameLayout" />
+			app:layout_constraintTop_toBottomOf="@+id/graphicsViewModeSwitch" />
 	
 	<TextView
 			android:id="@+id/stereoConfigLabel"
@@ -598,25 +646,6 @@
 			app:layout_constraintTop_toTopOf="@+id/recAngleEdit"
 			app:layout_constraintVertical_bias="0.312"
 			tools:text="±" />
-	
-	<FrameLayout
-			android:id="@+id/graphicsFrameLayout"
-			android:translationZ="1dp"
-			android:layout_width="0dp"
-			android:layout_height="250dp"
-			android:layout_marginStart="16dp"
-			android:layout_marginTop="8dp"
-			android:layout_marginEnd="16dp"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/angleDivider">
-		
-		<com.gmail.simetist.stereophoniccalculator.StereoConfigView
-				android:id="@+id/graphicsView"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:translationZ="1dp" />
-	</FrameLayout>
 	
 	<TextView
 			android:id="@+id/presetsLabel"

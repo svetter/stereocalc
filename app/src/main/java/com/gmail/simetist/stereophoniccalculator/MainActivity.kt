@@ -39,10 +39,15 @@ class MainActivity : AppCompatActivity() {
 	private val micAngleLowerBound		= 0.0
 	private val micAngleUpperBound		= 180.0
 	
-	private var useInches 				= false
+	private var currentRecAngle			= -1.0
+	private var currentMicDistance		= -1.0
+	private var currentMicAngle			= -1.0
+	
+	private var useImperial 			= false
 	private var useHalfAngles 			= false
 	private var useOmni					= false
 	private var holdRecAngle			= false
+	private var showGraphView			= true
 	
 	private var ignoreListeners	= false
 	
@@ -64,6 +69,7 @@ class MainActivity : AppCompatActivity() {
 	
 	private lateinit var graphicsFrameLayout:			FrameLayout
 	private lateinit var graphicsView:					StereoConfigView
+	private lateinit var graphicsViewModeSwitch:		Switch
 	
 	private lateinit var micDistanceValueLabel:			TextView
 	private lateinit var micDistanceSlider:				SeekBar
@@ -138,45 +144,39 @@ class MainActivity : AppCompatActivity() {
 	
 	
 	
-	// GET / SET SLIDER VALUES
+	// SET PRIMARY VALUES
 	
-	private fun getCurrentRecAngle(): Double {
-		return (recAngleLowerBound + recAngleSlider.progress)
-	}
 	private fun setCurrentRecAngleSlider(recAngle: Double) {
 		ignoreListeners = true
 		recAngleSlider.progress = (recAngle - recAngleLowerBound).roundToInt()
 		ignoreListeners = false
 	}
 	private fun setCurrentRecAngle(recAngle: Double) {
+		currentRecAngle = recAngle
 		setCurrentRecAngleSlider(recAngle)
 		updateRecAngleEdit()
 		graphicsView.setRecAngle(recAngle)
 	}
 	
-	private fun getCurrentMicDistance(): Double {
-		return micDistanceSlider.progress / 10.0
-	}
 	private fun setCurrentMicDistanceSlider(micDistance: Double) {
 		ignoreListeners = true
 		micDistanceSlider.progress = (micDistance * 10.0).roundToInt()
 		ignoreListeners = false
 	}
 	private fun setCurrentMicDistance(micDistance: Double) {
+		currentMicDistance = micDistance
 		setCurrentMicDistanceSlider(micDistance)
 		updateMicDistanceLabel()
 		graphicsView.setMicDistance(micDistance)
 	}
 	
-	private fun getCurrentMicAngle(): Double {
-		return micAngleSlider.progress / 10.0
-	}
 	private fun setCurrentMicAngleSlider(micAngle: Double) {
 		ignoreListeners = true
 		micAngleSlider.progress = (micAngle * 10.0).roundToInt()
 		ignoreListeners = false
 	}
 	private fun setCurrentMicAngle(micAngle: Double) {
+		currentMicAngle = micAngle
 		setCurrentMicAngleSlider(micAngle)
 		updateMicAngleLabel()
 		graphicsView.setMicAngle(micAngle)
@@ -184,9 +184,9 @@ class MainActivity : AppCompatActivity() {
 	
 	private fun getCurrent(what: PrimaryValue): Double {
 		return when (what) {
-			REC_ANGLE		-> getCurrentRecAngle()
-			MIC_DISTANCE	-> getCurrentMicDistance()
-			MIC_ANGLE		-> getCurrentMicAngle()
+			REC_ANGLE		-> currentRecAngle
+			MIC_DISTANCE	-> currentMicDistance
+			MIC_ANGLE		-> currentMicAngle
 		}
 	}
 	private fun setCurrent(what: PrimaryValue, value: Double) {
@@ -202,30 +202,27 @@ class MainActivity : AppCompatActivity() {
 	// UPDATE VALUE WIDGETS (EDIT/LABEL)
 	
 	private fun updateRecAngleEdit() {
-		val recAngle = getCurrentRecAngle()
 		if (useHalfAngles) {
-			recAngleEdit.setText("%.1f".format(recAngle / 2))
+			recAngleEdit.setText("%.1f".format(currentRecAngle / 2))
 		} else {
-			recAngleEdit.setText(recAngle.roundToInt().toString())
+			recAngleEdit.setText(currentRecAngle.roundToInt().toString())
 		}
 	}
 	
 	private fun updateMicDistanceLabel() {
-		val micDistance = getCurrentMicDistance()
-		if (useInches) {
-			val micDistanceInches = micDistance / 2.54
+		if (useImperial) {
+			val micDistanceInches = currentMicDistance / 2.54
 			micDistanceValueLabel.text = "%.2fin".format(micDistanceInches)
 		} else {
-			micDistanceValueLabel.text = "%.1fcm".format(micDistance)
+			micDistanceValueLabel.text = "%.1fcm".format(currentMicDistance)
 		}
 	}
 	
 	private fun updateMicAngleLabel() {
-		val micAngle = getCurrentMicAngle()
 		if (useHalfAngles) {
-			micAngleValueLabel.text = "± %.1f°".format(micAngle.roundToInt() / 2.0)
+			micAngleValueLabel.text = "± %.1f°".format(currentMicAngle.roundToInt() / 2.0)
 		} else {
-			micAngleValueLabel.text = "%.0f°".format(micAngle)
+			micAngleValueLabel.text = "%.0f°".format(currentMicAngle)
 		}
 	}
 	
@@ -242,10 +239,7 @@ class MainActivity : AppCompatActivity() {
 	}
 	
 	private fun recalculateAngularDistortion() {
-		val micDistance = getCurrentMicDistance()
-		val micAngle = getCurrentMicAngle()
-		
-		val angularDistortion = calculateAngularDistortion(micDistance, micAngle)
+		val angularDistortion = calculateAngularDistortion(currentMicDistance, currentMicAngle)
 		
 		angularDistValueLabel.text = "≤ %.1f°".format(angularDistortion)
 		angularDistIndicator.progress = (angularDistortion * 100).roundToInt()
@@ -262,10 +256,7 @@ class MainActivity : AppCompatActivity() {
 	}
 	
 	private fun recalculateReverbLimits() {
-		val micDistance = getCurrentMicDistance()
-		val micAngle = getCurrentMicAngle()
-		
-		val (centerExceeds, sidesExceed) = calculateReverbLimitExceeded(micDistance, micAngle)
+		val (centerExceeds, sidesExceed) = calculateReverbLimitExceeded(currentMicDistance, currentMicAngle)
 		
 		reverbLimitsWarnLabel.text = when {
 			centerExceeds	-> "Excessive reverb in the center"
@@ -338,7 +329,7 @@ class MainActivity : AppCompatActivity() {
 	
 	private fun handlePrimaryValueChangeByUserForOmni(changed: PrimaryValue) {
 		if (changed == REC_ANGLE) {
-			var recAngle = getCurrentRecAngle()
+			var recAngle = currentRecAngle
 			var micDistance = calculateOmniMicDistance(recAngle)
 			
 			if (micDistance < micDistanceLowerBound || micDistance > micDistanceUpperBound) {
@@ -351,7 +342,7 @@ class MainActivity : AppCompatActivity() {
 		} else {
 			assert(changed == MIC_DISTANCE)
 			
-			var micDistance = getCurrentMicDistance()
+			var micDistance = currentMicDistance
 			var recAngle = calculateOmniRecordingAngle(micDistance)
 			
 			if (recAngle < recAngleLowerBound || recAngle > recAngleUpperBound) {
@@ -373,16 +364,29 @@ class MainActivity : AppCompatActivity() {
 		}
 	}
 	
+	fun handle2DUserInput(micDistance: Double, micAngle: Double) {
+		if (useOmni && micAngle > 0.0) {
+			micTypeSwitch.performClick()
+		}
+		
+		lastChangedPrimValue = MIC_DISTANCE
+		secondToLastChangedPrimValue = MIC_ANGLE
+		
+		setCurrentMicDistance(micDistance.coerceIn(micDistanceLowerBound, micDistanceUpperBound))
+		setCurrentMicAngle(micAngle.coerceIn(micAngleLowerBound, micAngleUpperBound))
+		handlePrimaryValueChangeByUser(lastChangedPrimValue)
+	}
+	
 	
 	
 	// LISTENER FUNCTIONS
 	
 	private fun setUnitsSetting(imperialNotMetric: Boolean) {
-		useInches = imperialNotMetric
+		useImperial = imperialNotMetric
 		
 		// Update the mic distance slider ticks
 		val maxTickCm = micDistanceSliderTickLabels.last().first.first.toFloat()
-		if (useInches) {
+		if (useImperial) {
 			micDistanceSliderTickLabels.forEach { (cmAndInches, label) ->
 				if (cmAndInches.second == -1) {
 					label.text = ""
@@ -406,6 +410,8 @@ class MainActivity : AppCompatActivity() {
 		
 		// Update the mic distance label
 		updateMicDistanceLabel()
+		// Update the graph view
+		graphicsView.setUseImperial(useImperial)
 	}
 	
 	private fun setHalfAnglesSetting(halfNotFull: Boolean) {
@@ -433,6 +439,8 @@ class MainActivity : AppCompatActivity() {
 		// Update the widgets displaying angles as numbers
 		updateRecAngleEdit()
 		updateMicAngleLabel()
+		// Update the graph view
+		graphicsView.setUseHalfAngles(useHalfAngles)
 	}
 	
 	private fun setMicTypeSetting(omniNotCardioid: Boolean) {
@@ -459,6 +467,11 @@ class MainActivity : AppCompatActivity() {
 		holdRecAngle = enable
 	}
 	
+	private fun setGraphicsModeSetting(graphNotMic: Boolean) {
+		showGraphView = graphNotMic
+		graphicsView.setShowGraphView(showGraphView)
+	}
+	
 	private fun updateAfterRecAngleEditChanged() {
 		var currentValue = recAngleEdit.text.toString().toIntOrNull() ?: return
 		
@@ -471,20 +484,17 @@ class MainActivity : AppCompatActivity() {
 	}
 	
 	private fun updateAfterRecAngleSliderMoved() {
-		updateRecAngleEdit()
-		graphicsView.setRecAngle(getCurrentRecAngle())
+		setCurrentRecAngle(recAngleSlider.progress.toDouble() + recAngleLowerBound)
 		handlePrimaryValueChangeByUser(REC_ANGLE)
 	}
 	
 	private fun updateAfterMicDistanceSliderMoved() {
-		updateMicDistanceLabel()
-		graphicsView.setMicDistance(getCurrentMicDistance())
+		setCurrentMicDistance(micDistanceSlider.progress.toDouble() / 10.0)
 		handlePrimaryValueChangeByUser(MIC_DISTANCE)
 	}
 	
 	private fun updateAfterMicAngleSliderMoved() {
-		updateMicAngleLabel()
-		graphicsView.setMicAngle(getCurrentMicAngle())
+		setCurrentMicAngle(micAngleSlider.progress.toDouble() / 10.0)
 		handlePrimaryValueChangeByUser(MIC_ANGLE)
 	}
 	
@@ -553,6 +563,8 @@ class MainActivity : AppCompatActivity() {
 			// Set background color for graphicsFrameLayout
 			graphicsFrameLayout.setBackgroundColor(Color.BLACK)
 		}
+		
+		graphicsView.resetCache()
 	}
 	
 	
@@ -561,23 +573,23 @@ class MainActivity : AppCompatActivity() {
 	
 	override fun onSaveInstanceState(outState: Bundle) {
 		super.onSaveInstanceState(outState)
-		outState.putBoolean("useInches",		useInches)
+		outState.putBoolean("useInches",		useImperial)
 		outState.putBoolean("useHalfAngles",	useHalfAngles)
 		outState.putBoolean("useOmni",			useOmni)
 		outState.putBoolean("holdRecAngle",		holdRecAngle)
-		outState.putDouble("recAngle",			getCurrentRecAngle())
-		outState.putDouble("micDistance",		getCurrentMicDistance())
-		outState.putDouble("micAngle",			getCurrentMicAngle())
+		outState.putDouble("recAngle",			currentRecAngle)
+		outState.putDouble("micDistance",		currentMicDistance)
+		outState.putDouble("micAngle",			currentMicAngle)
 	}
 	
 	private fun restoreState(savedInstanceState: Bundle) {
 		// Restore saved state
-		useInches		= savedInstanceState.getBoolean("useInches")
+		useImperial		= savedInstanceState.getBoolean("useInches")
 		useHalfAngles	= savedInstanceState.getBoolean("useHalfAngles")
 		useOmni			= savedInstanceState.getBoolean("useOmni")
 		holdRecAngle	= savedInstanceState.getBoolean("holdRecAngle")
 		
-		unitsSwitch.isChecked			= useInches
+		unitsSwitch.isChecked			= useImperial
 		halfAnglesSwitch.isChecked		= useHalfAngles
 		micTypeSwitch.isChecked			= useOmni
 		holdRecAngleSwitch.isChecked	= holdRecAngle
@@ -619,6 +631,7 @@ class MainActivity : AppCompatActivity() {
 		
 		graphicsFrameLayout			= findViewById(R.id.graphicsFrameLayout)
 		graphicsView				= findViewById(R.id.graphicsView)
+		graphicsViewModeSwitch		= findViewById(R.id.graphicsViewModeSwitch)
 		
 		micDistanceValueLabel		= findViewById(R.id.micDistanceValueLabel)
 		micDistanceSlider			= findViewById(R.id.micDistanceSlider)
@@ -655,7 +668,7 @@ class MainActivity : AppCompatActivity() {
 		}
 		
 		unitsSwitch.setOnCheckedChangeListener { _, isChecked ->
-			if (!ignoreListeners) return@setOnCheckedChangeListener
+			if (ignoreListeners) return@setOnCheckedChangeListener
 			setUnitsSetting(isChecked)
 		}
 		halfAnglesSwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -669,6 +682,10 @@ class MainActivity : AppCompatActivity() {
 		holdRecAngleSwitch.setOnCheckedChangeListener { _, isChecked ->
 			if (ignoreListeners) return@setOnCheckedChangeListener
 			setHoldRecAngleSetting(isChecked)
+		}
+		graphicsViewModeSwitch.setOnCheckedChangeListener { _, isChecked ->
+			if (ignoreListeners) return@setOnCheckedChangeListener
+			setGraphicsModeSetting(isChecked)
 		}
 		
 		recAngleEdit.setOnKeyListener(object: View.OnKeyListener {
