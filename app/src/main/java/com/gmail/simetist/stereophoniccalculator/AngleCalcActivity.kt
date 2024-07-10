@@ -50,6 +50,7 @@ class AngleCalcActivity : AppCompatActivity() {
 	
 	
 	private val sliderPrecision	= 0.10		// Slider steps in m or ft
+	private val cmPerFoot		= 30.48
 	
 	private val metersFormat	= "%.2f"
 	private val feetFormat		= "%.1f"
@@ -98,7 +99,7 @@ class AngleCalcActivity : AppCompatActivity() {
 			micHeightEdit		.setText(feetFormat.format(6.0))
 			subjectHeightEdit	.setText(feetFormat.format(3.0))
 			subjectWidthEdit	.setText(feetFormat.format(15.0))
-			horDistanceEdit		.setText(feetFormat.format(12.0))
+			horDistanceEdit		.setText(feetFormat.format(10.0))
 			
 			micHeightSlider		.max = (15 / sliderPrecision).roundToInt()
 			subjectHeightSlider	.max = (15 / sliderPrecision).roundToInt()
@@ -108,7 +109,7 @@ class AngleCalcActivity : AppCompatActivity() {
 			micHeightEdit		.setText(metersFormat.format(2.0))
 			subjectHeightEdit	.setText(metersFormat.format(1.0))
 			subjectWidthEdit	.setText(metersFormat.format(5.0))
-			horDistanceEdit		.setText(metersFormat.format(4.0))
+			horDistanceEdit		.setText(metersFormat.format(3.0))
 			
 			micHeightSlider		.max = ( 5 / sliderPrecision).roundToInt()
 			subjectHeightSlider	.max = ( 5 / sliderPrecision).roundToInt()
@@ -134,8 +135,10 @@ class AngleCalcActivity : AppCompatActivity() {
 		
 		val heightDifference	= micHeight - subjectHeight
 		val distanceFromMic		= sqrt(heightDifference.pow(2) + horDistance.pow(2))
-		currentRecAngle			= Math.toDegrees(2 * atan(subjectWidth / (2 * distanceFromMic)))
-		val micInclination		= Math.toDegrees(atan(heightDifference / horDistance))
+		currentRecAngle = if (distanceFromMic > 0) {
+			Math.toDegrees(2 * atan(subjectWidth / (2 * distanceFromMic)))
+		} else 180.0
+		val micInclination = Math.toDegrees(atan(heightDifference / horDistance))
 		
 		recAngleValueLabel.text = if (useHalfAngles) {
 			"± %.1f°".format(currentRecAngle.roundToInt() / 2.0)
@@ -143,12 +146,20 @@ class AngleCalcActivity : AppCompatActivity() {
 			"%.0f°".format(currentRecAngle)
 		}
 		
-		if (micInclination.roundToInt() == 0) {
+		if (micInclination.isNaN() || micInclination.roundToInt() == 0) {
 			micInclinationValueLabel.text = "level"
 		} else {
 			val downUpString = if (micInclination > 0) " down" else " up"
 			micInclinationValueLabel.text = "%.0f°".format(abs(micInclination)) + downUpString
 		}
+		
+		val conversionFactor = if (useImperial) cmPerFoot else 100.0
+		graphicsView.setParametersInCm(
+			micHeight		* conversionFactor,
+			subjectHeight	* conversionFactor,
+			subjectWidth	* conversionFactor,
+			horDistance		* conversionFactor
+		)
 	}
 	
 	private fun submitRecAngle() {

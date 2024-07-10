@@ -50,9 +50,9 @@ class MainActivity : AppCompatActivity() {
 	private var useHalfAngles 			= false
 	private var useOmni					= false
 	private var holdRecAngle			= false
-	private var showGraphView			= true
+	private var showGraphView			= false
 	
-	private var ignoreListeners	= false
+	private var ignoreListeners			= false
 	
 	
 	private lateinit var mainLayout:					ConstraintLayout

@@ -243,10 +243,12 @@
           android:id="@+id/micHeightSliderLayout"
           android:layout_width="wrap_content"
           android:layout_height="0dp"
+          android:layout_marginTop="14dp"
+          android:layout_marginBottom="14dp"
           android:orientation="vertical"
-          app:layout_constraintBottom_toBottomOf="@+id/graphicsViewLayout"
+          app:layout_constraintBottom_toBottomOf="@+id/horDistanceSlider"
           app:layout_constraintStart_toStartOf="@+id/micInclinationLabel"
-          app:layout_constraintTop_toTopOf="@+id/graphicsViewLayout">
+          app:layout_constraintTop_toTopOf="@+id/subjectWidthSlider">
         
         <Space
             android:id="@+id/micHeightSliderSpace"
@@ -264,7 +266,11 @@
       <FrameLayout
           android:id="@+id/graphicsViewLayout"
           android:layout_width="0dp"
-          android:layout_height="350dp"
+          android:layout_height="400dp"
+          android:layout_marginStart="8dp"
+          android:layout_marginTop="8dp"
+          android:layout_marginEnd="8dp"
+          android:layout_marginBottom="8dp"
           app:layout_constraintBottom_toTopOf="@+id/horDistanceSlider"
           app:layout_constraintEnd_toStartOf="@+id/subjectHeightSliderLayout"
           app:layout_constraintStart_toEndOf="@+id/micHeightSliderLayout"
@@ -281,10 +287,12 @@
           android:id="@+id/subjectHeightSliderLayout"
           android:layout_width="wrap_content"
           android:layout_height="0dp"
+          android:layout_marginTop="14dp"
+          android:layout_marginBottom="14dp"
           android:orientation="vertical"
-          app:layout_constraintBottom_toBottomOf="@+id/graphicsViewLayout"
+          app:layout_constraintBottom_toBottomOf="@+id/horDistanceSlider"
           app:layout_constraintEnd_toEndOf="@+id/micInclinationValueLabel"
-          app:layout_constraintTop_toTopOf="@+id/graphicsViewLayout">
+          app:layout_constraintTop_toTopOf="@+id/subjectWidthSlider">
         
         <Space
             android:id="@+id/subjectHeightSliderSpace"
@@ -304,6 +312,7 @@
           android:id="@+id/horDistanceSlider"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
+          android:layout_marginStart="14dp"
           android:layout_marginBottom="16dp"
           app:layout_constraintBottom_toTopOf="@+id/applyBackButton"
           app:layout_constraintEnd_toEndOf="@+id/graphicsViewLayout"

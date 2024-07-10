@@ -67,7 +67,7 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	
 	private val mainActivity: MainActivity = context as MainActivity
 	
-	private var graphMode		= true//false
+	private var graphMode		= false
 	
 	private var useImperial		= false
 	private var useHalfAngles	= false
