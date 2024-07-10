@@ -266,7 +266,7 @@
       <FrameLayout
           android:id="@+id/graphicsViewLayout"
           android:layout_width="0dp"
-          android:layout_height="400dp"
+          android:layout_height="350dp"
           android:layout_marginStart="8dp"
           android:layout_marginTop="8dp"
           android:layout_marginEnd="8dp"

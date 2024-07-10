@@ -68,8 +68,10 @@ class AngleCalcActivity : AppCompatActivity() {
 		setContentView(R.layout.activity_angle_calc)
 		// Show notification bar in the same color as the app's background
 		enableEdgeToEdge()
+		var systemBarsHeight = 0
 		ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout)) { v, insets ->
 			val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+			systemBarsHeight = systemBars.top + systemBars.bottom
 			v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 			insets
 		}
@@ -80,9 +82,11 @@ class AngleCalcActivity : AppCompatActivity() {
 		useHalfAngles	= intent.getBooleanExtra("useHalfAngles",	false)
 		
 		mainLayout.post {
-			//graphicsViewLayout.layoutParams.height += mainLayout.height - scrollViewLayout.height
-			scrollViewLayout.requestLayout()
-			mainLayout.requestLayout()
+			// Expand the graphics view to fill the remaining space, if any
+			if (mainLayout.height > scrollViewLayout.height + systemBarsHeight) {
+				graphicsViewLayout.layoutParams.height += mainLayout.height - scrollViewLayout.height - systemBarsHeight
+				graphicsViewLayout.requestLayout()
+			}
 		}
 		
 		for (lengthUnitLabel in lengthUnitLabels) {
