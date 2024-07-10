@@ -14,23 +14,19 @@ class AboutActivity : AppCompatActivity() {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		enableEdgeToEdge()
 		setContentView(R.layout.activity_about)
-		
-		
-		backButton = findViewById(R.id.backButton)
-		
-		
+		// Show notification bar in the same color as the app's background
+		enableEdgeToEdge()
 		ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout)) { v, insets ->
 			val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 			v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 			insets
 		}
 		
-		
+		backButton = findViewById(R.id.backButton)
 		
 		backButton.setOnClickListener {
-			onBackPressedDispatcher.onBackPressed()
+			finish()
 		}
 	}
 }

@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AngleCalcActivity">
+  
+  <ScrollView
+      android:id="@+id/scrollView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      tools:layout_editor_absoluteX="253dp"
+      tools:layout_editor_absoluteY="1dp">
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/scrollViewLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".AngleCalcActivity">
+      
+      <TextView
+          android:id="@+id/pageTitleLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="16dp"
+          android:text="Recording angle calculator"
+          android:textSize="20sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+      
+      <View
+          android:id="@+id/titleDivider"
+          android:layout_width="0dp"
+          android:layout_height="1dp"
+          android:layout_marginTop="8dp"
+          android:layout_marginEnd="16dp"
+          android:background="?android:attr/listDivider"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="@+id/pageTitleLabel"
+          app:layout_constraintTop_toBottomOf="@+id/pageTitleLabel" />
+      
+      <TextView
+          android:id="@+id/micHeightLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Microphone height"
+          android:textSize="16sp"
+          app:layout_constraintBottom_toBottomOf="@+id/micHeightEdit"
+          app:layout_constraintStart_toStartOf="@+id/pageTitleLabel"
+          app:layout_constraintTop_toTopOf="@+id/micHeightEdit" />
+      
+      <EditText
+          android:id="@+id/micHeightEdit"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:ems="3"
+          android:inputType="numberDecimal"
+          android:textAlignment="textEnd"
+          app:layout_constraintEnd_toStartOf="@+id/micHeightUnitLabel"
+          app:layout_constraintTop_toBottomOf="@+id/titleDivider"
+          tools:text="3.50" />
+      
+      <TextView
+          android:id="@+id/micHeightUnitLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="16dp"
+          android:text="m"
+          android:textSize="16sp"
+          app:layout_constraintBottom_toBottomOf="@+id/micHeightEdit"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/titleDivider" />
+      
+      <TextView
+          android:id="@+id/subjectHeightLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Subject height"
+          android:textSize="16sp"
+          app:layout_constraintBottom_toBottomOf="@+id/subjectHeightEdit"
+          app:layout_constraintStart_toStartOf="@+id/micHeightLabel"
+          app:layout_constraintTop_toTopOf="@+id/subjectHeightEdit" />
+      
+      <EditText
+          android:id="@+id/subjectHeightEdit"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="-8dp"
+          android:ems="3"
+          android:inputType="numberDecimal"
+          android:textAlignment="textEnd"
+          app:layout_constraintEnd_toStartOf="@+id/subjectHeightUnitLabel"
+          app:layout_constraintTop_toBottomOf="@+id/micHeightEdit"
+          tools:text="1.00" />
+      
+      <TextView
+          android:id="@+id/subjectHeightUnitLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="m"
+          android:textSize="16sp"
+          app:layout_constraintBottom_toBottomOf="@+id/subjectHeightEdit"
+          app:layout_constraintEnd_toEndOf="@+id/micHeightUnitLabel"
+          app:layout_constraintTop_toTopOf="@+id/subjectHeightEdit" />
+      
+      <TextView
+          android:id="@+id/subjectWidthLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Subject width"
+          android:textSize="16sp"
+          app:layout_constraintBottom_toBottomOf="@+id/subjectWidthEdit"
+          app:layout_constraintStart_toStartOf="@+id/subjectHeightLabel"
+          app:layout_constraintTop_toTopOf="@+id/subjectWidthEdit" />
+      
+      <EditText
+          android:id="@+id/subjectWidthEdit"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="-8dp"
+          android:ems="3"
+          android:inputType="numberDecimal"
+          android:textAlignment="textEnd"
+          app:layout_constraintEnd_toStartOf="@+id/subjectWidthUnitLabel"
+          app:layout_constraintTop_toBottomOf="@+id/subjectHeightEdit"
+          tools:text="12.00" />
+      
+      <TextView
+          android:id="@+id/subjectWidthUnitLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="m"
+          android:textSize="16sp"
+          app:layout_constraintBottom_toBottomOf="@+id/subjectWidthEdit"
+          app:layout_constraintEnd_toEndOf="@+id/subjectHeightUnitLabel"
+          app:layout_constraintTop_toTopOf="@+id/subjectWidthEdit" />
+      
+      <TextView
+          android:id="@+id/horDistanceLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Horizontal distance"
+          android:textSize="16sp"
+          app:layout_constraintBottom_toBottomOf="@+id/horDistanceEdit"
+          app:layout_constraintStart_toStartOf="@+id/subjectWidthLabel"
+          app:layout_constraintTop_toTopOf="@+id/horDistanceEdit" />
+      
+      <EditText
+          android:id="@+id/horDistanceEdit"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="-8dp"
+          android:ems="3"
+          android:inputType="numberDecimal"
+          android:textAlignment="textEnd"
+          app:layout_constraintEnd_toStartOf="@+id/horDistanceUnitLabel"
+          app:layout_constraintTop_toBottomOf="@+id/subjectWidthEdit"
+          tools:text="2.50" />
+      
+      <TextView
+          android:id="@+id/horDistanceUnitLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="m"
+          android:textSize="16sp"
+          app:layout_constraintBottom_toBottomOf="@+id/horDistanceEdit"
+          app:layout_constraintEnd_toEndOf="@+id/subjectWidthUnitLabel"
+          app:layout_constraintTop_toTopOf="@+id/horDistanceEdit" />
+      
+      <View
+          android:id="@+id/distancesDivider"
+          android:layout_width="0dp"
+          android:layout_height="1dp"
+          android:background="?android:attr/listDivider"
+          app:layout_constraintEnd_toEndOf="@+id/titleDivider"
+          app:layout_constraintStart_toStartOf="@+id/titleDivider"
+          app:layout_constraintTop_toBottomOf="@+id/horDistanceEdit" />
+      
+      <TextView
+          android:id="@+id/recAngleLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Recording angle"
+          android:textSize="20sp"
+          app:layout_constraintBottom_toBottomOf="@+id/recAngleValueLabel"
+          app:layout_constraintStart_toStartOf="@+id/horDistanceLabel"
+          app:layout_constraintTop_toTopOf="@+id/recAngleValueLabel" />
+      
+      <TextView
+          android:id="@+id/recAngleValueLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="8dp"
+          android:textSize="24sp"
+          app:layout_constraintEnd_toEndOf="@+id/horDistanceUnitLabel"
+          app:layout_constraintTop_toBottomOf="@+id/distancesDivider"
+          tools:text="120°" />
+      
+      <TextView
+          android:id="@+id/micInclinationLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Microphone inclination"
+          android:textSize="16sp"
+          app:layout_constraintBottom_toBottomOf="@+id/micInclinationValueLabel"
+          app:layout_constraintStart_toStartOf="@+id/recAngleLabel"
+          app:layout_constraintTop_toTopOf="@+id/micInclinationValueLabel" />
+      
+      <TextView
+          android:id="@+id/micInclinationValueLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="8dp"
+          android:textSize="16sp"
+          app:layout_constraintEnd_toEndOf="@+id/recAngleValueLabel"
+          app:layout_constraintTop_toBottomOf="@+id/recAngleValueLabel"
+          tools:text="12° down" />
+      
+      <View
+          android:id="@+id/graphicDivider"
+          android:layout_width="0dp"
+          android:layout_height="1dp"
+          android:layout_marginTop="8dp"
+          android:background="?android:attr/listDivider"
+          app:layout_constraintEnd_toEndOf="@+id/distancesDivider"
+          app:layout_constraintHorizontal_bias="0.0"
+          app:layout_constraintStart_toStartOf="@+id/distancesDivider"
+          app:layout_constraintTop_toBottomOf="@+id/micInclinationValueLabel" />
+      
+      <SeekBar
+          android:id="@+id/subjectWidthSlider"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="8dp"
+          app:layout_constraintEnd_toEndOf="@+id/graphicsViewLayout"
+          app:layout_constraintStart_toStartOf="@+id/graphicsViewLayout"
+          app:layout_constraintTop_toBottomOf="@+id/graphicDivider" />
+      
+      <LinearLayout
+          android:id="@+id/micHeightSliderLayout"
+          android:layout_width="wrap_content"
+          android:layout_height="0dp"
+          android:orientation="vertical"
+          app:layout_constraintBottom_toBottomOf="@+id/graphicsViewLayout"
+          app:layout_constraintStart_toStartOf="@+id/micInclinationLabel"
+          app:layout_constraintTop_toTopOf="@+id/graphicsViewLayout">
+        
+        <Space
+            android:id="@+id/micHeightSliderSpace"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+        
+        <com.gmail.simetist.stereophoniccalculator.VerticalSeekBar
+            android:id="@+id/micHeightSlider"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+      </LinearLayout>
+      
+      <FrameLayout
+          android:id="@+id/graphicsViewLayout"
+          android:layout_width="0dp"
+          android:layout_height="350dp"
+          app:layout_constraintBottom_toTopOf="@+id/horDistanceSlider"
+          app:layout_constraintEnd_toStartOf="@+id/subjectHeightSliderLayout"
+          app:layout_constraintStart_toEndOf="@+id/micHeightSliderLayout"
+          app:layout_constraintTop_toBottomOf="@+id/subjectWidthSlider">
+        
+        <com.gmail.simetist.stereophoniccalculator.AngleCalcGraphicsView
+            android:id="@+id/graphicsView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:translationZ="1dp" />
+      </FrameLayout>
+      
+      <LinearLayout
+          android:id="@+id/subjectHeightSliderLayout"
+          android:layout_width="wrap_content"
+          android:layout_height="0dp"
+          android:orientation="vertical"
+          app:layout_constraintBottom_toBottomOf="@+id/graphicsViewLayout"
+          app:layout_constraintEnd_toEndOf="@+id/micInclinationValueLabel"
+          app:layout_constraintTop_toTopOf="@+id/graphicsViewLayout">
+        
+        <Space
+            android:id="@+id/subjectHeightSliderSpace"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+        
+        <com.gmail.simetist.stereophoniccalculator.VerticalSeekBar
+            android:id="@+id/subjectHeightSlider"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+      
+      </LinearLayout>
+      
+      <SeekBar
+          android:id="@+id/horDistanceSlider"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="16dp"
+          app:layout_constraintBottom_toTopOf="@+id/applyBackButton"
+          app:layout_constraintEnd_toEndOf="@+id/graphicsViewLayout"
+          app:layout_constraintStart_toStartOf="@+id/graphicsViewLayout" />
+      
+      <Button
+          android:id="@+id/backButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:backgroundTint="#9A8C0000"
+          android:text="Back"
+          android:textColor="@color/white"
+          app:cornerRadius="5dp"
+          app:layout_constraintBottom_toBottomOf="@+id/applyButton"
+          app:layout_constraintStart_toStartOf="@+id/micInclinationLabel"
+          app:layout_constraintTop_toTopOf="@+id/applyButton" />
+      
+      <Button
+          android:id="@+id/applyButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="16dp"
+          android:backgroundTint="#9A8C0000"
+          android:text="Apply"
+          android:textColor="@android:color/white"
+          app:cornerRadius="5dp"
+          app:layout_constraintBottom_toBottomOf="@+id/applyBackButton"
+          app:layout_constraintEnd_toStartOf="@+id/applyBackButton"
+          app:layout_constraintTop_toTopOf="@+id/applyBackButton" />
+      
+      <Button
+          android:id="@+id/applyBackButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="16dp"
+          android:backgroundTint="#9A8C0000"
+          android:text="Apply &amp; back"
+          android:textColor="@android:color/white"
+          app:cornerRadius="5dp"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="@+id/micInclinationValueLabel" />
+    
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  
+  </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -312,7 +312,7 @@
 			app:layout_constraintTop_toBottomOf="@+id/recAngleEdit" />
 	
 	<FrameLayout
-			android:id="@+id/graphicsFrameLayout"
+			android:id="@+id/graphicsViewLayout"
 			android:translationZ="1dp"
 			android:layout_width="0dp"
 			android:layout_height="250dp"
@@ -345,9 +345,9 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="4dp"
-			app:layout_constraintEnd_toEndOf="@+id/graphicsFrameLayout"
-			app:layout_constraintStart_toStartOf="@+id/graphicsFrameLayout"
-			app:layout_constraintTop_toBottomOf="@+id/graphicsFrameLayout" />
+			app:layout_constraintEnd_toEndOf="@+id/graphicsViewLayout"
+			app:layout_constraintStart_toStartOf="@+id/graphicsViewLayout"
+			app:layout_constraintTop_toBottomOf="@+id/graphicsViewLayout" />
 	
 	<TextView
 			android:id="@+id/graphModeLabel"

@@ -24,6 +24,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".AngleCalcActivity"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".AboutActivity"
             android:exported="true">
         </activity>

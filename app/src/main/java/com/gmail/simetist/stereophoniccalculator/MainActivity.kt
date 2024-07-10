@@ -1,5 +1,6 @@
 package com.gmail.simetist.stereophoniccalculator
 
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.ColorStateList
@@ -18,6 +19,8 @@ import android.widget.SeekBar
 import android.widget.Switch
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
@@ -67,7 +70,7 @@ class MainActivity : AppCompatActivity() {
 	private lateinit var recAngleSlider:				SeekBar
 	private lateinit var recAngleSliderTickLabels:		Array<Pair<Int, TextView>>
 	
-	private lateinit var graphicsFrameLayout:			FrameLayout
+	private lateinit var graphicsViewLayout:			FrameLayout
 	private lateinit var graphicsView:					StereoConfigView
 	private lateinit var graphicsViewModeSwitch:		Switch
 	
@@ -88,11 +91,20 @@ class MainActivity : AppCompatActivity() {
 	private lateinit var dinButton:						Button
 	
 	
+	private lateinit var recAngleCalcLauncher: ActivityResultLauncher<Intent>
+	
+	
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		enableEdgeToEdge()
 		setContentView(R.layout.activity_main)
+		// Show notification bar in the same color as the app's background
+		enableEdgeToEdge()
+		ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout)) { v, insets ->
+			val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+			v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+			insets
+		}
 		
 		populateUIElementMembers()
 		
@@ -109,15 +121,18 @@ class MainActivity : AppCompatActivity() {
 			recalculateReverbLimits()
 		}
 		
-		ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout)) { v, insets ->
-			val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-			v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-			insets
-		}
-		
 		// Wait until layout is finished to unlock orientation
 		mainLayout.post {
 			requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+		}
+		
+		// Set up the recording angle calculator activity launcher
+		recAngleCalcLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+			if (result.resultCode == Activity.RESULT_OK) {
+				val resultValue = result.data?.getDoubleExtra("recAngle", -1.0)
+					?: return@registerForActivityResult
+				applyRecAngleCalcResult(resultValue)
+			}
 		}
 		
 		setupUIListeners()
@@ -382,6 +397,7 @@ class MainActivity : AppCompatActivity() {
 	// LISTENER FUNCTIONS
 	
 	private fun setUnitsSetting(imperialNotMetric: Boolean) {
+		if (unitsSwitch.isChecked != imperialNotMetric) unitsSwitch.isChecked = imperialNotMetric
 		useImperial = imperialNotMetric
 		
 		// Update the mic distance slider ticks
@@ -415,6 +431,7 @@ class MainActivity : AppCompatActivity() {
 	}
 	
 	private fun setHalfAnglesSetting(halfNotFull: Boolean) {
+		if (halfAnglesSwitch.isChecked != halfNotFull) halfAnglesSwitch.isChecked = halfNotFull
 		useHalfAngles = halfNotFull
 		
 		// Update the rec angle slider ticks
@@ -444,6 +461,7 @@ class MainActivity : AppCompatActivity() {
 	}
 	
 	private fun setMicTypeSetting(omniNotCardioid: Boolean) {
+		if (micTypeSwitch.isChecked != omniNotCardioid) micTypeSwitch.isChecked = omniNotCardioid
 		useOmni = omniNotCardioid
 		
 		// Disable mic angle slider and hold rec angle switch if using omni
@@ -464,10 +482,12 @@ class MainActivity : AppCompatActivity() {
 	}
 	
 	private fun setHoldRecAngleSetting(enable: Boolean) {
+		if (holdRecAngleSwitch.isChecked != enable) holdRecAngleSwitch.isChecked = enable
 		holdRecAngle = enable
 	}
 	
 	private fun setGraphicsModeSetting(graphNotMic: Boolean) {
+		if (graphicsViewModeSwitch.isChecked != graphNotMic) graphicsViewModeSwitch.isChecked = graphNotMic
 		showGraphView = graphNotMic
 		graphicsView.setShowGraphView(showGraphView)
 	}
@@ -496,6 +516,16 @@ class MainActivity : AppCompatActivity() {
 	private fun updateAfterMicAngleSliderMoved() {
 		setCurrentMicAngle(micAngleSlider.progress.toDouble() / 10.0)
 		handlePrimaryValueChangeByUser(MIC_ANGLE)
+	}
+	
+	
+	
+	// RECORDING ANGLE CALCULATOR CALLBACK
+	
+	private fun applyRecAngleCalcResult(recAngle: Double) {
+		if (!holdRecAngle) setHoldRecAngleSetting(true)
+		setCurrentRecAngle(recAngle)
+		handlePrimaryValueChangeByUser(REC_ANGLE)
 	}
 	
 	
@@ -533,7 +563,7 @@ class MainActivity : AppCompatActivity() {
 		
 		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
 			// Restore graphicsFrame's constraints
-			(graphicsFrameLayout.layoutParams as ConstraintLayout.LayoutParams).apply {
+			(graphicsViewLayout.layoutParams as ConstraintLayout.LayoutParams).apply {
 				height			= portraitGraphicsFrameHeight
 				topToBottom		= portraitGraphicsFrameTopToBottom
 				startToStart	= portraitGraphicsFrameStartToStart
@@ -543,25 +573,25 @@ class MainActivity : AppCompatActivity() {
 				rightMargin		= portraitGraphicsFrameRightMargin
 			}
 			// Remove background color for graphicsFrameLayout
-			graphicsFrameLayout.setBackgroundColor(Color.TRANSPARENT)
+			graphicsViewLayout.setBackgroundColor(Color.TRANSPARENT)
 		}
 		else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			// Save layout values
-			portraitGraphicsFrameHeight			= graphicsFrameLayout.height
-			portraitGraphicsFrameTopToBottom	= (graphicsFrameLayout.layoutParams as ConstraintLayout.LayoutParams).topToBottom
-			portraitGraphicsFrameStartToStart	= (graphicsFrameLayout.layoutParams as ConstraintLayout.LayoutParams).startToStart
-			portraitGraphicsFrameEndToEnd		= (graphicsFrameLayout.layoutParams as ConstraintLayout.LayoutParams).endToEnd
-			portraitGraphicsFrameTopMargin		= (graphicsFrameLayout.layoutParams as ConstraintLayout.LayoutParams).topMargin
-			portraitGraphicsFrameLeftMargin		= (graphicsFrameLayout.layoutParams as ConstraintLayout.LayoutParams).leftMargin
-			portraitGraphicsFrameRightMargin	= (graphicsFrameLayout.layoutParams as ConstraintLayout.LayoutParams).rightMargin
+			portraitGraphicsFrameHeight			= graphicsViewLayout.height
+			portraitGraphicsFrameTopToBottom	= (graphicsViewLayout.layoutParams as ConstraintLayout.LayoutParams).topToBottom
+			portraitGraphicsFrameStartToStart	= (graphicsViewLayout.layoutParams as ConstraintLayout.LayoutParams).startToStart
+			portraitGraphicsFrameEndToEnd		= (graphicsViewLayout.layoutParams as ConstraintLayout.LayoutParams).endToEnd
+			portraitGraphicsFrameTopMargin		= (graphicsViewLayout.layoutParams as ConstraintLayout.LayoutParams).topMargin
+			portraitGraphicsFrameLeftMargin		= (graphicsViewLayout.layoutParams as ConstraintLayout.LayoutParams).leftMargin
+			portraitGraphicsFrameRightMargin	= (graphicsViewLayout.layoutParams as ConstraintLayout.LayoutParams).rightMargin
 			
 			// Make graphicsFrame take up the whole layout
-			graphicsFrameLayout.layoutParams = FrameLayout.LayoutParams(
+			graphicsViewLayout.layoutParams = FrameLayout.LayoutParams(
 				ViewGroup.LayoutParams.MATCH_PARENT,
 				ViewGroup.LayoutParams.MATCH_PARENT
 			)
 			// Set background color for graphicsFrameLayout
-			graphicsFrameLayout.setBackgroundColor(Color.BLACK)
+			graphicsViewLayout.setBackgroundColor(Color.BLACK)
 		}
 		
 		graphicsView.resetCache()
@@ -629,7 +659,7 @@ class MainActivity : AppCompatActivity() {
 			180	to findViewById(R.id.recAngleSliderTick180Label)
 		)
 		
-		graphicsFrameLayout			= findViewById(R.id.graphicsFrameLayout)
+		graphicsViewLayout			= findViewById(R.id.graphicsViewLayout)
 		graphicsView				= findViewById(R.id.graphicsView)
 		graphicsViewModeSwitch		= findViewById(R.id.graphicsViewModeSwitch)
 		
@@ -686,6 +716,13 @@ class MainActivity : AppCompatActivity() {
 		graphicsViewModeSwitch.setOnCheckedChangeListener { _, isChecked ->
 			if (ignoreListeners) return@setOnCheckedChangeListener
 			setGraphicsModeSetting(isChecked)
+		}
+		
+		calcRecAngleButton.setOnClickListener {
+			val intent = Intent(this, AngleCalcActivity::class.java)
+			intent.putExtra("useImperial", useImperial)
+			intent.putExtra("useHalfAngles", useHalfAngles)
+			recAngleCalcLauncher.launch(intent)
 		}
 		
 		recAngleEdit.setOnKeyListener(object: View.OnKeyListener {
