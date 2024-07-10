@@ -51,6 +51,9 @@ class AngleCalcActivity : AppCompatActivity() {
 	
 	private val sliderPrecision	= 0.10		// Slider steps in m or ft
 	
+	private val metersFormat	= "%.2f"
+	private val feetFormat		= "%.1f"
+	
 	private var useImperial		= false
 	private var useHalfAngles	= false
 	
@@ -92,20 +95,20 @@ class AngleCalcActivity : AppCompatActivity() {
 		initializeListeners()
 		
 		if (useImperial) {
-			micHeightEdit		.setText("6.0")
-			subjectHeightEdit	.setText("3.0")
-			subjectWidthEdit	.setText("15.0")
-			horDistanceEdit		.setText("12.0")
+			micHeightEdit		.setText(feetFormat.format(6.0))
+			subjectHeightEdit	.setText(feetFormat.format(3.0))
+			subjectWidthEdit	.setText(feetFormat.format(15.0))
+			horDistanceEdit		.setText(feetFormat.format(12.0))
 			
 			micHeightSlider		.max = (15 / sliderPrecision).roundToInt()
 			subjectHeightSlider	.max = (15 / sliderPrecision).roundToInt()
 			subjectWidthSlider	.max = (60 / sliderPrecision).roundToInt()
 			horDistanceSlider	.max = (30 / sliderPrecision).roundToInt()
 		} else {
-			micHeightEdit		.setText("2.00")
-			subjectHeightEdit	.setText("1.00")
-			subjectWidthEdit	.setText("5.00")
-			horDistanceEdit		.setText("4.00")
+			micHeightEdit		.setText(metersFormat.format(2.0))
+			subjectHeightEdit	.setText(metersFormat.format(1.0))
+			subjectWidthEdit	.setText(metersFormat.format(5.0))
+			horDistanceEdit		.setText(metersFormat.format(4.0))
 			
 			micHeightSlider		.max = ( 5 / sliderPrecision).roundToInt()
 			subjectHeightSlider	.max = ( 5 / sliderPrecision).roundToInt()
@@ -118,10 +121,10 @@ class AngleCalcActivity : AppCompatActivity() {
 	
 	private fun calculateAndUpdate() {
 		// No conversions necessary, as the calculations are all in the same units
-		val micHeight		= micHeightEdit		.text.toString().toDoubleOrNull()
-		val subjectHeight	= subjectHeightEdit	.text.toString().toDoubleOrNull()
-		val subjectWidth	= subjectWidthEdit	.text.toString().toDoubleOrNull()
-		val horDistance		= horDistanceEdit	.text.toString().toDoubleOrNull()
+		val micHeight		= micHeightEdit		.text.toString().replace(',', '.').toDoubleOrNull()
+		val subjectHeight	= subjectHeightEdit	.text.toString().replace(',', '.').toDoubleOrNull()
+		val subjectWidth	= subjectWidthEdit	.text.toString().replace(',', '.').toDoubleOrNull()
+		val horDistance		= horDistanceEdit	.text.toString().replace(',', '.').toDoubleOrNull()
 		
 		if (micHeight == null || subjectHeight == null || subjectWidth == null || horDistance == null) {
 			recAngleValueLabel.text = ""
@@ -247,7 +250,7 @@ class AngleCalcActivity : AppCompatActivity() {
 		if (ignoreListeners) return
 		ignoreListeners = true
 		
-		val value = edit.text.toString().toDoubleOrNull()
+		val value = edit.text.toString().replace(',', '.').toDoubleOrNull()
 		if (value != null) {
 			slider.progress = (value / sliderPrecision).roundToInt()
 		}
@@ -260,7 +263,7 @@ class AngleCalcActivity : AppCompatActivity() {
 		if (ignoreListeners) return
 		ignoreListeners = true
 		
-		val formatString = if (useImperial) "%.1f" else "%.2f"
+		val formatString = if (useImperial) feetFormat else metersFormat
 		edit.setText(formatString.format(slider.progress * sliderPrecision))
 		
 		ignoreListeners = false
