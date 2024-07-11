@@ -296,7 +296,7 @@
 			android:translationZ="1dp"
 			app:layout_constraintBottom_toTopOf="@+id/graphicsViewModeSwitch"
 			app:layout_constraintEnd_toEndOf="@+id/calcRecAngleButton"
-			app:layout_constraintStart_toStartOf="@+id/recAnglePlusMinusLabel"
+			app:layout_constraintStart_toStartOf="@+id/recAngleLabel"
 			app:layout_constraintTop_toBottomOf="@+id/recAngleDivider">
 		
 		<com.gmail.simetist.stereophoniccalculator.StereoConfigView
@@ -353,7 +353,7 @@
 			android:text="Stereo configuration"
 			android:textSize="20sp"
 			app:layout_constraintBottom_toTopOf="@+id/micDistanceValueLabel"
-			app:layout_constraintStart_toStartOf="@+id/graphicsViewLayout" />
+			app:layout_constraintStart_toStartOf="@+id/recAngleLabel" />
 	
 	<TextView
 			android:id="@+id/micDistanceLabel"
@@ -386,7 +386,7 @@
 			android:max="500"
 			android:progress="250"
 			app:layout_constraintBottom_toBottomOf="@+id/micDistanceValueLabel"
-			app:layout_constraintEnd_toEndOf="@+id/graphicsViewLayout"
+			app:layout_constraintEnd_toEndOf="@+id/calcRecAngleButton"
 			app:layout_constraintStart_toEndOf="@+id/micDistanceValueLabel" />
 	
 	<TextView

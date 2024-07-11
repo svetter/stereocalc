@@ -588,43 +588,54 @@ class MainActivity : AppCompatActivity() {
 	// PORTRAIT / LANDSCAPE HANDLING
 	
 	// Saved layout states during landscape orientation
+	private var portraitGraphicsFrameWidth			= 0
 	private var portraitGraphicsFrameHeight			= 0
-	private var portraitGraphicsFrameTopToBottom	= 0
 	private var portraitGraphicsFrameStartToStart	= 0
 	private var portraitGraphicsFrameEndToEnd		= 0
-	private var portraitGraphicsFrameTopMargin		= 0
+	private var portraitGraphicsFrameTopToBottom	= 0
+	private var portraitGraphicsFrameBottomToTop	= 0
 	private var portraitGraphicsFrameLeftMargin		= 0
 	private var portraitGraphicsFrameRightMargin	= 0
+	private var portraitGraphicsFrameTopMargin		= 0
+	private var portraitGraphicsFrameBottomMargin	= 0
 	
 	override fun onConfigurationChanged(newConfig: Configuration) {
 		super.onConfigurationChanged(newConfig)
 		
 		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
 			// Restore graphicsFrame's constraints
-			(graphicsViewLayout.layoutParams as ConstraintLayout.LayoutParams).apply {
-				height			= portraitGraphicsFrameHeight
-				topToBottom		= portraitGraphicsFrameTopToBottom
+			graphicsViewLayout.layoutParams = ConstraintLayout.LayoutParams(
+				portraitGraphicsFrameWidth,
+				portraitGraphicsFrameHeight
+			).apply {
 				startToStart	= portraitGraphicsFrameStartToStart
 				endToEnd		= portraitGraphicsFrameEndToEnd
-				topMargin		= portraitGraphicsFrameTopMargin
+				topToBottom		= portraitGraphicsFrameTopToBottom
+				bottomToTop		= portraitGraphicsFrameBottomToTop
 				leftMargin		= portraitGraphicsFrameLeftMargin
 				rightMargin		= portraitGraphicsFrameRightMargin
+				topMargin		= portraitGraphicsFrameTopMargin
+				bottomMargin	= portraitGraphicsFrameBottomMargin
 			}
 			// Remove background color for graphicsFrameLayout
 			graphicsViewLayout.setBackgroundColor(Color.TRANSPARENT)
 		}
 		else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			// Save layout values
+			portraitGraphicsFrameWidth			= graphicsViewLayout.width
 			portraitGraphicsFrameHeight			= graphicsViewLayout.height
-			portraitGraphicsFrameTopToBottom	= (graphicsViewLayout.layoutParams as ConstraintLayout.LayoutParams).topToBottom
-			portraitGraphicsFrameStartToStart	= (graphicsViewLayout.layoutParams as ConstraintLayout.LayoutParams).startToStart
-			portraitGraphicsFrameEndToEnd		= (graphicsViewLayout.layoutParams as ConstraintLayout.LayoutParams).endToEnd
-			portraitGraphicsFrameTopMargin		= (graphicsViewLayout.layoutParams as ConstraintLayout.LayoutParams).topMargin
-			portraitGraphicsFrameLeftMargin		= (graphicsViewLayout.layoutParams as ConstraintLayout.LayoutParams).leftMargin
-			portraitGraphicsFrameRightMargin	= (graphicsViewLayout.layoutParams as ConstraintLayout.LayoutParams).rightMargin
+			val params = graphicsViewLayout.layoutParams as ConstraintLayout.LayoutParams
+			portraitGraphicsFrameStartToStart	= params.startToStart
+			portraitGraphicsFrameEndToEnd		= params.endToEnd
+			portraitGraphicsFrameTopToBottom	= params.topToBottom
+			portraitGraphicsFrameBottomToTop	= params.bottomToTop
+			portraitGraphicsFrameLeftMargin		= params.leftMargin
+			portraitGraphicsFrameRightMargin	= params.rightMargin
+			portraitGraphicsFrameTopMargin		= params.topMargin
+			portraitGraphicsFrameBottomMargin	= params.bottomMargin
 			
 			// Make graphicsFrame take up the whole layout
-			graphicsViewLayout.layoutParams = FrameLayout.LayoutParams(
+			graphicsViewLayout.layoutParams = ConstraintLayout.LayoutParams(
 				ViewGroup.LayoutParams.MATCH_PARENT,
 				ViewGroup.LayoutParams.MATCH_PARENT
 			)
@@ -657,10 +668,10 @@ class MainActivity : AppCompatActivity() {
 		useOmni			= savedInstanceState.getBoolean("useOmni")
 		holdRecAngle	= savedInstanceState.getBoolean("holdRecAngle")
 		
-		unitsSwitch.isChecked			= useImperial
-		halfAnglesSwitch.isChecked		= useHalfAngles
-		micTypeSwitch.isChecked			= useOmni
-		holdRecAngleSwitch.isChecked	= holdRecAngle
+		unitsSwitch			.isChecked = useImperial
+		halfAnglesSwitch	.isChecked = useHalfAngles
+		micTypeSwitch		.isChecked = useOmni
+		holdRecAngleSwitch	.isChecked = holdRecAngle
 		
 		setCurrentRecAngle		(savedInstanceState.getDouble("recAngle"))
 		setCurrentMicDistance	(savedInstanceState.getDouble("micDistance"))
