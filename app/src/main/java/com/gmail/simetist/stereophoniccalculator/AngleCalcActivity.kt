@@ -50,7 +50,6 @@ class AngleCalcActivity : AppCompatActivity() {
 	
 	
 	private val sliderPrecision	= 0.10		// Slider steps in m or ft
-	private val cmPerFoot		= 30.48
 	
 	private val metersFormat	= "%.2f"
 	private val feetFormat		= "%.1f"
@@ -144,17 +143,13 @@ class AngleCalcActivity : AppCompatActivity() {
 		} else 180.0
 		val micInclination = Math.toDegrees(atan(heightDifference / horDistance))
 		
-		recAngleValueLabel.text = if (useHalfAngles) {
-			"± %.1f°".format(currentRecAngle.roundToInt() / 2.0)
-		} else {
-			"%.0f°".format(currentRecAngle)
-		}
+		recAngleValueLabel.text = angleText(currentRecAngle, useHalfAngles, plusMinusSpace = true)
 		
 		if (micInclination.isNaN() || micInclination.roundToInt() == 0) {
 			micInclinationValueLabel.text = "level"
 		} else {
 			val downUpString = if (micInclination > 0) " down" else " up"
-			micInclinationValueLabel.text = "%.0f°".format(abs(micInclination)) + downUpString
+			micInclinationValueLabel.text = angleText(abs(micInclination), false) + downUpString
 		}
 		
 		val conversionFactor = if (useImperial) cmPerFoot else 100.0

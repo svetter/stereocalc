@@ -374,13 +374,8 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 					val tickPaint = if (majorTick) graphMajorTickPaint else graphMinorTickPaint
 					graphViewCacheCanvas!!.drawLine(graphLeftX, y, graphLeftX - tickLength, y, tickPaint)
 					if (micAngle % 30 == 0) {
-						val labelText = if (useHalfAngles && micAngle != 0) {
-							"±${micAngle / 2}°"
-						} else {
-							"$micAngle°"
-						}
+						val labelText = angleText(micAngle.toDouble(), useHalfAngles, addHalfDecimalForHalfAngles = false)
 						graphViewCacheCanvas!!.drawText(labelText, graphLeftX - mainTickLength - 10, y + 10, graphTickTextPaint)
-						
 						graphViewCacheCanvas!!.drawLine(graphLeftX, y, graphRightX, y, graphGridPaint)
 					}
 				}

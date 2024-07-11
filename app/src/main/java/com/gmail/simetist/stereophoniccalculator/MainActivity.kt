@@ -54,6 +54,8 @@ class MainActivity : AppCompatActivity() {
 	
 	private var ignoreListeners			= false
 	
+	private var customPresets = Array<StereoConfiguration?>(3) { null }
+	
 	
 	private lateinit var mainLayout:					ConstraintLayout
 	
@@ -89,6 +91,9 @@ class MainActivity : AppCompatActivity() {
 	private lateinit var ortfButton:					Button
 	private lateinit var nosButton:						Button
 	private lateinit var dinButton:						Button
+	private lateinit var customButton1:					Button
+	private lateinit var customButton2:					Button
+	private lateinit var customButton3:					Button
 	
 	
 	private lateinit var recAngleCalcLauncher: ActivityResultLauncher<Intent>
@@ -225,20 +230,11 @@ class MainActivity : AppCompatActivity() {
 	}
 	
 	private fun updateMicDistanceLabel() {
-		if (useImperial) {
-			val micDistanceInches = currentMicDistance / 2.54
-			micDistanceValueLabel.text = "%.2fin".format(micDistanceInches)
-		} else {
-			micDistanceValueLabel.text = "%.1fcm".format(currentMicDistance)
-		}
+		micDistanceValueLabel.text = lengthText(currentMicDistance)
 	}
 	
 	private fun updateMicAngleLabel() {
-		if (useHalfAngles) {
-			micAngleValueLabel.text = "± %.1f°".format(currentMicAngle.roundToInt() / 2.0)
-		} else {
-			micAngleValueLabel.text = "%.0f°".format(currentMicAngle)
-		}
+		micAngleValueLabel.text = angleText(currentMicAngle, plusMinusSpace = true)
 	}
 	
 	
@@ -411,7 +407,7 @@ class MainActivity : AppCompatActivity() {
 				}
 				// Reposition the tick label
 				label.layoutParams = (label.layoutParams as ConstraintLayout.LayoutParams).apply {
-					horizontalBias = cmAndInches.second.toFloat() / (maxTickCm / 2.54f)
+					horizontalBias = cmAndInches.second.toFloat() / (maxTickCm / cmPerInch.toFloat())
 				}
 			}
 		} else {
@@ -426,6 +422,12 @@ class MainActivity : AppCompatActivity() {
 		
 		// Update the mic distance label
 		updateMicDistanceLabel()
+		
+		// Update preset buttons
+		setCustomPresetButtonText(0, customButton1)
+		setCustomPresetButtonText(1, customButton2)
+		setCustomPresetButtonText(2, customButton3)
+		
 		// Update the graph view
 		graphicsView.setUseImperial(useImperial)
 	}
@@ -435,27 +437,23 @@ class MainActivity : AppCompatActivity() {
 		useHalfAngles = halfNotFull
 		
 		// Update the rec angle slider ticks
-		if (useHalfAngles) {
-			recAnglePlusMinusLabel.text = "±"
-			recAngleSliderTickLabels.forEach { (angle, label) ->
-				label.text = "±${angle / 2}°"
-			}
-			micAngleSliderTickLabels.forEach { (angle, label) ->
-				label.text = "±${angle / 2}°"
-			}
-		} else {
-			recAnglePlusMinusLabel.text = ""
-			recAngleSliderTickLabels.forEach { (angle, label) ->
-				label.text = "${angle}°"
-			}
-			micAngleSliderTickLabels.forEach { (angle, label) ->
-				label.text = "${angle}°"
-			}
+		recAnglePlusMinusLabel.text = if (useHalfAngles) "±" else ""
+		recAngleSliderTickLabels.forEach { (angle, label) ->
+			label.text = angleText(angle.toDouble(), useHalfAngles, 0, false)
+		}
+		micAngleSliderTickLabels.forEach { (angle, label) ->
+			label.text = angleText(angle.toDouble(), useHalfAngles, 0, false)
 		}
 		
 		// Update the widgets displaying angles as numbers
 		updateRecAngleEdit()
 		updateMicAngleLabel()
+		
+		// Update preset buttons
+		setCustomPresetButtonText(0, customButton1)
+		setCustomPresetButtonText(1, customButton2)
+		setCustomPresetButtonText(2, customButton3)
+		
 		// Update the graph view
 		graphicsView.setUseHalfAngles(useHalfAngles)
 	}
@@ -530,7 +528,7 @@ class MainActivity : AppCompatActivity() {
 	
 	
 	
-	// APPLY PRESETS
+	// PRESETS
 	
 	private fun applyNearCoincidentPreset(micDistance: Int, micAngle: Int) {
 		if (useOmni) micTypeSwitch.performClick()
@@ -540,6 +538,43 @@ class MainActivity : AppCompatActivity() {
 		setCurrentRecAngle		(recAngle)
 		setCurrentMicDistance	(micDistance.toDouble())
 		setCurrentMicAngle		(micAngle.toDouble())
+		
+		recalculateAngularDistortion()
+		recalculateReverbLimits()
+	}
+	
+	private fun setCustomPreset(index: Int, button: Button) {
+		customPresets[index] = StereoConfiguration(
+			useOmni,
+			currentRecAngle,
+			currentMicDistance,
+			currentMicAngle
+		)
+		
+		setCustomPresetButtonText(index, button)
+	}
+	
+	private fun setCustomPresetButtonText(index: Int, button: Button) {
+		val preset = customPresets[index] ?: return
+		
+		val recAngleText	= angleText	(preset.recAngle,		useHalfAngles, 	0, false)
+		val micDistanceText	= lengthText(preset.micDistance,	useImperial,	0)
+		val micAngleText	= angleText	(preset.micAngle,		useHalfAngles,	0, false)
+		
+		var detailsText = micDistanceText
+		if (!preset.omniNotCardioid) {
+			detailsText += "/$micAngleText"
+		}
+		button.text = "$recAngleText $detailsText"
+	}
+	
+	private fun applyCustomPreset(index: Int) {
+		val preset = customPresets[index] ?: return
+		
+		setMicTypeSetting(preset.omniNotCardioid)
+		setCurrentRecAngle		(preset.recAngle)
+		setCurrentMicDistance	(preset.micDistance)
+		setCurrentMicAngle		(preset.micAngle)
 		
 		recalculateAngularDistortion()
 		recalculateReverbLimits()
@@ -690,6 +725,9 @@ class MainActivity : AppCompatActivity() {
 		ortfButton					= findViewById(R.id.ortfButton)
 		nosButton					= findViewById(R.id.nosButton)
 		dinButton					= findViewById(R.id.dinButton)
+		customButton1				= findViewById(R.id.customPresetButton1)
+		customButton2				= findViewById(R.id.customPresetButton2)
+		customButton3				= findViewById(R.id.customPresetButton3)
 	}
 	
 	private fun setupUIListeners() {
@@ -769,7 +807,31 @@ class MainActivity : AppCompatActivity() {
 		dinButton.setOnClickListener {
 			applyNearCoincidentPreset(20, 90)
 		}
+		
+		customButton1.setOnClickListener {
+			applyCustomPreset(0)
+		}
+		customButton1.setOnLongClickListener {
+			setCustomPreset(0, customButton1)
+			true
+		}
+		customButton2.setOnClickListener {
+			applyCustomPreset(1)
+		}
+		customButton2.setOnLongClickListener {
+			setCustomPreset(1, customButton2)
+			true
+		}
+		customButton3.setOnClickListener {
+			applyCustomPreset(2)
+		}
+		customButton3.setOnLongClickListener {
+			setCustomPreset(2, customButton3)
+			true
+		}
 	}
+	
+	
 	
 	private enum class PrimaryValue {
 		REC_ANGLE,
@@ -784,4 +846,13 @@ class MainActivity : AppCompatActivity() {
 			}
 		}
 	}
+	
+	
+	
+	private class StereoConfiguration (
+		val omniNotCardioid:	Boolean,
+		val recAngle:			Double,
+		val micDistance:		Double,
+		val micAngle:			Double
+	)
 }

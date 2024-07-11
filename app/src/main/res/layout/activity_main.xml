@@ -11,9 +11,9 @@
 	<Button
 			android:id="@+id/aboutButton"
 			android:layout_width="wrap_content"
-			android:layout_height="40dp"
+			android:layout_height="wrap_content"
 			android:layout_marginStart="16dp"
-			android:layout_marginTop="8dp"
+			android:layout_marginTop="16dp"
 			android:backgroundTint="#9A8C0000"
 			android:text="About"
 			android:textColor="@color/white"
@@ -22,21 +22,11 @@
 			app:layout_constraintTop_toTopOf="parent" />
 	
 	<TextView
-			android:id="@+id/unitsSettingLabel"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="16dp"
-			android:text="Units"
-			app:layout_constraintBottom_toBottomOf="@+id/metricLabel"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="@+id/metricLabel" />
-	
-	<TextView
 			android:id="@+id/metricLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="8dp"
-			android:text="Metric"
+			android:text="Metric units"
 			app:layout_constraintBottom_toBottomOf="@+id/unitsSwitch"
 			app:layout_constraintEnd_toStartOf="@+id/unitsSwitch"
 			app:layout_constraintTop_toTopOf="@+id/unitsSwitch" />
@@ -45,35 +35,24 @@
 			android:id="@+id/unitsSwitch"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="8dp"
-			android:layout_marginEnd="8dp"
-			app:layout_constraintEnd_toStartOf="@+id/imperialLabel"
-			app:layout_constraintTop_toBottomOf="@+id/aboutButton" />
+			app:layout_constraintEnd_toEndOf="@+id/halfAnglesSwitch"
+			app:layout_constraintStart_toStartOf="@+id/halfAnglesSwitch"
+			app:layout_constraintTop_toTopOf="@+id/aboutButton" />
 	
 	<TextView
 			android:id="@+id/imperialLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="16dp"
-			android:text="Imperial"
+			android:text="Imperial units"
 			app:layout_constraintBottom_toBottomOf="@+id/unitsSwitch"
-			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="@+id/halfAnglesLabel"
 			app:layout_constraintTop_toTopOf="@+id/unitsSwitch" />
-	
-	<TextView
-			android:id="@+id/anglesSettingLabel"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Angles"
-			app:layout_constraintBottom_toBottomOf="@+id/fullAnglesLabel"
-			app:layout_constraintStart_toStartOf="@+id/unitsSettingLabel"
-			app:layout_constraintTop_toTopOf="@+id/fullAnglesLabel" />
 	
 	<TextView
 			android:id="@+id/fullAnglesLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Full"
+			android:text="Full angles"
 			app:layout_constraintBottom_toBottomOf="@+id/halfAnglesSwitch"
 			app:layout_constraintEnd_toEndOf="@+id/metricLabel"
 			app:layout_constraintTop_toTopOf="@+id/halfAnglesSwitch" />
@@ -82,33 +61,25 @@
 			android:id="@+id/halfAnglesSwitch"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			app:layout_constraintEnd_toEndOf="@+id/unitsSwitch"
-			app:layout_constraintStart_toStartOf="@+id/unitsSwitch"
+			android:layout_marginEnd="8dp"
+			app:layout_constraintEnd_toStartOf="@+id/halfAnglesLabel"
 			app:layout_constraintTop_toBottomOf="@+id/unitsSwitch" />
 	
 	<TextView
 			android:id="@+id/halfAnglesLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Half (±)"
+			android:layout_marginEnd="16dp"
+			android:text="Half angles (±)"
 			app:layout_constraintBottom_toBottomOf="@+id/halfAnglesSwitch"
-			app:layout_constraintStart_toStartOf="@+id/imperialLabel"
+			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="@+id/halfAnglesSwitch" />
-	
-	<TextView
-			android:id="@+id/micTypeSettingLabel"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Microphone type"
-			app:layout_constraintBottom_toBottomOf="@+id/cardioidLabel"
-			app:layout_constraintStart_toStartOf="@+id/anglesSettingLabel"
-			app:layout_constraintTop_toTopOf="@+id/cardioidLabel" />
 	
 	<TextView
 			android:id="@+id/cardioidLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Cardioid"
+			android:text="Cardioid mics"
 			app:layout_constraintBottom_toBottomOf="@+id/micTypeSwitch"
 			app:layout_constraintEnd_toEndOf="@+id/fullAnglesLabel"
 			app:layout_constraintTop_toTopOf="@+id/micTypeSwitch" />
@@ -117,15 +88,15 @@
 			android:id="@+id/micTypeSwitch"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			app:layout_constraintEnd_toEndOf="@+id/unitsSwitch"
-			app:layout_constraintStart_toStartOf="@+id/unitsSwitch"
+			app:layout_constraintEnd_toEndOf="@+id/halfAnglesSwitch"
+			app:layout_constraintStart_toStartOf="@+id/halfAnglesSwitch"
 			app:layout_constraintTop_toBottomOf="@+id/halfAnglesSwitch" />
 	
 	<TextView
 			android:id="@+id/omniLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Omni"
+			android:text="Omni mics"
 			app:layout_constraintBottom_toBottomOf="@+id/micTypeSwitch"
 			app:layout_constraintStart_toStartOf="@+id/halfAnglesLabel"
 			app:layout_constraintTop_toTopOf="@+id/micTypeSwitch" />
@@ -134,22 +105,19 @@
 			android:id="@+id/settingsDivider"
 			android:layout_width="0dp"
 			android:layout_height="1dp"
-			android:layout_marginStart="16dp"
 			android:layout_marginTop="8dp"
-			android:layout_marginEnd="16dp"
 			android:background="?android:attr/listDivider"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="@+id/halfAnglesLabel"
+			app:layout_constraintStart_toStartOf="@+id/aboutButton"
 			app:layout_constraintTop_toBottomOf="@+id/micTypeSwitch" />
 	
 	<TextView
 			android:id="@+id/recAngleLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="16dp"
 			android:text="Recording angle"
 			android:textSize="20sp"
-			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintStart_toStartOf="@+id/aboutButton"
 			app:layout_constraintTop_toTopOf="@+id/calcRecAngleButton" />
 	
 	<LinearLayout
@@ -181,13 +149,23 @@
 			android:layout_width="wrap_content"
 			android:layout_height="40dp"
 			android:layout_marginTop="8dp"
-			android:layout_marginEnd="16dp"
 			android:backgroundTint="#9A8C0000"
 			android:text="Calculate"
 			android:textColor="@color/white"
 			app:cornerRadius="5dp"
-			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintEnd_toEndOf="@+id/halfAnglesLabel"
 			app:layout_constraintTop_toBottomOf="@+id/settingsDivider" />
+	
+	<TextView
+			android:id="@+id/recAnglePlusMinusLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="24sp"
+			app:layout_constraintBottom_toBottomOf="@+id/recAngleEdit"
+			app:layout_constraintStart_toStartOf="@+id/recAngleLabel"
+			app:layout_constraintTop_toTopOf="@+id/recAngleEdit"
+			app:layout_constraintVertical_bias="0.312"
+			tools:text="±" />
 	
 	<EditText
 			android:id="@+id/recAngleEdit"
@@ -219,11 +197,11 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="16dp"
-			android:layout_marginEnd="8dp"
+			android:layout_marginEnd="-8dp"
 			android:max="140"
 			android:progress="50"
 			app:layout_constraintBottom_toBottomOf="@+id/recAngleEdit"
-			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintEnd_toEndOf="@+id/calcRecAngleButton"
 			app:layout_constraintHorizontal_bias="0.0"
 			app:layout_constraintStart_toEndOf="@+id/recAngleDegreeLabel" />
 	
@@ -303,24 +281,22 @@
 			android:id="@+id/recAngleDivider"
 			android:layout_width="0dp"
 			android:layout_height="1dp"
-			android:layout_marginStart="16dp"
 			android:layout_marginTop="8dp"
-			android:layout_marginEnd="16dp"
 			android:background="?android:attr/listDivider"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="@+id/settingsDivider"
+			app:layout_constraintStart_toStartOf="@+id/settingsDivider"
 			app:layout_constraintTop_toBottomOf="@+id/recAngleEdit" />
 	
 	<FrameLayout
 			android:id="@+id/graphicsViewLayout"
-			android:translationZ="1dp"
 			android:layout_width="0dp"
-			android:layout_height="250dp"
-			android:layout_marginStart="16dp"
+			android:layout_height="0dp"
 			android:layout_marginTop="8dp"
-			android:layout_marginEnd="16dp"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
+			android:layout_marginBottom="4dp"
+			android:translationZ="1dp"
+			app:layout_constraintBottom_toTopOf="@+id/graphicsViewModeSwitch"
+			app:layout_constraintEnd_toEndOf="@+id/calcRecAngleButton"
+			app:layout_constraintStart_toStartOf="@+id/recAnglePlusMinusLabel"
 			app:layout_constraintTop_toBottomOf="@+id/recAngleDivider">
 		
 		<com.gmail.simetist.stereophoniccalculator.StereoConfigView
@@ -344,10 +320,10 @@
 			android:id="@+id/graphicsViewModeSwitch"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="4dp"
+			android:layout_marginBottom="8dp"
+			app:layout_constraintBottom_toTopOf="@+id/graphicsDivider"
 			app:layout_constraintEnd_toEndOf="@+id/graphicsViewLayout"
-			app:layout_constraintStart_toStartOf="@+id/graphicsViewLayout"
-			app:layout_constraintTop_toBottomOf="@+id/graphicsViewLayout" />
+			app:layout_constraintStart_toStartOf="@+id/graphicsViewLayout" />
 	
 	<TextView
 			android:id="@+id/graphModeLabel"
@@ -363,34 +339,30 @@
 			android:id="@+id/graphicsDivider"
 			android:layout_width="0dp"
 			android:layout_height="1dp"
-			android:layout_marginStart="16dp"
-			android:layout_marginTop="8dp"
-			android:layout_marginEnd="16dp"
+			android:layout_marginBottom="8dp"
 			android:background="?android:attr/listDivider"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/graphicsViewModeSwitch" />
+			app:layout_constraintBottom_toTopOf="@+id/stereoConfigLabel"
+			app:layout_constraintEnd_toEndOf="@+id/recAngleDivider"
+			app:layout_constraintStart_toStartOf="@+id/recAngleDivider" />
 	
 	<TextView
 			android:id="@+id/stereoConfigLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="16dp"
-			android:layout_marginTop="8dp"
+			android:layout_marginBottom="12dp"
 			android:text="Stereo configuration"
 			android:textSize="20sp"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/graphicsDivider" />
+			app:layout_constraintBottom_toTopOf="@+id/micDistanceValueLabel"
+			app:layout_constraintStart_toStartOf="@+id/graphicsViewLayout" />
 	
 	<TextView
 			android:id="@+id/micDistanceLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="16dp"
 			android:text="Distance"
 			android:textSize="16sp"
 			app:layout_constraintBottom_toBottomOf="@+id/micDistanceValueLabel"
-			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintStart_toStartOf="@+id/stereoConfigLabel"
 			app:layout_constraintTop_toTopOf="@+id/micDistanceValueLabel" />
 	
 	<TextView
@@ -398,11 +370,11 @@
 			android:layout_width="75dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="8dp"
-			android:layout_marginTop="12dp"
+			android:layout_marginBottom="8dp"
 			android:textAlignment="textEnd"
 			android:textSize="20sp"
+			app:layout_constraintBottom_toTopOf="@+id/micAngleValueLabel"
 			app:layout_constraintStart_toEndOf="@+id/micDistanceLabel"
-			app:layout_constraintTop_toBottomOf="@+id/stereoConfigLabel"
 			tools:text="30.0cm" />
 	
 	<SeekBar
@@ -410,11 +382,11 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="8dp"
-			android:layout_marginEnd="8dp"
+			android:layout_marginEnd="-8dp"
 			android:max="500"
 			android:progress="250"
 			app:layout_constraintBottom_toBottomOf="@+id/micDistanceValueLabel"
-			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintEnd_toEndOf="@+id/graphicsViewLayout"
 			app:layout_constraintStart_toEndOf="@+id/micDistanceValueLabel" />
 	
 	<TextView
@@ -493,33 +465,31 @@
 			android:id="@+id/micAngleLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="16dp"
 			android:text="Angle"
 			android:textSize="16sp"
 			app:layout_constraintBottom_toBottomOf="@+id/micAngleValueLabel"
-			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintStart_toStartOf="@+id/micDistanceLabel"
 			app:layout_constraintTop_toTopOf="@+id/micAngleValueLabel" />
 	
 	<TextView
 			android:id="@+id/micAngleValueLabel"
 			android:layout_width="75dp"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="8dp"
+			android:layout_marginBottom="16dp"
 			android:textAlignment="textEnd"
 			android:textSize="20sp"
+			app:layout_constraintBottom_toTopOf="@+id/angularDistValueLabel"
 			app:layout_constraintEnd_toEndOf="@+id/micDistanceValueLabel"
-			app:layout_constraintTop_toBottomOf="@+id/micDistanceValueLabel"
 			tools:text="68°" />
 	
 	<SeekBar
 			android:id="@+id/micAngleSlider"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="8dp"
 			android:max="1800"
 			android:progress="600"
 			app:layout_constraintBottom_toBottomOf="@+id/micAngleValueLabel"
-			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintEnd_toEndOf="@+id/micDistanceSlider"
 			app:layout_constraintStart_toStartOf="@+id/micDistanceSlider" />
 	
 	<TextView
@@ -573,19 +543,18 @@
 			android:id="@+id/angularDistLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="16dp"
 			android:text="Angular distortion"
 			app:layout_constraintBottom_toBottomOf="@+id/angularDistValueLabel"
-			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintStart_toStartOf="@+id/micAngleLabel"
 			app:layout_constraintTop_toTopOf="@+id/angularDistValueLabel" />
 	
 	<TextView
 			android:id="@+id/angularDistValueLabel"
 			android:layout_width="40dp"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="16dp"
+			android:layout_marginBottom="8dp"
+			app:layout_constraintBottom_toTopOf="@+id/reverbLimitsWarnLabel"
 			app:layout_constraintStart_toStartOf="@+id/micDistanceSliderTick0Label"
-			app:layout_constraintTop_toBottomOf="@+id/micAngleValueLabel"
 			tools:text="≤ 4.5°" />
 	
 	<ProgressBar
@@ -594,12 +563,11 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="8dp"
-			android:layout_marginEnd="16dp"
 			android:max="1000"
 			android:progress="400"
 			android:progressTint="#FFEB3B"
 			app:layout_constraintBottom_toBottomOf="@+id/angularDistValueLabel"
-			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintEnd_toEndOf="@+id/graphicsViewLayout"
 			app:layout_constraintStart_toEndOf="@+id/angularDistValueLabel"
 			app:layout_constraintTop_toTopOf="@+id/angularDistValueLabel" />
 	
@@ -607,93 +575,170 @@
 			android:id="@+id/reverbLimitsLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="16dp"
 			android:text="Reverberation limits"
 			app:layout_constraintBottom_toBottomOf="@+id/reverbLimitsWarnLabel"
-			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintStart_toStartOf="@+id/angularDistLabel"
 			app:layout_constraintTop_toTopOf="@+id/reverbLimitsWarnLabel" />
 	
 	<TextView
 			android:id="@+id/reverbLimitsWarnLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="8dp"
+			android:layout_marginBottom="8dp"
 			android:textColor="#4CAF50"
+			app:layout_constraintBottom_toTopOf="@+id/bottomDivider"
 			app:layout_constraintStart_toStartOf="@+id/angularDistValueLabel"
-			app:layout_constraintTop_toBottomOf="@+id/angularDistValueLabel"
 			tools:text="Okay/Excessive in center/on sides" />
 	
 	<View
 			android:id="@+id/bottomDivider"
 			android:layout_width="0dp"
 			android:layout_height="1dp"
-			android:layout_marginStart="16dp"
-			android:layout_marginTop="8dp"
-			android:layout_marginEnd="16dp"
+			android:layout_marginBottom="8dp"
 			android:background="?android:attr/listDivider"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/reverbLimitsWarnLabel" />
-	
-	<TextView
-			android:id="@+id/recAnglePlusMinusLabel"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="16dp"
-			android:textSize="24sp"
-			app:layout_constraintBottom_toBottomOf="@+id/recAngleEdit"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="@+id/recAngleEdit"
-			app:layout_constraintVertical_bias="0.312"
-			tools:text="±" />
+			app:layout_constraintBottom_toTopOf="@+id/presetsLabel"
+			app:layout_constraintEnd_toEndOf="@+id/graphicsDivider"
+			app:layout_constraintStart_toStartOf="@+id/graphicsDivider" />
 	
 	<TextView
 			android:id="@+id/presetsLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="16dp"
-			android:layout_marginTop="8dp"
+			android:layout_marginBottom="4dp"
 			android:text="Presets"
 			android:textSize="16sp"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/bottomDivider" />
+			app:layout_constraintBottom_toTopOf="@+id/presetsLayout"
+			app:layout_constraintStart_toStartOf="@+id/reverbLimitsLabel" />
 	
-	<Button
-			android:id="@+id/ortfButton"
+	<LinearLayout
+			android:id="@+id/presetsLayout"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="8dp"
+			android:orientation="horizontal"
+			app:layout_constraintBottom_toTopOf="@+id/customPresetsLabel"
+			app:layout_constraintEnd_toEndOf="@+id/angularDistIndicator"
+			app:layout_constraintStart_toStartOf="@+id/presetsLabel">
+		
+		<Button
+				android:id="@+id/ortfButton"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:layout_weight="1"
+				android:backgroundTint="#9A8C0000"
+				android:text="ORTF"
+				android:textColor="@color/white"
+				app:cornerRadius="0dp" />
+		
+		<Space
+				android:layout_width="16dp"
+				android:layout_height="match_parent"
+				android:layout_weight="0" />
+		
+		<Button
+				android:id="@+id/nosButton"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:layout_weight="1"
+				android:backgroundTint="#9A8C0000"
+				android:text="NOS"
+				android:textColor="@color/white"
+				app:cornerRadius="0dp" />
+		
+		<Space
+				android:layout_width="16dp"
+				android:layout_height="match_parent"
+				android:layout_weight="0" />
+		
+		<Button
+				android:id="@+id/dinButton"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:layout_weight="1"
+				android:backgroundTint="#9A8C0000"
+				android:text="DIN"
+				android:textColor="@color/white"
+				app:cornerRadius="0dp" />
+	
+	</LinearLayout>
+	
+	<TextView
+			android:id="@+id/customPresetsLabel"
 			android:layout_width="wrap_content"
-			android:layout_height="40dp"
-			android:layout_marginTop="4dp"
-			android:backgroundTint="#9A8C0000"
-			android:text="ORTF"
-			android:textColor="@color/white"
-			app:cornerRadius="0dp"
-			app:layout_constraintStart_toStartOf="@+id/presetsLabel"
-			app:layout_constraintTop_toBottomOf="@+id/presetsLabel" />
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="4dp"
+			android:text="Saved configurations"
+			android:textSize="16sp"
+			app:layout_constraintBottom_toTopOf="@+id/customPresetsLayout"
+			app:layout_constraintStart_toStartOf="@+id/presetsLayout" />
 	
-	<Button
-			android:id="@+id/nosButton"
+	<TextView
+			android:id="@+id/customPresetExplainLabel"
 			android:layout_width="wrap_content"
-			android:layout_height="40dp"
-			android:layout_marginStart="16dp"
-			android:backgroundTint="#9A8C0000"
-			android:text="NOS"
-			android:textColor="@color/white"
-			app:cornerRadius="0dp"
-			app:layout_constraintBottom_toBottomOf="@+id/ortfButton"
-			app:layout_constraintStart_toEndOf="@+id/ortfButton"
-			app:layout_constraintTop_toTopOf="@+id/ortfButton" />
+			android:layout_height="wrap_content"
+			android:text="Hold to set"
+			android:textSize="12sp"
+			app:layout_constraintBottom_toBottomOf="@+id/customPresetsLabel"
+			app:layout_constraintEnd_toEndOf="@+id/presetsLayout" />
 	
-	<Button
-			android:id="@+id/dinButton"
-			android:layout_width="wrap_content"
-			android:layout_height="40dp"
-			android:layout_marginStart="16dp"
-			android:backgroundTint="#9A8C0000"
-			android:text="DIN"
-			android:textColor="@color/white"
-			app:cornerRadius="0dp"
-			app:layout_constraintBottom_toBottomOf="@+id/nosButton"
-			app:layout_constraintStart_toEndOf="@+id/nosButton"
-			app:layout_constraintTop_toTopOf="@+id/nosButton" />
-	
+	<LinearLayout
+			android:id="@+id/customPresetsLayout"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="16dp"
+			android:orientation="horizontal"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="@+id/customPresetExplainLabel"
+			app:layout_constraintStart_toStartOf="@+id/customPresetsLabel">
+		
+		<Button
+				android:id="@+id/customPresetButton1"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:layout_weight="1"
+				android:backgroundTint="#9A8C0000"
+				android:paddingLeft="8dp"
+				android:paddingRight="8dp"
+				android:text="Empty"
+				android:textColor="@color/white"
+				android:textSize="12sp"
+				app:cornerRadius="0dp" />
+		
+		<Space
+				android:layout_width="16dp"
+				android:layout_height="match_parent"
+				android:layout_weight="0" />
+		
+		<Button
+				android:id="@+id/customPresetButton2"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:layout_weight="1"
+				android:backgroundTint="#9A8C0000"
+				android:paddingLeft="8dp"
+				android:paddingRight="8dp"
+				android:text="Empty"
+				android:textColor="@color/white"
+				android:textSize="12sp"
+				app:cornerRadius="0dp" />
+		
+		<Space
+				android:layout_width="16dp"
+				android:layout_height="match_parent"
+				android:layout_weight="0" />
+		
+		<Button
+				android:id="@+id/customPresetButton3"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:layout_weight="1"
+				android:backgroundTint="#9A8C0000"
+				android:paddingLeft="8dp"
+				android:paddingRight="8dp"
+				android:text="Empty"
+				android:textColor="@color/white"
+				android:textSize="12sp"
+				app:cornerRadius="0dp" />
+	</LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
