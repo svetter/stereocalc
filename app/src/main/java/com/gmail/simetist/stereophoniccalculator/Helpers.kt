@@ -18,7 +18,7 @@ const val cmPerFoot	= 30.48
 
 fun lengthText(
 	length:				Double,
-	useImperial:		Boolean = false,
+	useImperial:		Boolean,
 	numDecimalPlaces:	Int = if (useImperial) 2 else 1): String {
 	return if (useImperial) {
 		"%.${numDecimalPlaces}fin".format(length / cmPerInch)

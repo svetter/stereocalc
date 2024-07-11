@@ -240,7 +240,7 @@ class MainActivity : AppCompatActivity() {
 	}
 	
 	private fun updateMicDistanceLabel() {
-		micDistanceValueLabel.text = lengthText(currentMicDistance)
+		micDistanceValueLabel.text = lengthText(currentMicDistance, useImperial)
 	}
 	
 	private fun updateMicAngleLabel() {
