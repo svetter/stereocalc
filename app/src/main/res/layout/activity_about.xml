@@ -35,10 +35,10 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginBottom="8dp"
-      android:text="Version 0.1"
       android:textSize="16sp"
       app:layout_constraintBottom_toTopOf="@+id/logoDivider"
-      app:layout_constraintStart_toStartOf="@+id/appNameLabel" />
+      app:layout_constraintStart_toStartOf="@+id/appNameLabel"
+      tools:text="Version X.X.X" />
   
   <View
       android:id="@+id/logoDivider"
