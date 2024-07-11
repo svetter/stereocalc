@@ -49,6 +49,10 @@ class AngleCalcActivity : AppCompatActivity() {
 	private lateinit var applyBackButton:			Button
 	
 	
+	private lateinit var sharedPreferences:		android.content.SharedPreferences
+	private lateinit var prefEditor:			android.content.SharedPreferences.Editor
+	
+	
 	private val sliderPrecision	= 0.10		// Slider steps in m or ft
 	
 	private val metersFormat	= "%.2f"
@@ -75,11 +79,6 @@ class AngleCalcActivity : AppCompatActivity() {
 			view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 			insets
 		}
-		
-		
-		useImperial		= intent.getBooleanExtra("useImperial",	false)
-		useHalfAngles	= intent.getBooleanExtra("useHalfAngles",	false)
-		
 		mainLayout.post {
 			// Expand the graphics view to fill the remaining space, if any
 			if (mainLayout.height > scrollViewLayout.height + systemBarsHeight) {
@@ -88,36 +87,36 @@ class AngleCalcActivity : AppCompatActivity() {
 			}
 		}
 		
-		for (lengthUnitLabel in lengthUnitLabels) {
-			if (useImperial) {
-				lengthUnitLabel.text = "ft"
-			} else {
-				lengthUnitLabel.text = "m"
-			}
-		}
 		
+		sharedPreferences = getSharedPreferences("com.gmail.simetist.stereophoniccalculator", MODE_PRIVATE)
+		prefEditor = sharedPreferences.edit()
+		
+		
+		useImperial		= intent.getBooleanExtra("useImperial",	false)
+		useHalfAngles	= intent.getBooleanExtra("useHalfAngles",	false)
+		
+		setupUIForSettings()
 		initializeListeners()
 		
+		// Set defaults
 		if (useImperial) {
 			micHeightEdit		.setText(feetFormat.format(6.0))
 			subjectHeightEdit	.setText(feetFormat.format(3.0))
 			subjectWidthEdit	.setText(feetFormat.format(15.0))
 			horDistanceEdit		.setText(feetFormat.format(10.0))
-			
-			micHeightSlider		.max = (15 / sliderPrecision).roundToInt()
-			subjectHeightSlider	.max = (15 / sliderPrecision).roundToInt()
-			subjectWidthSlider	.max = (60 / sliderPrecision).roundToInt()
-			horDistanceSlider	.max = (30 / sliderPrecision).roundToInt()
 		} else {
 			micHeightEdit		.setText(metersFormat.format(2.0))
 			subjectHeightEdit	.setText(metersFormat.format(1.0))
 			subjectWidthEdit	.setText(metersFormat.format(5.0))
 			horDistanceEdit		.setText(metersFormat.format(3.0))
-			
-			micHeightSlider		.max = ( 5 / sliderPrecision).roundToInt()
-			subjectHeightSlider	.max = ( 5 / sliderPrecision).roundToInt()
-			subjectWidthSlider	.max = (20 / sliderPrecision).roundToInt()
-			horDistanceSlider	.max = (10 / sliderPrecision).roundToInt()
+		}
+		
+		if (savedInstanceState != null) {
+			restoreStateFromBundle(savedInstanceState)
+		} else if (sharedPreferences.contains("micHeightCm")) {
+			restoreStateFromSharedPrefs()
+		} else {
+			calculateAndUpdate()
 		}
 	}
 	
@@ -201,6 +200,28 @@ class AngleCalcActivity : AppCompatActivity() {
 		applyBackButton				= findViewById(R.id.applyBackButton)
 	}
 	
+	private fun setupUIForSettings() {
+		for (lengthUnitLabel in lengthUnitLabels) {
+			if (useImperial) {
+				lengthUnitLabel.text = "ft"
+			} else {
+				lengthUnitLabel.text = "m"
+			}
+		}
+		
+		if (useImperial) {
+			micHeightSlider		.max = (15 / sliderPrecision).roundToInt()
+			subjectHeightSlider	.max = (15 / sliderPrecision).roundToInt()
+			subjectWidthSlider	.max = (60 / sliderPrecision).roundToInt()
+			horDistanceSlider	.max = (30 / sliderPrecision).roundToInt()
+		} else {
+			micHeightSlider		.max = ( 5 / sliderPrecision).roundToInt()
+			subjectHeightSlider	.max = ( 5 / sliderPrecision).roundToInt()
+			subjectWidthSlider	.max = (20 / sliderPrecision).roundToInt()
+			horDistanceSlider	.max = (10 / sliderPrecision).roundToInt()
+		}
+	}
+	
 	private fun initializeListeners() {
 		micHeightEdit.addTextChangedListener {
 			handleLengthEditChange(micHeightEdit, micHeightSlider)
@@ -278,5 +299,78 @@ class AngleCalcActivity : AppCompatActivity() {
 		
 		ignoreListeners = false
 		calculateAndUpdate()
+	}
+	
+	
+	
+	// SAVE / RESTORE STATE
+	
+	override fun onSaveInstanceState(outState: Bundle) {
+		super.onSaveInstanceState(outState)
+		
+		outState.putDouble("micHeight",		micHeightEdit		.text.toString().replace(',', '.').toDoubleOrNull() ?: Double.NaN)
+		outState.putDouble("subjectHeight",	subjectHeightEdit	.text.toString().replace(',', '.').toDoubleOrNull() ?: Double.NaN)
+		outState.putDouble("subjectWidth",	subjectWidthEdit		.text.toString().replace(',', '.').toDoubleOrNull() ?: Double.NaN)
+		outState.putDouble("horDistance",	horDistanceEdit		.text.toString().replace(',', '.').toDoubleOrNull() ?: Double.NaN)
+	}
+	
+	private fun restoreStateFromBundle(savedInstanceState: Bundle) {
+		val formatString = if (useImperial) feetFormat else metersFormat
+		
+		arrayOf(
+			"micHeight"		to micHeightEdit,
+			"subjectHeight"	to subjectHeightEdit,
+			"subjectWidth"	to subjectWidthEdit,
+			"horDistance"	to horDistanceEdit
+		).forEach { (key, edit) ->
+			val value = savedInstanceState.getDouble(key)
+			if (!value.isNaN()) {
+				edit.setText(formatString.format(value))
+			}
+		}
+		
+		calculateAndUpdate()
+	}
+	
+	private fun saveStateToSharedPrefs() {
+		val conversionFactor = if (useImperial) cmPerFoot else 100.0
+		arrayOf(
+			"micHeightCm"		to micHeightEdit		.text.toString().replace(',', '.').toDoubleOrNull(),
+			"subjectHeightCm"	to subjectHeightEdit	.text.toString().replace(',', '.').toDoubleOrNull(),
+			"subjectWidthCm"	to subjectWidthEdit		.text.toString().replace(',', '.').toDoubleOrNull(),
+			"horDistanceCm"		to horDistanceEdit		.text.toString().replace(',', '.').toDoubleOrNull()
+		).forEach { (key, value) ->
+			if (value != null) {
+				prefEditor.putFloat(key, (value * conversionFactor).toFloat())
+			} else {
+				prefEditor.remove(key)
+			}
+		}
+		
+		prefEditor.apply()
+	}
+	
+	private fun restoreStateFromSharedPrefs() {
+		val conversionFactor = if (useImperial) cmPerFoot else 100.0
+		val formatString = if (useImperial) feetFormat else metersFormat
+		
+		arrayOf(
+			"micHeightCm"		to micHeightEdit,
+			"subjectHeightCm"	to subjectHeightEdit,
+			"subjectWidthCm"	to subjectWidthEdit,
+			"horDistanceCm"		to horDistanceEdit
+		).forEach { (key, edit) ->
+			val value = sharedPreferences.getFloat(key, Float.NaN).toDouble()
+			if (!value.isNaN()) {
+				edit.setText(formatString.format(value / conversionFactor))
+			}
+		}
+		
+		calculateAndUpdate()
+	}
+	
+	override fun onDestroy() {
+		saveStateToSharedPrefs()
+		super.onDestroy()
 	}
 }

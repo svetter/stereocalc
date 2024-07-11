@@ -26,6 +26,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.gmail.simetist.stereophoniccalculator.MainActivity.PrimaryValue.*
+import java.io.Serializable
 import kotlin.math.roundToInt
 
 
@@ -135,7 +136,7 @@ class MainActivity : AppCompatActivity() {
 		
 		if (savedInstanceState != null) {
 			Log.i(TAG, "Restoring saved state")
-			restoreState(savedInstanceState)
+			restoreStateFromBundle(savedInstanceState)
 		}
 		else if (sharedPreferences.contains("recAngle")) {
 			Log.i(TAG, "Restoring state from shared preferences")
@@ -665,7 +666,6 @@ class MainActivity : AppCompatActivity() {
 	override fun onSaveInstanceState(outState: Bundle) {
 		super.onSaveInstanceState(outState)
 		
-		// Save state to bundle
 		outState.putBoolean("useInches",		useImperial)
 		outState.putBoolean("useHalfAngles",	useHalfAngles)
 		outState.putBoolean("useOmni",			useOmni)
@@ -677,10 +677,30 @@ class MainActivity : AppCompatActivity() {
 		outState.putDouble("micAngle",			currentMicAngle)
 		
 		outState.putSerializable("customPresets", customPresets)
+	}
+	
+	private fun restoreStateFromBundle(savedInstanceState: Bundle) {
+		setUnitsSetting			(savedInstanceState.getBoolean("useInches"))
+		setHalfAnglesSetting	(savedInstanceState.getBoolean("useHalfAngles"))
+		setMicTypeSetting		(savedInstanceState.getBoolean("useOmni"))
+		setHoldRecAngleSetting	(savedInstanceState.getBoolean("holdRecAngle"))
+		setGraphicsModeSetting	(savedInstanceState.getBoolean("showGraphView"))
 		
-		// Save state to shared preferences
-		prefEditor.clear()
+		setCurrentRecAngle		(savedInstanceState.getDouble("recAngle"))
+		setCurrentMicDistance	(savedInstanceState.getDouble("micDistance"))
+		setCurrentMicAngle		(savedInstanceState.getDouble("micAngle"))
 		
+		recalculateAngularDistortion()
+		recalculateReverbLimits()
+		
+		val serializable = savedInstanceState.getSerializable("customPresets") as Array<*>
+		for (i in 0 until 3) {
+			customPresets[i] = serializable[i] as StereoConfiguration?
+		}
+		updatePresetButtonTexts()
+	}
+	
+	private fun saveStateToSharedPrefs() {
 		prefEditor.putBoolean("useImperial",	useImperial)
 		prefEditor.putBoolean("useHalfAngles",	useHalfAngles)
 		prefEditor.putBoolean("useOmni",		useOmni)
@@ -706,28 +726,6 @@ class MainActivity : AppCompatActivity() {
 		}
 		
 		prefEditor.apply()
-	}
-	
-	private fun restoreState(savedInstanceState: Bundle) {
-		// Restore saved state
-		setUnitsSetting			(savedInstanceState.getBoolean("useInches"))
-		setHalfAnglesSetting	(savedInstanceState.getBoolean("useHalfAngles"))
-		setMicTypeSetting		(savedInstanceState.getBoolean("useOmni"))
-		setHoldRecAngleSetting	(savedInstanceState.getBoolean("holdRecAngle"))
-		setGraphicsModeSetting	(savedInstanceState.getBoolean("showGraphView"))
-		
-		setCurrentRecAngle		(savedInstanceState.getDouble("recAngle"))
-		setCurrentMicDistance	(savedInstanceState.getDouble("micDistance"))
-		setCurrentMicAngle		(savedInstanceState.getDouble("micAngle"))
-		
-		recalculateAngularDistortion()
-		recalculateReverbLimits()
-		
-		val serializable = savedInstanceState.getSerializable("customPresets") as Array<*>
-		for (i in 0 until 3) {
-			customPresets[i] = serializable[i] as StereoConfiguration?
-		}
-		updatePresetButtonTexts()
 	}
 	
 	private fun restoreStateFromSharedPrefs() {
@@ -756,6 +754,11 @@ class MainActivity : AppCompatActivity() {
 			customPresets[i] = StereoConfiguration(omniNotCardioid, recAngle, micDistance, micAngle)
 		}
 		updatePresetButtonTexts()
+	}
+	
+	override fun onDestroy() {
+		saveStateToSharedPrefs()
+		super.onDestroy()
 	}
 	
 	
@@ -945,5 +948,5 @@ class MainActivity : AppCompatActivity() {
 		val recAngle:			Double,
 		val micDistance:		Double,
 		val micAngle:			Double
-	)
+	) : Serializable
 }
