@@ -1,5 +1,11 @@
 package com.gmail.simetist.stereophoniccalculator
 
+import android.app.Activity
+import android.content.Context
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
@@ -43,5 +49,23 @@ fun angleText(
 		}
 	} else {
 		"%.${numDecimalPlaces}f°".format(angle)
+	}
+}
+
+
+
+fun vibrate(activity: Activity, duration: Int = 50) {
+	val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+		val vibratorManager = activity.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+		vibratorManager.defaultVibrator
+	} else {
+		activity.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+	}
+	
+	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+		vibrator.vibrate(VibrationEffect.createOneShot(duration.toLong(), VibrationEffect.DEFAULT_AMPLITUDE))
+	} else {
+		@Suppress("DEPRECATION")
+		vibrator.vibrate(duration.toLong())
 	}
 }

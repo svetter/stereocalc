@@ -378,6 +378,7 @@ class MainActivity : AppCompatActivity() {
 	fun handle2DUserInput(micDistance: Double, micAngle: Double) {
 		if (useOmni && micAngle > 0.0) {
 			micTypeSwitch.performClick()
+			vibrate(this, 100)
 		}
 		
 		lastChangedPrimValue = MIC_DISTANCE
@@ -566,6 +567,8 @@ class MainActivity : AppCompatActivity() {
 			detailsText += "/$micAngleText"
 		}
 		button.text = "$recAngleText $detailsText"
+		
+		vibrate(this)
 	}
 	
 	private fun applyCustomPreset(index: Int) {
