@@ -920,10 +920,6 @@ class MainActivity : AppCompatActivity() {
 				true
 			}
 		}
-		
-		findViewById<Button>(R.id.clearPrefsButton).setOnClickListener {
-			prefEditor.clear().apply()
-		}
 	}
 	
 	
