@@ -3,7 +3,6 @@ package com.gmail.simetist.stereophoniccalculator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.SeekBar
@@ -17,21 +16,7 @@ class VerticalSeekBar : SeekBar {
 	
 	constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 	
-	constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
-		context,
-		attrs,
-		defStyleAttr
-	)
-	
-	@Synchronized
-	override fun setMax(max: Int) {
-		super.setMax(max)
-	}
-	
-	@Synchronized
-	override fun setMin(min: Int) {
-		super.setMin(min)
-	}
+	constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 	
 	@Synchronized
 	override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -45,42 +30,49 @@ class VerticalSeekBar : SeekBar {
 	}
 	
 	@Synchronized
-	override fun onDraw(canvas: Canvas) {
+	override fun draw(canvas: Canvas) {
 		canvas.rotate(-90f)
 		canvas.translate(-height.toFloat(), 0f)
-		super.onDraw(canvas)
+		super.draw(canvas)
 	}
 	
 	@SuppressLint("ClickableViewAccessibility")
+	@Synchronized
 	override fun onTouchEvent(event: MotionEvent): Boolean {
 		if (!isEnabled) {
-			return true
+			return false
 		}
+		
+		super.onTouchEvent(event)
+		
 		when (event.action) {
 			MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -> {
-				progress = (max - (max * (event.y - paddingEnd)) / (height - paddingStart - paddingEnd)).roundToInt()
+				val yDelta = event.y - paddingEnd
+				val effectiveHeight = height - paddingStart - paddingEnd
+				progress = (max - (max * yDelta) / effectiveHeight).roundToInt()
 				onSizeChanged(width, height, 0, 0)
 			}
-			MotionEvent.ACTION_CANCEL -> {}
 		}
+		
+		if (event.action == MotionEvent.ACTION_MOVE) {
+			thumb.state = intArrayOf(
+				android.R.attr.state_window_focused,
+				android.R.attr.state_enabled,
+				android.R.attr.state_pressed,
+				android.R.attr.state_accelerated
+			)
+		} else {
+			thumb.state = intArrayOf(
+				android.R.attr.state_window_focused,
+				android.R.attr.state_enabled,
+				android.R.attr.state_accelerated
+			)
+		}
+		
+		if (event.action == MotionEvent.ACTION_UP) {
+			performClick()
+		}
+		
 		return true
-	}
-	
-	override fun setThumb(thumb: Drawable) {
-		super.setThumb(thumb)
-	}
-	
-	@Synchronized
-	override fun setProgress(progress: Int) {
-		super.setProgress(progress)
-	}
-	
-	@Synchronized
-	override fun getProgress(): Int {
-		return super.getProgress()
-	}
-	
-	override fun setOnSeekBarChangeListener(l: OnSeekBarChangeListener) {
-		super.setOnSeekBarChangeListener(l)
 	}
 }

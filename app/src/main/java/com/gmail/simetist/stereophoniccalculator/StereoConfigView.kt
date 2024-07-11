@@ -429,8 +429,7 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 			var prevX = graphLeftX
 			var prevY = graphBottomY
 			
-			val micDistanceAtMaxAngle =
-				calculateCardioidMicDistance(recAngle.toDouble(), maxMicAngle.toDouble())
+			val micDistanceAtMaxAngle = calculateCardioidMicDistance(recAngle.toDouble(), maxMicAngle.toDouble())
 			val firstMicDistance = if (micDistanceAtMaxAngle.isNaN()) {
 				0.0
 			} else {
