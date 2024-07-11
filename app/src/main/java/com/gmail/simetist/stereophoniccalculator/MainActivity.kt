@@ -33,18 +33,20 @@ import kotlin.math.roundToInt
 private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
-	private val recAngleLowerBound		= 40.0
+	private val recAngleLowerBound		=  40.0
 	private val recAngleUpperBound		= 180.0
-	private val recAngleDefault			= 90.0
-	private val micDistanceLowerBound	= 0.0
-	private val micDistanceUpperBound	= 50.0
-	private val micDistanceDefault		= 30.0
-	private val micAngleLowerBound		= 0.0
+	private val micDistanceLowerBound	=   0.0
+	private val micDistanceUpperBound	=  50.0
+	private val micAngleLowerBound		=   0.0
 	private val micAngleUpperBound		= 180.0
 	
-	private var currentRecAngle			= -1.0
-	private var currentMicDistance		= -1.0
-	private var currentMicAngle			= -1.0
+	private val recAngleDefault			=  90.0
+	private val micDistanceDefault		=  30.0
+	private val micAngleDefault			=  calculateCardioidMicAngle(recAngleDefault, micDistanceDefault)
+	
+	private var currentRecAngle			=  -1.0
+	private var currentMicDistance		=  -1.0
+	private var currentMicAngle			=  -1.0
 	
 	private var useImperial 			= false
 	private var useHalfAngles 			= false
@@ -91,45 +93,32 @@ class MainActivity : AppCompatActivity() {
 	private lateinit var ortfButton:					Button
 	private lateinit var nosButton:						Button
 	private lateinit var dinButton:						Button
-	private lateinit var customButton1:					Button
-	private lateinit var customButton2:					Button
-	private lateinit var customButton3:					Button
+	private lateinit var customPresetButtons:			Array<Button>
 	
 	
-	private lateinit var recAngleCalcLauncher: ActivityResultLauncher<Intent>
+	private lateinit var recAngleCalcLauncher:	ActivityResultLauncher<Intent>
+	
+	private lateinit var sharedPreferences:		android.content.SharedPreferences
+	private lateinit var prefEditor:			android.content.SharedPreferences.Editor
 	
 	
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main)
+		populateUIElementMembers()
 		// Show notification bar in the same color as the app's background
 		enableEdgeToEdge()
-		ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout)) { v, insets ->
+		ViewCompat.setOnApplyWindowInsetsListener(mainLayout) { view, insets ->
 			val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-			v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+			view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 			insets
 		}
-		
-		populateUIElementMembers()
-		
-		if (savedInstanceState != null) {
-			Log.i(TAG, "Restoring saved state")
-			restoreState(savedInstanceState)
-		}
-		else {
-			Log.i(TAG, "Using default values")
-			setCurrentRecAngle(recAngleDefault)
-			setCurrentMicDistance(micDistanceDefault)
-			setCurrentMicAngle(calculateCardioidMicAngle(recAngleDefault, micDistanceDefault))
-			recalculateAngularDistortion()
-			recalculateReverbLimits()
-		}
-		
 		// Wait until layout is finished to unlock orientation
 		mainLayout.post {
 			requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 		}
+		
 		
 		// Set up the recording angle calculator activity launcher
 		recAngleCalcLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -138,6 +127,27 @@ class MainActivity : AppCompatActivity() {
 					?: return@registerForActivityResult
 				applyRecAngleCalcResult(resultValue)
 			}
+		}
+		
+		
+		sharedPreferences = getSharedPreferences("com.gmail.simetist.stereophoniccalculator", MODE_PRIVATE)
+		prefEditor = sharedPreferences.edit()
+		
+		if (savedInstanceState != null) {
+			Log.i(TAG, "Restoring saved state")
+			restoreState(savedInstanceState)
+		}
+		else if (sharedPreferences.contains("recAngle")) {
+			Log.i(TAG, "Restoring state from shared preferences")
+			restoreStateFromSharedPrefs()
+		}
+		else {
+			Log.i(TAG, "Using default values")
+			setCurrentRecAngle(recAngleDefault)
+			setCurrentMicDistance(micDistanceDefault)
+			setCurrentMicAngle(micAngleDefault)
+			recalculateAngularDistortion()
+			recalculateReverbLimits()
 		}
 		
 		setupUIListeners()
@@ -423,11 +433,8 @@ class MainActivity : AppCompatActivity() {
 		
 		// Update the mic distance label
 		updateMicDistanceLabel()
-		
 		// Update preset buttons
-		setCustomPresetButtonText(0, customButton1)
-		setCustomPresetButtonText(1, customButton2)
-		setCustomPresetButtonText(2, customButton3)
+		updatePresetButtonTexts()
 		
 		// Update the graph view
 		graphicsView.setUseImperial(useImperial)
@@ -449,11 +456,7 @@ class MainActivity : AppCompatActivity() {
 		// Update the widgets displaying angles as numbers
 		updateRecAngleEdit()
 		updateMicAngleLabel()
-		
-		// Update preset buttons
-		setCustomPresetButtonText(0, customButton1)
-		setCustomPresetButtonText(1, customButton2)
-		setCustomPresetButtonText(2, customButton3)
+		updatePresetButtonTexts()
 		
 		// Update the graph view
 		graphicsView.setUseHalfAngles(useHalfAngles)
@@ -544,7 +547,7 @@ class MainActivity : AppCompatActivity() {
 		recalculateReverbLimits()
 	}
 	
-	private fun setCustomPreset(index: Int, button: Button) {
+	private fun setCustomPreset(index: Int) {
 		customPresets[index] = StereoConfiguration(
 			useOmni,
 			currentRecAngle,
@@ -552,10 +555,15 @@ class MainActivity : AppCompatActivity() {
 			currentMicAngle
 		)
 		
-		setCustomPresetButtonText(index, button)
+		setCustomPresetButtonText(index)
 	}
 	
-	private fun setCustomPresetButtonText(index: Int, button: Button) {
+	private fun clearCustomPreset(index: Int) {
+		customPresets[index] = null
+		customPresetButtons[index].text = "Empty"
+	}
+	
+	private fun setCustomPresetButtonText(index: Int) {
 		val preset = customPresets[index] ?: return
 		
 		val recAngleText	= angleText	(preset.recAngle,		useHalfAngles, 	0, false)
@@ -566,9 +574,13 @@ class MainActivity : AppCompatActivity() {
 		if (!preset.omniNotCardioid) {
 			detailsText += "/$micAngleText"
 		}
-		button.text = "$recAngleText $detailsText"
-		
-		vibrate(this)
+		customPresetButtons[index].text = "$recAngleText $detailsText"
+	}
+	
+	private fun updatePresetButtonTexts() {
+		customPresetButtons.indices.forEach { index ->
+			setCustomPresetButtonText(index)
+		}
 	}
 	
 	private fun applyCustomPreset(index: Int) {
@@ -652,26 +664,57 @@ class MainActivity : AppCompatActivity() {
 	
 	override fun onSaveInstanceState(outState: Bundle) {
 		super.onSaveInstanceState(outState)
+		
+		// Save state to bundle
 		outState.putBoolean("useInches",		useImperial)
 		outState.putBoolean("useHalfAngles",	useHalfAngles)
 		outState.putBoolean("useOmni",			useOmni)
 		outState.putBoolean("holdRecAngle",		holdRecAngle)
+		outState.putBoolean("showGraphView",	showGraphView)
+		
 		outState.putDouble("recAngle",			currentRecAngle)
 		outState.putDouble("micDistance",		currentMicDistance)
 		outState.putDouble("micAngle",			currentMicAngle)
+		
+		outState.putSerializable("customPresets", customPresets)
+		
+		// Save state to shared preferences
+		prefEditor.clear()
+		
+		prefEditor.putBoolean("useImperial",	useImperial)
+		prefEditor.putBoolean("useHalfAngles",	useHalfAngles)
+		prefEditor.putBoolean("useOmni",		useOmni)
+		prefEditor.putBoolean("holdRecAngle",	holdRecAngle)
+		prefEditor.putBoolean("showGraphView",	showGraphView)
+		
+		prefEditor.putFloat("recAngle",			currentRecAngle.toFloat())
+		prefEditor.putFloat("micDistance",		currentMicDistance.toFloat())
+		prefEditor.putFloat("micAngle",			currentMicAngle.toFloat())
+		
+		for (i in 0 until 3) {
+			if (customPresets[i] == null) continue
+			
+			val omniNotCardioid	= customPresets[i]!!.omniNotCardioid
+			val recAngle		= customPresets[i]!!.recAngle.toFloat()
+			val micDistance		= customPresets[i]!!.micDistance.toFloat()
+			val micAngle		= customPresets[i]!!.micAngle.toFloat()
+			
+			prefEditor.putBoolean(	"customPreset${i}_omniNotCardioid",	omniNotCardioid)
+			prefEditor.putFloat(	"customPreset${i}_recAngle",		recAngle)
+			prefEditor.putFloat(	"customPreset${i}_micDistance",		micDistance)
+			prefEditor.putFloat(	"customPreset${i}_micAngle",		micAngle)
+		}
+		
+		prefEditor.apply()
 	}
 	
 	private fun restoreState(savedInstanceState: Bundle) {
 		// Restore saved state
-		useImperial		= savedInstanceState.getBoolean("useInches")
-		useHalfAngles	= savedInstanceState.getBoolean("useHalfAngles")
-		useOmni			= savedInstanceState.getBoolean("useOmni")
-		holdRecAngle	= savedInstanceState.getBoolean("holdRecAngle")
-		
-		unitsSwitch			.isChecked = useImperial
-		halfAnglesSwitch	.isChecked = useHalfAngles
-		micTypeSwitch		.isChecked = useOmni
-		holdRecAngleSwitch	.isChecked = holdRecAngle
+		setUnitsSetting			(savedInstanceState.getBoolean("useInches"))
+		setHalfAnglesSetting	(savedInstanceState.getBoolean("useHalfAngles"))
+		setMicTypeSetting		(savedInstanceState.getBoolean("useOmni"))
+		setHoldRecAngleSetting	(savedInstanceState.getBoolean("holdRecAngle"))
+		setGraphicsModeSetting	(savedInstanceState.getBoolean("showGraphView"))
 		
 		setCurrentRecAngle		(savedInstanceState.getDouble("recAngle"))
 		setCurrentMicDistance	(savedInstanceState.getDouble("micDistance"))
@@ -679,6 +722,40 @@ class MainActivity : AppCompatActivity() {
 		
 		recalculateAngularDistortion()
 		recalculateReverbLimits()
+		
+		val serializable = savedInstanceState.getSerializable("customPresets") as Array<*>
+		for (i in 0 until 3) {
+			customPresets[i] = serializable[i] as StereoConfiguration?
+		}
+		updatePresetButtonTexts()
+	}
+	
+	private fun restoreStateFromSharedPrefs() {
+		setUnitsSetting			(sharedPreferences.getBoolean("useImperial",	false))
+		setHalfAnglesSetting	(sharedPreferences.getBoolean("useHalfAngles",	false))
+		setMicTypeSetting		(sharedPreferences.getBoolean("useOmni",		false))
+		setHoldRecAngleSetting	(sharedPreferences.getBoolean("holdRecAngle",	false))
+		setGraphicsModeSetting	(sharedPreferences.getBoolean("showGraphView",	false))
+		
+		setCurrentRecAngle		(sharedPreferences.getFloat("recAngle",		recAngleDefault		.toFloat()).toDouble())
+		setCurrentMicDistance	(sharedPreferences.getFloat("micDistance",	micDistanceDefault	.toFloat()).toDouble())
+		setCurrentMicAngle		(sharedPreferences.getFloat("micAngle",		micAngleDefault		.toFloat()).toDouble())
+		
+		recalculateAngularDistortion()
+		recalculateReverbLimits()
+		
+		for (i in 0 until 3) {
+			val neededKeys = arrayOf("omniNotCardioid", "recAngle", "micDistance", "micAngle")
+			if (neededKeys.any { !sharedPreferences.contains("customPreset${i}_" + it) }) continue
+			
+			val omniNotCardioid	= sharedPreferences.getBoolean(	"customPreset${i}_omniNotCardioid",	false)
+			val recAngle		= sharedPreferences.getFloat(	"customPreset${i}_recAngle",		-1f).toDouble()
+			val micDistance		= sharedPreferences.getFloat(	"customPreset${i}_micDistance",		-1f).toDouble()
+			val micAngle		= sharedPreferences.getFloat(	"customPreset${i}_micAngle",		-1f).toDouble()
+			
+			customPresets[i] = StereoConfiguration(omniNotCardioid, recAngle, micDistance, micAngle)
+		}
+		updatePresetButtonTexts()
 	}
 	
 	
@@ -739,9 +816,11 @@ class MainActivity : AppCompatActivity() {
 		ortfButton					= findViewById(R.id.ortfButton)
 		nosButton					= findViewById(R.id.nosButton)
 		dinButton					= findViewById(R.id.dinButton)
-		customButton1				= findViewById(R.id.customPresetButton1)
-		customButton2				= findViewById(R.id.customPresetButton2)
-		customButton3				= findViewById(R.id.customPresetButton3)
+		customPresetButtons = arrayOf(
+			findViewById(R.id.customPresetButton1),
+			findViewById(R.id.customPresetButton2),
+			findViewById(R.id.customPresetButton3)
+		)
 	}
 	
 	private fun setupUIListeners() {
@@ -822,26 +901,28 @@ class MainActivity : AppCompatActivity() {
 			applyNearCoincidentPreset(20, 90)
 		}
 		
-		customButton1.setOnClickListener {
-			applyCustomPreset(0)
+		customPresetButtons.forEachIndexed { index, button ->
+			button.setOnClickListener {
+				if (customPresets[index] == null) {
+					setCustomPreset(index)
+					vibrate(this)
+				} else {
+					applyCustomPreset(index)
+				}
+				applyCustomPreset(index)
+			}
+			
+			button.setOnLongClickListener {
+				if (customPresets[index] != null) {
+					clearCustomPreset(index)
+					vibrate(this)
+				}
+				true
+			}
 		}
-		customButton1.setOnLongClickListener {
-			setCustomPreset(0, customButton1)
-			true
-		}
-		customButton2.setOnClickListener {
-			applyCustomPreset(1)
-		}
-		customButton2.setOnLongClickListener {
-			setCustomPreset(1, customButton2)
-			true
-		}
-		customButton3.setOnClickListener {
-			applyCustomPreset(2)
-		}
-		customButton3.setOnLongClickListener {
-			setCustomPreset(2, customButton3)
-			true
+		
+		findViewById<Button>(R.id.clearPrefsButton).setOnClickListener {
+			prefEditor.clear().apply()
 		}
 	}
 	

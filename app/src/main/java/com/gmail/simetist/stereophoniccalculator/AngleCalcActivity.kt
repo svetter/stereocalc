@@ -65,17 +65,17 @@ class AngleCalcActivity : AppCompatActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_angle_calc)
+		populateUIElementMembers()
 		// Show notification bar in the same color as the app's background
 		enableEdgeToEdge()
 		var systemBarsHeight = 0
-		ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout)) { v, insets ->
+		ViewCompat.setOnApplyWindowInsetsListener(mainLayout) { view, insets ->
 			val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 			systemBarsHeight = systemBars.top + systemBars.bottom
-			v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+			view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 			insets
 		}
 		
-		populateUIElementMembers()
 		
 		useImperial		= intent.getBooleanExtra("useImperial",	false)
 		useHalfAngles	= intent.getBooleanExtra("useHalfAngles",	false)
