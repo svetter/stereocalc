@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="40mm"
+   height="100mm"
+   viewBox="0 0 400 999.99999"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   sodipodi:docname="microphone.svg"
+   xml:space="preserve"
+   inkscape:export-filename="mic_shadow.webp"
+   inkscape:export-xdpi="254"
+   inkscape:export-ydpi="254"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+     id="namedview7"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="false"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="false"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="2.5208333"
+     inkscape:cx="69.619836"
+     inkscape:cy="188.6281"
+     inkscape:current-layer="layer1"
+     inkscape:window-width="3840"
+     inkscape:window-height="2109"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1" /><defs
+     id="defs2"><filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter1613"
+       x="-0.36750188"
+       y="-0.091874878"
+       width="1.7350038"
+       height="1.1837498"><feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="30.624871"
+         id="feGaussianBlur1615" /></filter></defs><g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline">
+	 <path
+   id="rect234"
+   style="fill:#000000;fill-opacity:1;stroke-width:5.90496;paint-order:stroke fill markers;filter:url(#filter1613)"
+   inkscape:label="body"
+   d="m 109.99939,99.999998 c -5.54,0 -9.999392,4.459392 -9.999392,9.999392 v 70.00089 h 9.999392 v 9.99939 h -9.999392 v 9.99939 h 9.999392 v 9.99939 h -9.999392 v 679.99983 c 0,5.54 4.459392,9.99939 9.999392,9.99939 h 179.99935 c 5.53999,0 9.99939,-4.45939 9.99939,-9.99939 V 209.99845 h -9.99939 v -9.99939 h 9.99939 v -9.99939 h -9.99939 v -9.99939 h 9.99939 v -70.00089 c 0,-5.54 -4.4594,-9.999392 -9.99939,-9.999392 z" />
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   </g></svg>

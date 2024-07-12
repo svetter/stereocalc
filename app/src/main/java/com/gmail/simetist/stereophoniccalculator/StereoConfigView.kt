@@ -13,6 +13,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import kotlin.math.cos
 import kotlin.math.roundToInt
+import kotlin.math.sin
 import kotlin.math.tan
 
 
@@ -35,9 +36,11 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	private val graphCrossPaint:		Paint = Paint()
 	private val graphReticulePaint:		Paint = Paint()
 	
+	// Graph view drawing cache
 	private var graphViewCacheBitmap:	Bitmap? = null
 	private var graphViewCacheCanvas:	Canvas? = null
 	
+	// Drawables
 	private val cardioidMicVector:			Drawable? = ContextCompat.getDrawable(context!!, R.drawable.microphone_cardioid)
 	private val cardioidMicVectorMirrored:	Drawable? = ContextCompat.getDrawable(context!!, R.drawable.microphone_cardioid)
 	private val omniMicVector:				Drawable? = ContextCompat.getDrawable(context!!, R.drawable.microphone_omni)
@@ -45,6 +48,9 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	private var micVector:					Drawable? = cardioidMicVector
 	private var micVectorMirrored:			Drawable? = cardioidMicVectorMirrored
 	private val micShadowImage:				Drawable? = ContextCompat.getDrawable(context!!, R.drawable.mic_shadow)
+	private val cableVector:				Drawable? = ContextCompat.getDrawable(context!!, R.drawable.cable)
+	private val cableShadowImage:			Drawable? = ContextCompat.getDrawable(context!!, R.drawable.cable_shadow)
+	
 	
 	private val cmPerInch			= 2.54f
 	
@@ -55,19 +61,48 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	private val minMicAngle			= 0
 	private val maxMicAngle			= 180
 	
+	
 	// Microphone view constants
-	private val micHeightCm			= 8f
+	// Input graphics parameters
 	private val micWidthCm			= 2f
+	private val micHeightCm			= 8f
+	private val cableWidthCm		= micWidthCm
+	private val cableHeightCm		= 60f
+	private val shadowOverhangCm	= 1f
+	// Layout
+	private val shadowXOffsetCm			= -0.5f
+	private val shadowYOffsetCm			= 0.3f
+	private val maxShadowAlpha			= 200
+	private val cableVisibleUntilDeg	= 155
+	private val cableInvisibleFromDeg	= 170
+	
 	private val halfCircleRadiusCm	= maxMicDistanceCm / 2f
 	
+	// Calculations
+	private var pixelPerCm			= -1f
+	private var micWidth			= -1f
+	private var micHeight			= -1f
+	private var cableWidth			= -1f
+	private var cableHeight			= -1f
+	private var shadowOverhang		= -1f
+	private var shadowXOffset		= -1f
+	private var shadowYOffset		= -1f
+	
+	private var centerX				= -1f
+	private var centerY				= -1f
+	private var left				= -1f
+	private var right				= -1f
+	private var top					= -1f
+	
+	
 	// Graph view constants
-	val hmStep			= 4		// Heat map resolution in device pixels
-	var graphLeftX		= -1f
-	var graphBottomY	= -1f
-	var graphRightX		= -1f
-	var graphTopY		= -1f
-	var graphScaleX		= -1f
-	var graphScaleY		= -1f
+	private val hmStep			= 4		// Heat map resolution in device pixels
+	private var graphLeftX		= -1f
+	private var graphBottomY	= -1f
+	private var graphRightX		= -1f
+	private var graphTopY		= -1f
+	private var graphScaleX		= -1f
+	private var graphScaleY		= -1f
 	
 	
 	private val mainActivity: MainActivity = context as MainActivity
@@ -168,27 +203,31 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	private fun drawMicView(canvas: Canvas) {
 		val picturedWidth	= maxMicDistanceCm + micWidthCm * 1.5f		// Max mic distance (center to center) + sqrt(2) for each mic when at max distance and 45°
 		val picturedHeight	= halfCircleRadiusCm + micHeightCm - 1 + 1	// Circle radius + mic length - 1cm for the top of the mic + 1cm buffer
-		val pixelPerCm		= width / picturedWidth
+		pixelPerCm			= width / picturedWidth
 		
-		val micWidth		= micWidthCm * pixelPerCm
-		val micLength		= micHeightCm * pixelPerCm
-		val halfMicDistance	= micDistance * pixelPerCm / 2f
+		micWidth			= micWidthCm		* pixelPerCm
+		micHeight			= micHeightCm		* pixelPerCm
+		cableWidth			= cableWidthCm		* pixelPerCm
+		cableHeight			= cableHeightCm		* pixelPerCm
+		shadowOverhang		= shadowOverhangCm	* pixelPerCm
+		shadowXOffset		= shadowXOffsetCm	* pixelPerCm
+		shadowYOffset		= shadowYOffsetCm	* pixelPerCm
+		val halfMicDistance	= micDistance / 2f	* pixelPerCm
 		
-		val centerX		= width / 2f
-		val centerY		= height - micLength
-		val left		= 0f
-		val right		= width.toFloat()
-		val top			= 0f
+		centerX	= width / 2f
+		centerY	= height - micHeight
+		left	= 0f
+		right	= width.toFloat()
+		top		= 0f
 		
 		val leftMicCenterX	= centerX - halfMicDistance
-		val leftMicLeftX	= (leftMicCenterX - micWidth / 2).roundToInt()
-		val leftMicRightX	= (leftMicCenterX + micWidth / 2).roundToInt()
+		val leftMicLeftX	= leftMicCenterX - micWidth / 2
 		val rightMicCenterX	= centerX + halfMicDistance
-		val rightMicLeftX	= (rightMicCenterX - micWidth / 2).roundToInt()
-		val rightMicRightX	= (rightMicCenterX + micWidth / 2).roundToInt()
+		val rightMicLeftX	= rightMicCenterX - micWidth / 2
 		
-		val micTopY		= (centerY - 1 * pixelPerCm).roundToInt()
-		val micBottomY	= (micTopY + micLength).roundToInt()
+		val micTopY			= centerY - 1 * pixelPerCm
+		val micBottomY		= micTopY + micHeight
+		val cableTopY		= micBottomY - 0.25f * pixelPerCm	// Slight overlap to line up the shadows
 		
 		val angleWithXAxisDeg = 90 - recAngle / 2
 		val angleWithXAxisRad = angleWithXAxisDeg * Math.PI.toFloat() / 180
@@ -199,6 +238,8 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		
 		val circleRadius = halfCircleRadiusCm * pixelPerCm
 		
+		
+		// Draw recording angle area
 		canvas.drawPath(Path().apply {
 			moveTo(centerX, centerY)
 			lineTo(left, recAngleLineY)
@@ -208,6 +249,7 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 			close()
 		}, recAreaPaint)
 		
+		// Draw bottom line and ticks
 		canvas.drawLine(left, centerY, right, centerY, linesPaint)
 		canvas.drawLine(centerX, centerY, centerX, 0f, linesPaint)
 		val tickLength = 1 * pixelPerCm
@@ -218,14 +260,14 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 			canvas.drawLine(x, centerY, x, if (i % 2 == 0) longTickBottomY else shortTickBottomY, linesPaint)
 		}
 		
-		// Angle lines
-		canvas.drawLine(centerX, centerY, left, recAngleLineY, linesPaint)
-		canvas.drawLine(centerX, centerY, right, recAngleLineY, linesPaint)
-		canvas.drawLine(centerX, centerY, left, halfRecAngleLineY, linesPaint)
-		canvas.drawLine(centerX, centerY, right, halfRecAngleLineY, linesPaint)
+		// Draw recording angle lines
+		canvas.drawLine(centerX, centerY, left,		recAngleLineY,		linesPaint)
+		canvas.drawLine(centerX, centerY, right,	recAngleLineY,		linesPaint)
+		canvas.drawLine(centerX, centerY, left,		halfRecAngleLineY,	linesPaint)
+		canvas.drawLine(centerX, centerY, right,	halfRecAngleLineY,	linesPaint)
 		
+		// Draw half circle
 		if (height >= picturedHeight * pixelPerCm) {
-			// Half circle
 			canvas.drawArc(
 				centerX - circleRadius, centerY - circleRadius,
 				centerX + circleRadius, centerY + circleRadius,
@@ -234,77 +276,37 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		}
 		
 		// Draw shadows and microphones
-		micShadowImage?.alpha = 200
-		val shadowOverhang	= micWidth / 2
-		val shadowXOffset	= - micWidth / 3
-		val shadowYOffset	= micWidth / 4
-		val shadowCenterY		= centerY + shadowYOffset
-		val shadowTopY			= (micTopY			- shadowOverhang + shadowYOffset).roundToInt()
-		val shadowBottomY		= (micBottomY		+ shadowOverhang + shadowYOffset).roundToInt()
-		val leftShadowLeftX		= (leftMicLeftX		- shadowOverhang + shadowXOffset).roundToInt()
-		val leftShadowRightX	= (leftMicRightX	+ shadowOverhang + shadowXOffset).roundToInt()
-		val rightShadowLeftX	= (rightMicLeftX	- shadowOverhang + shadowXOffset).roundToInt()
-		val rightShadowRightX	= (rightMicRightX	+ shadowOverhang + shadowXOffset).roundToInt()
+		micShadowImage?.alpha = maxShadowAlpha
+		
 		// Vary mirrored microphone alpha based on angle to simulate light reflections
 		micVectorMirrored?.alpha = (128 * (1 - cos(Math.toRadians(micAngle / 2.0)))).roundToInt()
-		// Right microphone shadow
-		micShadowImage?.let {
-			canvas.save()
-			canvas.rotate(micAngle / 2, rightMicCenterX + shadowXOffset, shadowCenterY)
-			it.setBounds(rightShadowLeftX, shadowTopY, rightShadowRightX, shadowBottomY)
-			it.draw(canvas)
-			canvas.restore()
+		
+		// Vary cable alpha based on angle to avoid covering the lower microphone
+		cableVector?.alpha = when {
+			micAngle <= cableVisibleUntilDeg	-> 255
+			micAngle >= cableInvisibleFromDeg	-> 0
+			else -> {
+				val xScale = Math.PI / 2 / (cableInvisibleFromDeg - cableVisibleUntilDeg)
+				(255.0 * sin((cableInvisibleFromDeg - micAngle) * xScale)).roundToInt()
+			}
 		}
-		// Right microphone
-		micVector?.let {
-			canvas.save()
-			canvas.rotate(micAngle / 2, rightMicCenterX, centerY)
-			it.setBounds(rightMicLeftX, micTopY, rightMicRightX, micBottomY)
-			it.draw(canvas)
-			canvas.restore()
-		}
-		// Right microphone
-		micVector?.let {
-			canvas.save()
-			canvas.rotate(micAngle / 2, rightMicCenterX, centerY)
-			it.setBounds(rightMicLeftX, micTopY, rightMicRightX, micBottomY)
-			it.draw(canvas)
-			canvas.restore()
-		}
-		// Mirrored right microphone
-		micVectorMirrored?.let {
-			canvas.save()
-			canvas.rotate(micAngle / 2, rightMicCenterX, centerY)
-			canvas.scale(-1f, 1f, rightMicCenterX, centerY)
-			it.setBounds(rightMicLeftX, micTopY, rightMicRightX, micBottomY)
-			it.draw(canvas)
-			canvas.restore()
-		}
-		// Left microphone shadow
-		micShadowImage?.let {
-			canvas.save()
-			canvas.rotate(-micAngle / 2, leftMicCenterX + shadowXOffset, shadowCenterY)
-			it.setBounds(leftShadowLeftX, shadowTopY, leftShadowRightX, shadowBottomY)
-			it.draw(canvas)
-			canvas.restore()
-		}
-		// Left microphone
-		micVector?.let {
-			canvas.save()
-			canvas.rotate(-micAngle / 2, leftMicCenterX, centerY)
-			it.setBounds(leftMicLeftX, micTopY, leftMicRightX, micBottomY)
-			it.draw(canvas)
-			canvas.restore()
-		}
-		// Mirrored left microphone
-		micVectorMirrored?.let {
-			canvas.save()
-			canvas.rotate(-micAngle / 2, leftMicCenterX, centerY)
-			canvas.scale(-1f, 1f, leftMicCenterX, centerY)
-			it.setBounds(leftMicLeftX, micTopY, leftMicRightX, micBottomY)
-			it.draw(canvas)
-			canvas.restore()
-		}
+		cableShadowImage?.alpha = cableVector?.let {
+			(it.alpha.toFloat() * maxShadowAlpha / 255f).roundToInt()
+		} ?: 0
+		
+		val leftRotAngle		= -micAngle / 2
+		val rightRotAngle		= micAngle / 2
+		//						drawable			leftX			topY		width		height			rotationAngle	rotationCenterY
+		// RIGHT
+		drawShadow	(canvas,	cableShadowImage,	rightMicLeftX,	cableTopY,	cableWidth,	cableHeight,	rightRotAngle,	rotationCenterY = centerY)
+		drawShadow	(canvas,	micShadowImage,		rightMicLeftX,	micTopY,	micWidth,	micHeight,		rightRotAngle,	rotationCenterY = centerY)
+		draw		(canvas,	cableVector,		rightMicLeftX,	cableTopY,	cableWidth,	cableHeight,	rightRotAngle,	rotationCenterY = centerY)
+		drawMic		(canvas, rightNotLeft = true,	rightMicLeftX,	micTopY)
+		// LEFT
+		drawShadow	(canvas,	cableShadowImage,	leftMicLeftX,	cableTopY,	cableWidth,	cableHeight,	leftRotAngle,	rotationCenterY = centerY)
+		drawShadow	(canvas,	micShadowImage,		leftMicLeftX,	micTopY,	micWidth,	micHeight,		leftRotAngle,	rotationCenterY = centerY)
+		draw		(canvas,	cableVector,		leftMicLeftX,	cableTopY,	cableWidth,	cableHeight,	leftRotAngle,	rotationCenterY = centerY)
+		drawMic		(canvas, rightNotLeft = false,	leftMicLeftX,	micTopY)
 	}
 	
 	private fun drawGraphView(canvas: Canvas) {
@@ -542,6 +544,76 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		// Draw current state reticule
 		canvas.drawCircle(currentConfigX, currentConfigY, 10f, graphReticulePaint)
 	}
+	
+	
+	
+	private fun draw(
+		canvas:				Canvas,
+		drawable:			Drawable?,
+		leftX:				Float,
+		topY:				Float,
+		width:				Float,
+		height:				Float,
+		rotationAngle:		Float = 0f,
+		rotationCenterX:	Float = leftX + width / 2f,
+		rotationCenterY:	Float = topY + height / 2f,
+		offsetX:			Float = 0f,
+		offsetY:			Float = 0f,
+		scaleX:				Float = 1f,
+		scaleY:				Float = 1f
+	) {
+		drawable?.let {
+			canvas.save()
+			if (rotationAngle != 0f) {
+				canvas.rotate(rotationAngle, rotationCenterX + offsetX, rotationCenterY + offsetY)
+			}
+			if (scaleX != 1f || scaleY != 1f) {
+				canvas.scale(scaleX, scaleY, rotationCenterX + offsetX, rotationCenterY + offsetY)
+			}
+			val left	= (leftX			+ offsetX).roundToInt()
+			val top		= (topY				+ offsetY).roundToInt()
+			val right	= (leftX + width	+ offsetX).roundToInt()
+			val bottom	= (topY + height	+ offsetY).roundToInt()
+			it.setBounds(left, top, right, bottom)
+			it.draw(canvas)
+			canvas.restore()
+		}
+	}
+	
+	private fun drawMic(
+		canvas:			Canvas,
+		rightNotLeft:	Boolean,
+		leftX:			Float,
+		topY:			Float) {
+		draw(
+			canvas, micVector, leftX, topY, micWidth, micHeight,
+			(if (rightNotLeft) 1f else -1f) * micAngle / 2,
+			leftX + micWidth / 2, centerY
+		)
+		draw(
+			canvas, micVectorMirrored, leftX, topY, micWidth, micHeight,
+			(if (rightNotLeft) 1f else -1f) * micAngle / 2,
+			leftX + micWidth / 2, centerY,
+			scaleX = -1f
+		)
+	}
+	
+	private fun drawShadow(
+		canvas:				Canvas,
+		drawable:			Drawable?,
+		casterLeftX:		Float,
+		casterTopY:			Float,
+		casterWidth:		Float,
+		casterHeight:		Float,
+		rotationAngle:		Float = 0f,
+		rotationCenterX:	Float = casterLeftX + casterWidth / 2,
+		rotationCenterY:	Float = casterTopY + casterHeight / 2
+	) = draw(
+		canvas, drawable,
+		casterLeftX - shadowOverhang, casterTopY - shadowOverhang,
+		casterWidth + 2 * shadowOverhang, casterHeight + 2 * shadowOverhang,
+		rotationAngle, rotationCenterX, rotationCenterY, shadowXOffset, shadowYOffset
+	)
 	
 	
 	
