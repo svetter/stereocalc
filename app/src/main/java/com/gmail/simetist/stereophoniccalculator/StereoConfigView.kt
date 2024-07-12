@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
+import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.tan
 
@@ -37,9 +38,13 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	private var graphViewCacheBitmap:	Bitmap? = null
 	private var graphViewCacheCanvas:	Canvas? = null
 	
-	private val cardioidMicVector:	Drawable? = ContextCompat.getDrawable(context!!, R.drawable.microphone_cardioid)
-	private val omniMicVector:		Drawable? = ContextCompat.getDrawable(context!!, R.drawable.microphone_omni)
-	private var micVector:			Drawable? = cardioidMicVector
+	private val cardioidMicVector:			Drawable? = ContextCompat.getDrawable(context!!, R.drawable.microphone_cardioid)
+	private val cardioidMicVectorMirrored:	Drawable? = ContextCompat.getDrawable(context!!, R.drawable.microphone_cardioid)
+	private val omniMicVector:				Drawable? = ContextCompat.getDrawable(context!!, R.drawable.microphone_omni)
+	private val omniMicVectorMirrored:		Drawable? = ContextCompat.getDrawable(context!!, R.drawable.microphone_omni)
+	private var micVector:					Drawable? = cardioidMicVector
+	private var micVectorMirrored:			Drawable? = cardioidMicVectorMirrored
+	private val micShadowImage:				Drawable? = ContextCompat.getDrawable(context!!, R.drawable.mic_shadow)
 	
 	private val cmPerInch			= 2.54f
 	
@@ -176,14 +181,14 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		val top			= 0f
 		
 		val leftMicCenterX	= centerX - halfMicDistance
-		val leftMicLeftX	= (leftMicCenterX - micWidth / 2).toInt()
-		val leftMicRightX	= (leftMicCenterX + micWidth / 2).toInt()
+		val leftMicLeftX	= (leftMicCenterX - micWidth / 2).roundToInt()
+		val leftMicRightX	= (leftMicCenterX + micWidth / 2).roundToInt()
 		val rightMicCenterX	= centerX + halfMicDistance
-		val rightMicLeftX	= (rightMicCenterX - micWidth / 2).toInt()
-		val rightMicRightX	= (rightMicCenterX + micWidth / 2).toInt()
+		val rightMicLeftX	= (rightMicCenterX - micWidth / 2).roundToInt()
+		val rightMicRightX	= (rightMicCenterX + micWidth / 2).roundToInt()
 		
-		val micTopY		= (centerY - 1 * pixelPerCm).toInt()
-		val micBottomY	= (micTopY + micLength).toInt()
+		val micTopY		= (centerY - 1 * pixelPerCm).roundToInt()
+		val micBottomY	= (micTopY + micLength).roundToInt()
 		
 		val angleWithXAxisDeg = 90 - recAngle / 2
 		val angleWithXAxisRad = angleWithXAxisDeg * Math.PI.toFloat() / 180
@@ -228,15 +233,74 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 			)
 		}
 		
+		// Draw shadows and microphones
+		micShadowImage?.alpha = 200
+		val shadowOverhang	= micWidth / 2
+		val shadowXOffset	= - micWidth / 3
+		val shadowYOffset	= micWidth / 4
+		val shadowCenterY		= centerY + shadowYOffset
+		val shadowTopY			= (micTopY			- shadowOverhang + shadowYOffset).roundToInt()
+		val shadowBottomY		= (micBottomY		+ shadowOverhang + shadowYOffset).roundToInt()
+		val leftShadowLeftX		= (leftMicLeftX		- shadowOverhang + shadowXOffset).roundToInt()
+		val leftShadowRightX	= (leftMicRightX	+ shadowOverhang + shadowXOffset).roundToInt()
+		val rightShadowLeftX	= (rightMicLeftX	- shadowOverhang + shadowXOffset).roundToInt()
+		val rightShadowRightX	= (rightMicRightX	+ shadowOverhang + shadowXOffset).roundToInt()
+		// Vary mirrored microphone alpha based on angle to simulate light reflections
+		micVectorMirrored?.alpha = (128 * (1 - cos(Math.toRadians(micAngle / 2.0)))).roundToInt()
+		// Right microphone shadow
+		micShadowImage?.let {
+			canvas.save()
+			canvas.rotate(micAngle / 2, rightMicCenterX + shadowXOffset, shadowCenterY)
+			it.setBounds(rightShadowLeftX, shadowTopY, rightShadowRightX, shadowBottomY)
+			it.draw(canvas)
+			canvas.restore()
+		}
+		// Right microphone
 		micVector?.let {
 			canvas.save()
 			canvas.rotate(micAngle / 2, rightMicCenterX, centerY)
 			it.setBounds(rightMicLeftX, micTopY, rightMicRightX, micBottomY)
 			it.draw(canvas)
 			canvas.restore()
-			
+		}
+		// Right microphone
+		micVector?.let {
+			canvas.save()
+			canvas.rotate(micAngle / 2, rightMicCenterX, centerY)
+			it.setBounds(rightMicLeftX, micTopY, rightMicRightX, micBottomY)
+			it.draw(canvas)
+			canvas.restore()
+		}
+		// Mirrored right microphone
+		micVectorMirrored?.let {
+			canvas.save()
+			canvas.rotate(micAngle / 2, rightMicCenterX, centerY)
+			canvas.scale(-1f, 1f, rightMicCenterX, centerY)
+			it.setBounds(rightMicLeftX, micTopY, rightMicRightX, micBottomY)
+			it.draw(canvas)
+			canvas.restore()
+		}
+		// Left microphone shadow
+		micShadowImage?.let {
+			canvas.save()
+			canvas.rotate(-micAngle / 2, leftMicCenterX + shadowXOffset, shadowCenterY)
+			it.setBounds(leftShadowLeftX, shadowTopY, leftShadowRightX, shadowBottomY)
+			it.draw(canvas)
+			canvas.restore()
+		}
+		// Left microphone
+		micVector?.let {
 			canvas.save()
 			canvas.rotate(-micAngle / 2, leftMicCenterX, centerY)
+			it.setBounds(leftMicLeftX, micTopY, leftMicRightX, micBottomY)
+			it.draw(canvas)
+			canvas.restore()
+		}
+		// Mirrored left microphone
+		micVectorMirrored?.let {
+			canvas.save()
+			canvas.rotate(-micAngle / 2, leftMicCenterX, centerY)
+			canvas.scale(-1f, 1f, leftMicCenterX, centerY)
 			it.setBounds(leftMicLeftX, micTopY, leftMicRightX, micBottomY)
 			it.draw(canvas)
 			canvas.restore()
@@ -340,8 +404,8 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 				graphTickTextPaint.textAlign = Paint.Align.CENTER
 				val (micDistanceTickXs, micDistanceMajorStep) = if (useImperial) {
 					IntRange(
-						(minMicDistanceCm / cmPerInch).toInt(),
-						(maxMicDistanceCm / cmPerInch).toInt()
+						(minMicDistanceCm / cmPerInch).roundToInt(),
+						(maxMicDistanceCm / cmPerInch).roundToInt()
 					) to 5
 				} else {
 					IntRange(minMicDistanceCm, maxMicDistanceCm).step(5) to 10
@@ -508,10 +572,12 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	fun setUseOmni(useOmni: Boolean) {
 		this.useOmni = useOmni
 		if (useOmni) micAngle = 0f
-		micVector = if (useOmni) {
-			omniMicVector
+		if (useOmni) {
+			micVector = omniMicVector
+			micVectorMirrored = omniMicVectorMirrored
 		} else {
-			cardioidMicVector
+			micVector = cardioidMicVector
+			micVectorMirrored = cardioidMicVectorMirrored
 		}
 		invalidate()
 	}
