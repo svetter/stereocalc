@@ -29,7 +29,7 @@ fun lengthText(
 
 fun angleText(
 	angle:							Double,
-	useHalfAngles:					Boolean = false,
+	useHalfAngles:					Boolean,
 	numDecimalPlaces:				Int = 0,
 	addHalfDecimalForHalfAngles:	Boolean = true,
 	plusMinusSpace:					Boolean = false,

@@ -245,7 +245,7 @@ class MainActivity : AppCompatActivity() {
 	}
 	
 	private fun updateMicAngleLabel() {
-		micAngleValueLabel.text = angleText(currentMicAngle, plusMinusSpace = true)
+		micAngleValueLabel.text = angleText(currentMicAngle, useHalfAngles, plusMinusSpace = true)
 	}
 	
 	
