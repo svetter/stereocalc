@@ -906,20 +906,18 @@ class MainActivity : AppCompatActivity() {
 		
 		customPresetButtons.forEachIndexed { index, button ->
 			button.setOnClickListener {
-				if (customPresets[index] == null) {
-					setCustomPreset(index)
-					vibrate(this)
-				} else {
+				if (customPresets[index] != null) {
 					applyCustomPreset(index)
 				}
-				applyCustomPreset(index)
 			}
 			
 			button.setOnLongClickListener {
-				if (customPresets[index] != null) {
-					clearCustomPreset(index)
-					vibrate(this)
+				if (customPresets[index] == null) {
+					setCustomPreset(index)
+				} else {
+                    clearCustomPreset(index)
 				}
+				vibrate(this)
 				true
 			}
 		}
