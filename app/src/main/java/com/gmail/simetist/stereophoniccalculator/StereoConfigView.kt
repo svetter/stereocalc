@@ -47,8 +47,8 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	private var micVector:					Drawable? = cardioidMicVector
 	private var micVectorMirrored:			Drawable? = cardioidMicVectorMirrored
 	private val micShadowImage:				Drawable? = ContextCompat.getDrawable(context!!, R.drawable.mic_shadow)
-	private val cableVector:				Drawable? = ContextCompat.getDrawable(context!!, R.drawable.cable_bent)
-	private val cableShadowImage:			Drawable? = ContextCompat.getDrawable(context!!, R.drawable.cable_bent_shadow)
+	private val cableVector:				Drawable? = ContextCompat.getDrawable(context!!, R.drawable.cable)
+	private val cableShadowImage:			Drawable? = ContextCompat.getDrawable(context!!, R.drawable.cable_shadow)
 	
 	
 	private val cmPerInch			= 2.54f
