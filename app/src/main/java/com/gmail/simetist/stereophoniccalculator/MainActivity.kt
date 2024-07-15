@@ -1,5 +1,7 @@
 package com.gmail.simetist.stereophoniccalculator
 
+import android.animation.Animator
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -25,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.gmail.simetist.stereophoniccalculator.MainActivity.PrimaryValue.*
 import java.io.Serializable
 import kotlin.math.roundToInt
@@ -56,6 +59,8 @@ class MainActivity : AppCompatActivity() {
 	private var showGraphView			= false
 	
 	private var ignoreListeners			= false
+	
+	private val animationDuration		= 1500	// ms
 	
 	private var customPresets = Array<StereoConfiguration?>(3) { null }
 	
@@ -98,6 +103,7 @@ class MainActivity : AppCompatActivity() {
 	
 	
 	private lateinit var recAngleCalcLauncher:	ActivityResultLauncher<Intent>
+	private lateinit var animator:				ValueAnimator
 	
 	private lateinit var sharedPreferences:		android.content.SharedPreferences
 	private lateinit var prefEditor:			android.content.SharedPreferences.Editor
@@ -129,6 +135,8 @@ class MainActivity : AppCompatActivity() {
 				applyRecAngleCalcResult(resultValue)
 			}
 		}
+		
+		setupAnimations()
 		
 		
 		sharedPreferences = getSharedPreferences("com.gmail.simetist.stereophoniccalculator", MODE_PRIVATE)
@@ -496,6 +504,8 @@ class MainActivity : AppCompatActivity() {
 	}
 	
 	private fun updateAfterRecAngleEditChanged() {
+		stopAnimation()
+		
 		var currentValue = recAngleEdit.text.toString().toIntOrNull() ?: return
 		
 		if (currentValue < recAngleLowerBound || currentValue > recAngleUpperBound) {
@@ -507,16 +517,19 @@ class MainActivity : AppCompatActivity() {
 	}
 	
 	private fun updateAfterRecAngleSliderMoved() {
+		stopAnimation()
 		setCurrentRecAngle(recAngleSlider.progress.toDouble() + recAngleLowerBound)
 		handlePrimaryValueChangeByUser(REC_ANGLE)
 	}
 	
 	private fun updateAfterMicDistanceSliderMoved() {
+		stopAnimation()
 		setCurrentMicDistance(micDistanceSlider.progress.toDouble() / 10.0)
 		handlePrimaryValueChangeByUser(MIC_DISTANCE)
 	}
 	
 	private fun updateAfterMicAngleSliderMoved() {
+		stopAnimation()
 		setCurrentMicAngle(micAngleSlider.progress.toDouble() / 10.0)
 		handlePrimaryValueChangeByUser(MIC_ANGLE)
 	}
@@ -538,14 +551,7 @@ class MainActivity : AppCompatActivity() {
 	private fun applyNearCoincidentPreset(micDistance: Int, micAngle: Int) {
 		if (useOmni) micTypeSwitch.performClick()
 		
-		val recAngle = calculateCardioidRecordingAngle(micDistance.toDouble(), micAngle.toDouble())
-		
-		setCurrentRecAngle		(recAngle)
-		setCurrentMicDistance	(micDistance.toDouble())
-		setCurrentMicAngle		(micAngle.toDouble())
-		
-		recalculateAngularDistortion()
-		recalculateReverbLimits()
+		startAnimation(false, micDistance.toDouble(), micAngle.toDouble())
 	}
 	
 	private fun setCustomPreset(index: Int) {
@@ -587,13 +593,7 @@ class MainActivity : AppCompatActivity() {
 	private fun applyCustomPreset(index: Int) {
 		val preset = customPresets[index] ?: return
 		
-		setMicTypeSetting(preset.omniNotCardioid)
-		setCurrentRecAngle		(preset.recAngle)
-		setCurrentMicDistance	(preset.micDistance)
-		setCurrentMicAngle		(preset.micAngle)
-		
-		recalculateAngularDistortion()
-		recalculateReverbLimits()
+		startAnimation(preset.omniNotCardioid, preset.micDistance, preset.micAngle)
 	}
 	
 	
@@ -921,6 +921,76 @@ class MainActivity : AppCompatActivity() {
 				true
 			}
 		}
+	}
+	
+	
+	
+	// ANIMATIONS
+	
+	private fun setupAnimations() {
+		animator = ValueAnimator.ofFloat(0f, 1f).apply {
+			duration = animationDuration.toLong()
+			interpolator = FastOutSlowInInterpolator()
+		}
+	}
+	
+	private fun startAnimation(endOmniNotCardioid: Boolean, endMicDistance: Double, endMicAngle: Double) {
+		stopAnimation()
+		
+		if (endOmniNotCardioid != useOmni) {
+			if (!endOmniNotCardioid) {
+				setMicTypeSetting(false)
+			} else if (currentMicAngle == 0.0) {
+				setMicTypeSetting(true)
+			}
+			else {
+				animator.addListener(object: Animator.AnimatorListener {
+					override fun onAnimationStart(p0: Animator) {}
+					override fun onAnimationEnd(p0: Animator) {
+						setMicTypeSetting(true)
+					}
+					override fun onAnimationCancel(p0: Animator) {}
+					override fun onAnimationRepeat(p0: Animator) {}
+				})
+			}
+		}
+		
+		val animationStartMD	= currentMicDistance
+		val animationStartMA	= currentMicAngle
+		animator.addUpdateListener {
+			val progress = it.animatedValue as Float
+			doAnimationStep(animationStartMD, animationStartMA, endMicDistance, endMicAngle, progress.toDouble())
+		}
+		animator.start()
+	}
+	
+	private fun stopAnimation() {
+		animator.cancel()
+		animator.removeAllListeners()
+	}
+	
+	private fun doAnimationStep(
+		startMicDistance: Double, startMicAngle: Double,
+		endMicDistance: Double, endMicAngle: Double,
+		progress: Double
+	) {
+		val newMicDistance	= startMicDistance + (endMicDistance - startMicDistance) * progress
+		var newMicAngle		= startMicAngle + (endMicAngle - startMicAngle) * progress
+		var newRecAngle		= calculateCardioidRecordingAngle(newMicDistance, newMicAngle)
+		
+		// Check bounds
+		if (newRecAngle < recAngleLowerBound || newRecAngle > recAngleUpperBound) {
+			newRecAngle = newRecAngle.coerceIn(recAngleLowerBound, recAngleUpperBound)
+			
+			newMicAngle = calculateCardioidMicAngle(newRecAngle, newMicDistance)
+		}
+		
+		// Perform updates
+		setCurrentMicDistance(newMicDistance)
+		setCurrentMicAngle(newMicAngle)
+		setCurrentRecAngle(newRecAngle)
+		recalculateAngularDistortion()
+		recalculateReverbLimits()
 	}
 	
 	
