@@ -1,4 +1,4 @@
-                <img src="graphics/logo.svg" width="200" height="200"/>
+                <img src="app/src/main/res/drawable/logo_1024.webp" width="200" height="200"/>
 
 # Stereophonic Calculator
 
