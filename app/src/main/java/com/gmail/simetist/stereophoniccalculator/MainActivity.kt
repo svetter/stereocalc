@@ -577,11 +577,14 @@ class MainActivity : AppCompatActivity() {
 		val micDistanceText	= lengthText(preset.micDistance,	useImperial,	0)
 		val micAngleText	= angleText	(preset.micAngle,		useHalfAngles,	0, false)
 		
-		var detailsText = micDistanceText
-		if (!preset.omniNotCardioid) {
-			detailsText += "/$micAngleText"
+		var detailsText = "$micDistanceText/$micAngleText"
+		if (preset.micDistance == 0.0) {
+			detailsText = "XY $micAngleText"
+		} else if (preset.micAngle == 0.0) {
+			detailsText = "AB $micDistanceText"
 		}
-		customPresetButtons[index].text = "$recAngleText $detailsText"
+		
+		customPresetButtons[index].text = "$recAngleText: $detailsText"
 	}
 	
 	private fun updatePresetButtonTexts() {
