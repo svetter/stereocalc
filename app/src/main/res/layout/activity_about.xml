@@ -98,7 +98,17 @@
           android:linksClickable="true"
           android:text="This app is available under license X. TODO"
           android:textSize="16sp" />
-    
+
+      <Button
+          android:id="@+id/licensesButton"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="24dp"
+          android:backgroundTint="#9A8C0000"
+          android:text="Show open source licenses"
+          android:textColor="@color/white"
+          app:cornerRadius="5dp" />
+
     </LinearLayout>
   </ScrollView>
   

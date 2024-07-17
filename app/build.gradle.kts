@@ -1,6 +1,7 @@
 plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.jetbrains.kotlin.android)
+	id("com.google.android.gms.oss-licenses-plugin")
 }
 
 android {
@@ -24,6 +25,7 @@ android {
 				getDefaultProguardFile("proguard-android-optimize.txt"),
 				"proguard-rules.pro"
 			)
+			signingConfig = signingConfigs.getByName("debug")
 		}
 	}
 	compileOptions {
@@ -41,6 +43,7 @@ dependencies {
 	implementation(libs.material)
 	implementation(libs.androidx.activity)
 	implementation(libs.androidx.constraintlayout)
+	implementation(libs.play.services.oss.licenses)
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.junit)
 	androidTestImplementation(libs.androidx.espresso.core)

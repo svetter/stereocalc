@@ -1,5 +1,6 @@
 package com.gmail.simetist.stereophoniccalculator
 
+import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -9,12 +10,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 
 
 
 class AboutActivity : AppCompatActivity() {
-	private lateinit var versionLabel:	TextView
-	private lateinit var backButton:	Button
+	private lateinit var versionLabel:		TextView
+	private lateinit var licensesButton:	Button
+	private lateinit var backButton:		Button
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -28,6 +31,7 @@ class AboutActivity : AppCompatActivity() {
 		}
 		
 		versionLabel	= findViewById(R.id.versionLabel)
+		licensesButton	= findViewById(R.id.licensesButton)
 		backButton		= findViewById(R.id.backButton)
 		
 		try {
@@ -36,6 +40,10 @@ class AboutActivity : AppCompatActivity() {
 			versionLabel.text = "Version $version"
 		} catch (e: PackageManager.NameNotFoundException) {
 			e.printStackTrace()
+		}
+		
+		licensesButton.setOnClickListener {
+			startActivity(Intent(this, OssLicensesMenuActivity::class.java))
 		}
 		
 		backButton.setOnClickListener {

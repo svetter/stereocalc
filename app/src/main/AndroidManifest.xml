@@ -33,6 +33,12 @@
         android:name=".AboutActivity"
         android:exported="true">
     </activity>
+    <activity
+        android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity">
+    </activity>
+    <activity
+        android:name="com.google.android.gms.oss.licenses.OssLicensesActivity">
+    </activity>
   </application>
 
 </manifest>
