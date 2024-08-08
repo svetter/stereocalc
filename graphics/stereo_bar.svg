@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="534mm"
+   height="34.000443mm"
+   viewBox="0 0 534 34.000443"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   sodipodi:docname="stereo_bar.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#d1d1d1"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="false"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showborder="true"
+     inkscape:zoom="2.342073"
+     inkscape:cx="1893.8351"
+     inkscape:cy="88.169754"
+     inkscape:window-width="3840"
+     inkscape:window-height="2109"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     showgrid="false" />
+  <defs
+     id="defs1">
+    <linearGradient
+       id="linearGradient16"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#404040;stop-opacity:1;"
+         offset="0"
+         id="stop14" />
+      <stop
+         style="stop-color:#999999;stop-opacity:1;"
+         offset="0.39910987"
+         id="stop15" />
+      <stop
+         style="stop-color:#262626;stop-opacity:1;"
+         offset="1"
+         id="stop17" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient2"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#404040;stop-opacity:1;"
+         offset="0"
+         id="stop2" />
+      <stop
+         style="stop-color:#808080;stop-opacity:1;"
+         offset="0.39910987"
+         id="stop4" />
+      <stop
+         style="stop-color:#262626;stop-opacity:1;"
+         offset="1"
+         id="stop3" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient5"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#0a0a0a;stop-opacity:1;"
+         offset="0.13"
+         id="stop5" />
+      <stop
+         style="stop-color:#b2b2b2;stop-opacity:1;"
+         offset="0.15000001"
+         id="stop7" />
+      <stop
+         style="stop-color:#b2b2b2;stop-opacity:1;"
+         offset="0.2"
+         id="stop8" />
+      <stop
+         style="stop-color:#0a0a0a;stop-opacity:1;"
+         offset="0.22"
+         id="stop9" />
+      <stop
+         style="stop-color:#0a0a0a;stop-opacity:1;"
+         offset="0.68000001"
+         id="stop10" />
+      <stop
+         style="stop-color:#b2b2b2;stop-opacity:1;"
+         offset="0.69999999"
+         id="stop11" />
+      <stop
+         style="stop-color:#b2b2b2;stop-opacity:1;"
+         offset="0.80000001"
+         id="stop12" />
+      <stop
+         style="stop-color:#0a0a0a;stop-opacity:1;"
+         offset="0.81999999"
+         id="stop13" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient5"
+       id="linearGradient6"
+       x1="0.046571642"
+       y1="75.896019"
+       x2="532.05664"
+       y2="-49.985832"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-3.0002116,-3.0002116)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient16"
+       id="linearGradient3"
+       x1="515.44098"
+       y1="0.38478974"
+       x2="529.92841"
+       y2="15.19374"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.85000809,0,0,0.85000809,74.245546,-0.74999138)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2"
+       id="linearGradient7"
+       gradientUnits="userSpaceOnUse"
+       x1="515.15057"
+       y1="0.25632668"
+       x2="526.0603"
+       y2="24.47607"
+       gradientTransform="matrix(-0.85000817,0,0,0.85000817,449.75405,-0.74999145)" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(5.0002116,5.0002116)">
+    <path
+       id="path2"
+       style="opacity:1;fill:url(#linearGradient3);fill-opacity:1;stroke:none;stroke-width:0.425004;stroke-linecap:round"
+       d="m 511.99979,-5.0002116 v 8.5004402 h 8.5 V 20.500229 h -8.5 v 8.500002 a 17.00016,17.00016 0 0 0 17,-17.000003 17.00016,17.00016 0 0 0 -17,-17.0004396 z" />
+    <path
+       id="path6"
+       style="opacity:1;fill:url(#linearGradient7);fill-opacity:1;stroke:none;stroke-width:0.425004;stroke-linecap:round"
+       d="M 11.999788,-5.0002116 V 3.5002293 H 3.4997848 V 20.500231 h 8.5000032 v 8.500001 A 17.000159,17.000159 0 0 1 -5.0002116,12.00023 17.000159,17.000159 0 0 1 11.999788,-5.0002116 Z" />
+    <rect
+       style="opacity:1;fill:#262626;fill-opacity:1;stroke:none;stroke-width:0.249999;stroke-linecap:round"
+       id="rect5"
+       width="500"
+       height="10"
+       x="11.999788"
+       y="18.999788" />
+    <rect
+       style="opacity:1;fill:#404040;fill-opacity:1;stroke:none;stroke-width:0.249998;stroke-linecap:round"
+       id="rect4"
+       width="500"
+       height="10"
+       x="11.999788"
+       y="-5" />
+    <path
+       id="path1"
+       style="opacity:1;fill:url(#linearGradient6);stroke:none;stroke-width:0.265;stroke-dasharray:none"
+       d="M 11.999906,-3.0002116 C 3.715543,-3.0002768 -3.0002768,3.715543 -3.0002116,11.999906 -3.0002768,20.284269 3.715543,27.000089 11.999906,27.000024 H 511.99979 c 8.28436,6.6e-5 15.00007,-6.715754 15,-15.000118 7e-5,-8.2843638 -6.71564,-15.0001839 -15,-15.0001176 z m 0,9.9999066 H 246.99979 c 2.76159,-1.16e-4 5.00012,2.238623 5,5.000211 -1.7e-4,2.761387 -2.23861,4.999998 -5,4.999882 L 11.999906,16.999601 C 9.238519,16.999718 6.9998634,14.761293 6.9996948,11.999906 6.9995779,9.238317 9.238317,6.999578 11.999906,6.999695 Z m 264.999884,0 h 235 c 2.76159,-1.22e-4 5.00012,2.238619 5,5.000211 -1.7e-4,2.761391 -2.23861,4.999817 -5,4.999695 h -235 c -2.76139,1.16e-4 -4.99983,-2.238308 -5,-4.999695 -1.2e-4,-2.761588 2.23841,-5.000327 5,-5.000211 z"
+       sodipodi:nodetypes="ccccccccccccccccscccc"
+       inkscape:label="body" />
+    <g
+       id="g82"
+       inkscape:label="ticks"
+       transform="translate(97,-3)">
+      <use
+         x="0"
+         y="0"
+         xlink:href="#path13"
+         id="use55"
+         transform="translate(10)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use55"
+         id="use56"
+         transform="translate(10)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use56"
+         id="use57"
+         transform="translate(10)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#path13"
+         id="use58"
+         transform="translate(50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#path14"
+         id="use59"
+         transform="translate(50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use55"
+         id="use60"
+         transform="translate(50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use56"
+         id="use61"
+         transform="translate(50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use57"
+         id="use62"
+         transform="translate(50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use58"
+         id="use63"
+         transform="translate(50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use59"
+         id="use64"
+         transform="translate(50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use60"
+         id="use65"
+         transform="translate(50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use61"
+         id="use66"
+         transform="translate(50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use62"
+         id="use67"
+         transform="translate(50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#path13"
+         id="use68"
+         transform="translate(-20)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use68"
+         id="use69"
+         transform="translate(-10)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use69"
+         id="use70"
+         transform="translate(-10)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use70"
+         id="use71"
+         transform="translate(-10)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#path14"
+         id="use72"
+         transform="translate(-100)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use68"
+         id="use73"
+         transform="translate(-50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use69"
+         id="use74"
+         transform="translate(-50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use70"
+         id="use75"
+         transform="translate(-50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use71"
+         id="use76"
+         transform="translate(-50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use72"
+         id="use77"
+         transform="translate(-50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use73"
+         id="use78"
+         transform="translate(-50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use74"
+         id="use79"
+         transform="translate(-50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use75"
+         id="use80"
+         transform="translate(-50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use76"
+         id="use81"
+         transform="translate(-50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use77"
+         id="use82"
+         transform="translate(-50)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use58"
+         id="use1060"
+         transform="translate(100)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use59"
+         id="use1062"
+         transform="translate(100)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use60"
+         id="use1064"
+         transform="translate(100)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use61"
+         id="use1066"
+         transform="translate(100)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use62"
+         id="use1068"
+         transform="translate(100)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use58"
+         id="use1070"
+         transform="translate(150)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use59"
+         id="use1072"
+         transform="translate(150)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use60"
+         id="use1074"
+         transform="translate(150)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use61"
+         id="use1076"
+         transform="translate(150)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use62"
+         id="use1078"
+         transform="translate(150)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use73"
+         id="use1080"
+         transform="translate(-100)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use74"
+         id="use1082"
+         transform="translate(-100)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use75"
+         id="use1084"
+         transform="translate(-100)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use76"
+         id="use1086"
+         transform="translate(-100)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use77"
+         id="use1088"
+         transform="translate(-100)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use73"
+         id="use1090"
+         transform="translate(-150)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use74"
+         id="use1092"
+         transform="translate(-150)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use75"
+         id="use1094"
+         transform="translate(-150)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use76"
+         id="use1096"
+         transform="translate(-150)" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#use77"
+         id="use1098"
+         transform="translate(-150)" />
+      <path
+         style="fill:none;stroke:#e5e5e5;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+         d="m 215,22 v 6"
+         id="path14"
+         sodipodi:nodetypes="cc"
+         inkscape:label="five_tick"
+         transform="translate(1.0833333e-6)" />
+      <path
+         style="fill:none;stroke:#e5e5e5;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+         d="m 175,25 v 3"
+         id="path13"
+         sodipodi:nodetypes="cc"
+         inkscape:label="one_tick"
+         transform="translate(1.0833333e-6)" />
+      <path
+         style="fill:none;stroke:#e5e5e5;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+         d="M 165,15 V 28"
+         id="path13-7"
+         sodipodi:nodetypes="cc"
+         inkscape:label="zero_tick"
+         transform="translate(1.0833333e-6)" />
+    </g>
+  </g>
+</svg>

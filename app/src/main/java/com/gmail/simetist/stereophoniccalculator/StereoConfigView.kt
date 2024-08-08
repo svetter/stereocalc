@@ -49,6 +49,9 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	private val micShadowImage:				Drawable? = ContextCompat.getDrawable(context!!, R.drawable.mic_shadow)
 	private val cableVector:				Drawable? = ContextCompat.getDrawable(context!!, R.drawable.cable)
 	private val cableShadowImage:			Drawable? = ContextCompat.getDrawable(context!!, R.drawable.cable_shadow)
+	private val stereoBarVector:			Drawable? = ContextCompat.getDrawable(context!!, R.drawable.stereo_bar)
+	private val micClampVector:				Drawable? = ContextCompat.getDrawable(context!!, R.drawable.mic_clamp)
+	private val micClampWheelVector:		Drawable? = ContextCompat.getDrawable(context!!, R.drawable.mic_clamp_wheel)
 	
 	
 	private val cmPerInch			= 2.54f
@@ -65,16 +68,20 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	// Input graphics parameters
 	private val micWidthCm			= 2f
 	private val micHeightCm			= 8f
+	private val micCenterYOffsetCm	= 1f
 	private val cableWidthCm		= 11f
 	private val cableHeightCm		= 16.5f
 	private val cableCenterXCm		= 1f
+	private val stereoBarWidthCm	= 53.4f
+	private val stereoBarHeightCm	= 3.4f
+	private val micClampWithCm		= 3f
+	private val micClampHeightCm	= micHeightCm
+	private val micClampCenterXRelativeToMicTopCm = 6f
 	private val shadowOverhangCm	= 1f
 	// Layout
-	private val shadowXOffsetCm			= -0.5f
-	private val shadowYOffsetCm			= 0.3f
-	private val maxShadowAlpha			= 200
-	private val cableVisibleUntilDeg	= 155
-	private val cableInvisibleFromDeg	= 170
+	private val shadowXOffsetCm		= -0.5f
+	private val shadowYOffsetCm		= 0.3f
+	private val maxShadowAlpha		= 200
 	
 	private val halfCircleRadiusCm	= maxMicDistanceCm / 2f
 	
@@ -82,8 +89,13 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	private var pixelPerCm			= -1f
 	private var micWidth			= -1f
 	private var micHeight			= -1f
+	private var micCenterYOffset	= -1f
 	private var cableWidth			= -1f
 	private var cableHeight			= -1f
+	private var stereoBarWidth		= -1f
+	private var stereoBarHeight		= -1f
+	private var micClampWidth		= -1f
+	private var micClampHeight		= -1f
 	private var shadowOverhang		= -1f
 	private var shadowXOffset		= -1f
 	private var shadowYOffset		= -1f
@@ -201,18 +213,23 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	}
 	
 	private fun drawMicView(canvas: Canvas) {
-		val picturedWidth	= maxMicDistanceCm + micWidthCm * 1.5f		// Max mic distance (center to center) + sqrt(2) for each mic when at max distance and 45°
+		val picturedWidth	= maxMicDistanceCm + micWidthCm + 2 * shadowOverhangCm
 		val picturedHeight	= halfCircleRadiusCm + micHeightCm - 1 + 1	// Circle radius + mic length - 1cm for the top of the mic + 1cm buffer
 		pixelPerCm			= width / picturedWidth
 		
-		micWidth			= micWidthCm		* pixelPerCm
-		micHeight			= micHeightCm		* pixelPerCm
-		cableWidth			= cableWidthCm		* pixelPerCm
-		cableHeight			= cableHeightCm		* pixelPerCm
-		shadowOverhang		= shadowOverhangCm	* pixelPerCm
-		shadowXOffset		= shadowXOffsetCm	* pixelPerCm
-		shadowYOffset		= shadowYOffsetCm	* pixelPerCm
-		val halfMicDistance	= micDistance / 2f	* pixelPerCm
+		micWidth			= micWidthCm			* pixelPerCm
+		micHeight			= micHeightCm			* pixelPerCm
+		micCenterYOffset	= micCenterYOffsetCm	* pixelPerCm
+		cableWidth			= cableWidthCm			* pixelPerCm
+		cableHeight			= cableHeightCm			* pixelPerCm
+		stereoBarWidth		= stereoBarWidthCm		* pixelPerCm
+		stereoBarHeight		= stereoBarHeightCm		* pixelPerCm
+		micClampWidth		= micClampWithCm		* pixelPerCm
+		micClampHeight		= micClampHeightCm		* pixelPerCm
+		shadowOverhang		= shadowOverhangCm		* pixelPerCm
+		shadowXOffset		= shadowXOffsetCm		* pixelPerCm
+		shadowYOffset		= shadowYOffsetCm		* pixelPerCm
+		val halfMicDistance	= micDistance / 2f		* pixelPerCm
 		
 		centerX	= width / 2f
 		centerY	= height - micHeight
@@ -220,22 +237,27 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		right	= width.toFloat()
 		top		= 0f
 		
-		val leftMicCenterX	= centerX - halfMicDistance
-		val leftMicLeftX	= leftMicCenterX - micWidth / 2
-		val rightMicCenterX	= centerX + halfMicDistance
-		val rightMicLeftX	= rightMicCenterX - micWidth / 2
-		val cableCenterX	= cableCenterXCm * pixelPerCm
+		val leftMicCenterX		= centerX - halfMicDistance
+		val leftMicLeftX		= leftMicCenterX - micWidth / 2
+		val rightMicCenterX		= centerX + halfMicDistance
+		val rightMicLeftX		= rightMicCenterX - micWidth / 2
+		val cableCenterX		= cableCenterXCm * pixelPerCm
+		val leftClampLeftX		= leftMicCenterX - micClampWidth / 2
+		val rightClampLeftX		= rightMicCenterX - micClampWidth / 2
+		val stereoBarLeftX		= centerX - stereoBarWidth / 2
+		val stereoBarCenterY	= centerY + (micClampCenterXRelativeToMicTopCm * pixelPerCm - micCenterYOffset) * cos(Math.toRadians(micAngle / 2.0)).toFloat()
+		val stereoBarTopY		= stereoBarCenterY - stereoBarHeight / 2
 		
-		val micTopY			= centerY - 1 * pixelPerCm
-		val micBottomY		= micTopY + micHeight
-		val cableTopY		= micBottomY - 0.25f * pixelPerCm	// Slight overlap to line up the shadows
+		val micTopY		= centerY - micCenterYOffset
+		val micBottomY	= micTopY + micHeight
+		val cableTopY	= micBottomY - 0.25f * pixelPerCm	// Slight overlap to line up the shadows
 		
-		val angleWithXAxisDeg = 90 - recAngle / 2
-		val angleWithXAxisRad = angleWithXAxisDeg * Math.PI.toFloat() / 180
-		val recAngleLineY = centerY - tan(angleWithXAxisRad) * centerX
-		val halfAngleWithXAxisDeg = 90 - recAngle * (0.25f + angularDist / 60f)
-		val halfAngleWithXAxisRad = halfAngleWithXAxisDeg * Math.PI.toFloat() / 180
-		val halfRecAngleLineY = centerY - tan(halfAngleWithXAxisRad) * centerX
+		val angleWithXAxisDeg		= 90 - recAngle / 2
+		val angleWithXAxisRad		= angleWithXAxisDeg * Math.PI.toFloat() / 180
+		val recAngleLineY			= centerY - tan(angleWithXAxisRad) * centerX
+		val halfAngleWithXAxisDeg	= 90 - recAngle * (0.25f + angularDist / 60f)
+		val halfAngleWithXAxisRad	= halfAngleWithXAxisDeg * Math.PI.toFloat() / 180
+		val halfRecAngleLineY		= centerY - tan(halfAngleWithXAxisRad) * centerX
 		
 		val circleRadius = halfCircleRadiusCm * pixelPerCm
 		
@@ -276,28 +298,36 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 			)
 		}
 		
-		// Draw shadows and microphones
-		micShadowImage?.alpha = maxShadowAlpha
-		
-		// Vary mirrored microphone alpha based on angle to simulate light reflections
-		micVectorMirrored?.alpha = (128 * (1 - cos(Math.toRadians(micAngle / 2.0)))).roundToInt()
+		// Draw stereo bar
+		draw(canvas, stereoBarVector, stereoBarLeftX, stereoBarTopY, stereoBarWidth, stereoBarHeight)
 		
 		val leftRotAngle	= -micAngle / 2
 		val rightRotAngle	= micAngle / 2
 		val leftCableCenterX	= leftMicLeftX + cableCenterX
 		val rightCableCenterX	= rightMicLeftX + cableCenterX
 		
-		//						drawable			leftX			topY		width		height			rotationAngle	rotationCenterX,	rotationCenterY
+		// Draw clamp wheels
+		draw(canvas, micClampWheelVector, rightClampLeftX,	micTopY, micClampWidth, micClampHeight, rightRotAngle,	rightCableCenterX, centerY)
+		draw(canvas, micClampWheelVector, leftClampLeftX,	micTopY, micClampWidth, micClampHeight, leftRotAngle,	leftCableCenterX, centerY)
+		
+		// Vary mirrored microphone alpha based on angle to simulate light reflections
+		micVectorMirrored?.alpha = (128 * (1 - cos(Math.toRadians(micAngle / 2.0)))).roundToInt()
+		
+		// Draw shadows, microphones and clamps
+		micShadowImage?.alpha = maxShadowAlpha
+		//						drawable			leftX				topY		width			height			rotationAngle	rotationCenterX,	rotationCenterY
 		// RIGHT
-		drawShadow	(canvas,	cableShadowImage,	rightMicLeftX,	cableTopY,	cableWidth,	cableHeight,	rightRotAngle,	rightCableCenterX,	rotationCenterY = centerY)
-		drawShadow	(canvas,	micShadowImage,		rightMicLeftX,	micTopY,	micWidth,	micHeight,		rightRotAngle,						rotationCenterY = centerY)
-		draw		(canvas,	cableVector,		rightMicLeftX,	cableTopY,	cableWidth,	cableHeight,	rightRotAngle,	rightCableCenterX,	centerY)
-		drawMic		(canvas, rightNotLeft = true,	rightMicLeftX,	micTopY)
+		drawShadow	(canvas,	cableShadowImage,	rightMicLeftX,		cableTopY,	cableWidth,		cableHeight,	rightRotAngle,	rightCableCenterX,	rotationCenterY = centerY)
+		drawShadow	(canvas,	micShadowImage,		rightMicLeftX,		micTopY,	micWidth,		micHeight,		rightRotAngle,						rotationCenterY = centerY)
+		draw		(canvas,	cableVector,		rightMicLeftX,		cableTopY,	cableWidth,		cableHeight,	rightRotAngle,	rightCableCenterX,	centerY)
+		drawMic		(canvas, rightNotLeft = true,	rightMicLeftX,		micTopY)
+		draw		(canvas,	micClampVector,		rightClampLeftX,	micTopY, 	micClampWidth,	micClampHeight,	rightRotAngle,	rightCableCenterX,	centerY)
 		// LEFT
-		drawShadow	(canvas,	cableShadowImage,	leftMicLeftX,	cableTopY,	cableWidth,	cableHeight,	leftRotAngle,	leftCableCenterX,	rotationCenterY = centerY,	scaleX = -1f)
-		drawShadow	(canvas,	micShadowImage,		leftMicLeftX,	micTopY,	micWidth,	micHeight,		leftRotAngle,						rotationCenterY = centerY)
-		draw		(canvas,	cableVector,		leftMicLeftX,	cableTopY,	cableWidth,	cableHeight,	leftRotAngle,	leftCableCenterX,	rotationCenterY = centerY,	scaleX = -1f)
-		drawMic		(canvas, rightNotLeft = false,	leftMicLeftX,	micTopY)
+		drawShadow	(canvas,	cableShadowImage,	leftMicLeftX,		cableTopY,	cableWidth,		cableHeight,	leftRotAngle,	leftCableCenterX,	rotationCenterY = centerY,	scaleX = -1f)
+		drawShadow	(canvas,	micShadowImage,		leftMicLeftX,		micTopY,	micWidth,		micHeight,		leftRotAngle,						rotationCenterY = centerY)
+		draw		(canvas,	cableVector,		leftMicLeftX,		cableTopY,	cableWidth,		cableHeight,	leftRotAngle,	leftCableCenterX,	rotationCenterY = centerY,	scaleX = -1f)
+		drawMic		(canvas, rightNotLeft = false,	leftMicLeftX,		micTopY)
+		draw		(canvas,	micClampVector,		leftClampLeftX,		micTopY,	micClampWidth,	micClampHeight,	leftRotAngle,	leftCableCenterX,	centerY)
 	}
 	
 	private fun drawGraphView(canvas: Canvas) {
