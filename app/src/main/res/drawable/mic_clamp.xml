@@ -1,20 +1,20 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt"
     android:width="30dp"
-    android:height="80dp"
+    android:height="30dp"
     android:viewportWidth="300"
-    android:viewportHeight="800">
+    android:viewportHeight="300">
   <path
-      android:pathData="M225,500L255,500A5,5 0,0 1,260 505L260,695A5,5 0,0 1,255 700L225,700A5,5 0,0 1,220 695L220,505A5,5 0,0 1,225 500z"
+      android:pathData="M225,50L255,50A5,5 0,0 1,260 55L260,245A5,5 0,0 1,255 250L225,250A5,5 0,0 1,220 245L220,55A5,5 0,0 1,225 50z"
       android:strokeWidth="5"
       android:strokeColor="#00000000"
       android:strokeLineCap="round">
     <aapt:attr name="android:fillColor">
       <gradient 
           android:startX="220"
-          android:startY="600"
+          android:startY="150"
           android:endX="260"
-          android:endY="600"
+          android:endY="150"
           android:type="linear">
         <item android:offset="0" android:color="#FF595959"/>
         <item android:offset="0.2" android:color="#FF1A1A1A"/>
@@ -24,16 +24,16 @@
     </aapt:attr>
   </path>
   <path
-      android:pathData="M45,500L75,500A5,5 0,0 1,80 505L80,695A5,5 0,0 1,75 700L45,700A5,5 0,0 1,40 695L40,505A5,5 0,0 1,45 500z"
+      android:pathData="M45,50L75,50A5,5 0,0 1,80 55L80,245A5,5 0,0 1,75 250L45,250A5,5 0,0 1,40 245L40,55A5,5 0,0 1,45 50z"
       android:strokeWidth="5"
       android:strokeColor="#00000000"
       android:strokeLineCap="round">
     <aapt:attr name="android:fillColor">
       <gradient 
           android:startX="40"
-          android:startY="600"
+          android:startY="150"
           android:endX="80"
-          android:endY="600"
+          android:endY="150"
           android:type="linear">
         <item android:offset="0" android:color="#FF000000"/>
         <item android:offset="0.6" android:color="#FF262626"/>

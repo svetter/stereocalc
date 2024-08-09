@@ -11,8 +11,10 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.roundToInt
+import kotlin.math.sin
 import kotlin.math.tan
 
 
@@ -66,18 +68,19 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	
 	// Microphone view constants
 	// Input graphics parameters
-	private val micWidthCm			= 2f
-	private val micHeightCm			= 8f
-	private val micCenterYOffsetCm	= 1f
-	private val cableWidthCm		= 11f
-	private val cableHeightCm		= 16.5f
-	private val cableCenterXCm		= 1f
-	private val stereoBarWidthCm	= 53.4f
-	private val stereoBarHeightCm	= 3.4f
-	private val micClampWithCm		= 3f
-	private val micClampHeightCm	= micHeightCm
-	private val micClampCenterXRelativeToMicTopCm = 6f
-	private val shadowOverhangCm	= 1f
+	private val micWidthCm				= 2f
+	private val micHeightCm				= 8f
+	private val micCenterYOffsetCm		= 1f
+	private val cableWidthCm			= 11f
+	private val cableHeightCm			= 16.5f
+	private val cableCenterXCm			= 1f
+	private val stereoBarWidthCm		= 53.4f
+	private val stereoBarHeightCm		= 3.4f
+	private val minClampPitchCm			= 3.25f
+	private val micClampWidthCm			= 3f
+	private val micClampHeightCm		= 3f
+	private val micClampWheelOverhangCm	= 0.4f
+	private val shadowOverhangCm		= 1f
 	// Layout
 	private val shadowXOffsetCm		= -0.5f
 	private val shadowYOffsetCm		= 0.3f
@@ -94,6 +97,7 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	private var cableHeight			= -1f
 	private var stereoBarWidth		= -1f
 	private var stereoBarHeight		= -1f
+	private var minClampPitch		= -1f
 	private var micClampWidth		= -1f
 	private var micClampHeight		= -1f
 	private var shadowOverhang		= -1f
@@ -224,7 +228,8 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		cableHeight			= cableHeightCm			* pixelPerCm
 		stereoBarWidth		= stereoBarWidthCm		* pixelPerCm
 		stereoBarHeight		= stereoBarHeightCm		* pixelPerCm
-		micClampWidth		= micClampWithCm		* pixelPerCm
+		minClampPitch		= minClampPitchCm		* pixelPerCm
+		micClampWidth		= micClampWidthCm		* pixelPerCm
 		micClampHeight		= micClampHeightCm		* pixelPerCm
 		shadowOverhang		= shadowOverhangCm		* pixelPerCm
 		shadowXOffset		= shadowXOffsetCm		* pixelPerCm
@@ -245,13 +250,54 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		val leftClampLeftX		= leftMicCenterX - micClampWidth / 2
 		val rightClampLeftX		= rightMicCenterX - micClampWidth / 2
 		val stereoBarLeftX		= centerX - stereoBarWidth / 2
-		val stereoBarCenterY	= centerY + (micClampCenterXRelativeToMicTopCm * pixelPerCm - micCenterYOffset) * cos(Math.toRadians(micAngle / 2.0)).toFloat()
-		val stereoBarTopY		= stereoBarCenterY - stereoBarHeight / 2
 		
+		// Calculate microphone and cable positions
 		val micTopY		= centerY - micCenterYOffset
 		val micBottomY	= micTopY + micHeight
 		val cableTopY	= micBottomY - 0.25f * pixelPerCm	// Slight overlap to line up the shadows
 		
+		// Calculate stereo bar and clamp positions
+		// Distance from mic top to clamp top
+		val defaultClampOffset	= 4.3f	* pixelPerCm
+		val upperClampOffset	= 1f	* pixelPerCm
+		val lowerClampOffset	= (micHeightCm - micClampHeightCm + micClampWheelOverhangCm - 0.1f) * pixelPerCm
+		val clampYOffset = run {
+			val micDistancePx = micDistance * pixelPerCm
+			val sine = sin(Math.toRadians(micAngle / 2.0)).toFloat()
+			fun rawClampPitch(clampOffset: Float): Float {
+				val hypotenuse = clampOffset - micCenterYOffset + micClampHeight / 2
+				return micDistancePx - 2 * hypotenuse * sine
+			}
+			fun clampPitch	(clampOffset: Float): Float		= abs(rawClampPitch(clampOffset))
+			fun clampFitsAt	(clampOffset: Float): Boolean	= clampPitch(clampOffset) >= minClampPitch
+			fun crossed		(clampOffset: Float): Boolean	= rawClampPitch(clampOffset) < 0
+			
+			return@run when {
+				clampFitsAt(defaultClampOffset) -> {
+					defaultClampOffset
+				}
+				crossed(lowerClampOffset) && clampFitsAt(lowerClampOffset) -> {
+					// Slide clamp towards mic rear
+					val opposite = (micDistancePx + minClampPitch) / 2
+					opposite / sine + micCenterYOffset - micClampHeight / 2
+				}
+				!crossed(upperClampOffset) && clampFitsAt(upperClampOffset) -> {
+					// Slide clamp towards mic front
+					val opposite = (micDistancePx - minClampPitch) / 2
+					opposite / sine + micCenterYOffset - micClampHeight / 2
+				}
+				else -> {
+					// Slide clamp past rear stopper as fallback
+					val opposite = (micDistancePx + minClampPitch) / 2
+					opposite / sine + micCenterYOffset - micClampHeight / 2
+				}
+			}
+		}
+		val clampTopY			= micTopY + clampYOffset
+		val stereoBarCenterY	= centerY + (clampYOffset - micCenterYOffset + micClampHeight / 2) * cos(Math.toRadians(micAngle / 2.0)).toFloat()
+		val stereoBarTopY		= stereoBarCenterY - stereoBarHeight / 2
+		
+		// Calculate recording angle lines
 		val angleWithXAxisDeg		= 90 - recAngle / 2
 		val angleWithXAxisRad		= angleWithXAxisDeg * Math.PI.toFloat() / 180
 		val recAngleLineY			= centerY - tan(angleWithXAxisRad) * centerX
@@ -307,8 +353,8 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		val rightCableCenterX	= rightMicLeftX + cableCenterX
 		
 		// Draw clamp wheels
-		draw(canvas, micClampWheelVector, rightClampLeftX,	micTopY, micClampWidth, micClampHeight, rightRotAngle,	rightCableCenterX, centerY)
-		draw(canvas, micClampWheelVector, leftClampLeftX,	micTopY, micClampWidth, micClampHeight, leftRotAngle,	leftCableCenterX, centerY)
+		draw(canvas, micClampWheelVector, rightClampLeftX,	clampTopY, micClampWidth, micClampHeight, rightRotAngle,	rightCableCenterX, centerY)
+		draw(canvas, micClampWheelVector, leftClampLeftX,	clampTopY, micClampWidth, micClampHeight, leftRotAngle,	leftCableCenterX, centerY)
 		
 		// Vary mirrored microphone alpha based on angle to simulate light reflections
 		micVectorMirrored?.alpha = (128 * (1 - cos(Math.toRadians(micAngle / 2.0)))).roundToInt()
@@ -321,13 +367,13 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		drawShadow	(canvas,	micShadowImage,		rightMicLeftX,		micTopY,	micWidth,		micHeight,		rightRotAngle,						rotationCenterY = centerY)
 		draw		(canvas,	cableVector,		rightMicLeftX,		cableTopY,	cableWidth,		cableHeight,	rightRotAngle,	rightCableCenterX,	centerY)
 		drawMic		(canvas, rightNotLeft = true,	rightMicLeftX,		micTopY)
-		draw		(canvas,	micClampVector,		rightClampLeftX,	micTopY, 	micClampWidth,	micClampHeight,	rightRotAngle,	rightCableCenterX,	centerY)
+		draw		(canvas,	micClampVector,		rightClampLeftX,	clampTopY, 	micClampWidth,	micClampHeight,	rightRotAngle,	rightCableCenterX,	centerY)
 		// LEFT
 		drawShadow	(canvas,	cableShadowImage,	leftMicLeftX,		cableTopY,	cableWidth,		cableHeight,	leftRotAngle,	leftCableCenterX,	rotationCenterY = centerY,	scaleX = -1f)
 		drawShadow	(canvas,	micShadowImage,		leftMicLeftX,		micTopY,	micWidth,		micHeight,		leftRotAngle,						rotationCenterY = centerY)
 		draw		(canvas,	cableVector,		leftMicLeftX,		cableTopY,	cableWidth,		cableHeight,	leftRotAngle,	leftCableCenterX,	rotationCenterY = centerY,	scaleX = -1f)
 		drawMic		(canvas, rightNotLeft = false,	leftMicLeftX,		micTopY)
-		draw		(canvas,	micClampVector,		leftClampLeftX,		micTopY,	micClampWidth,	micClampHeight,	leftRotAngle,	leftCableCenterX,	centerY)
+		draw		(canvas,	micClampVector,		leftClampLeftX,		clampTopY,	micClampWidth,	micClampHeight,	leftRotAngle,	leftCableCenterX,	centerY)
 	}
 	
 	private fun drawGraphView(canvas: Canvas) {
@@ -605,7 +651,8 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		canvas:			Canvas,
 		rightNotLeft:	Boolean,
 		leftX:			Float,
-		topY:			Float) {
+		topY:			Float
+	) {
 		draw(
 			canvas, micVector, leftX, topY, micWidth, micHeight,
 			(if (rightNotLeft) 1f else -1f) * micAngle / 2,
