@@ -765,6 +765,10 @@ class MainActivity : AppCompatActivity() {
 		updatePresetButtonTexts()
 	}
 	
+	override fun onPause() {
+		saveStateToSharedPrefs()
+		super.onPause()
+	}
 	override fun onDestroy() {
 		saveStateToSharedPrefs()
 		super.onDestroy()
