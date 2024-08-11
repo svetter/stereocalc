@@ -25,4 +25,18 @@ Inspired by and based on the data of [Michael Williams](http://www.williamsmmad.
 
 ## Screenshots
 
-TODO
+Main activity, showing the microphone view:
+
+<img src="resources/screenshots/main_mic_view_dark.png" alt="Main activity, microphone view" width="400" style="max-width: 100%; height: auto;">
+
+---
+
+Main activity with graph view activated:
+
+<img src="resources/screenshots/main_graph_view_dark.png" alt="Main activity, graph viwe" width="400" style="max-width: 100%; height: auto;">
+
+---
+
+Calculating the best recording angle from distance measurements:
+
+<img src="resources/screenshots/angle_calc_dark.png" alt="Recording angle calculator activity" width="400" style="max-width: 100%; height: auto;">
