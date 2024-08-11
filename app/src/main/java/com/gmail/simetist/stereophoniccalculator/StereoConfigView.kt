@@ -321,6 +321,9 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		val circleRadius = halfCircleRadiusCm * pixelPerCm
 		
 		
+		// Draw stereo bar
+		draw(canvas, stereoBarVector, stereoBarLeftX, stereoBarTopY, stereoBarWidth, stereoBarHeight)
+		
 		// Draw recording angle area
 		canvas.drawPath(Path().apply {
 			moveTo(centerX, centerY)
@@ -347,7 +350,6 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		canvas.drawLine(centerX, centerY, right,	recAngleLineY,		linesPaint)
 		canvas.drawLine(centerX, centerY, left,		halfRecAngleLineY,	linesPaint)
 		canvas.drawLine(centerX, centerY, right,	halfRecAngleLineY,	linesPaint)
-		
 		// Draw half circle
 		if (height >= picturedHeight * pixelPerCm) {
 			canvas.drawArc(
@@ -356,9 +358,6 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 				180f, 180f, false, linesPaint
 			)
 		}
-		
-		// Draw stereo bar
-		draw(canvas, stereoBarVector, stereoBarLeftX, stereoBarTopY, stereoBarWidth, stereoBarHeight)
 		
 		val leftRotAngle	= -micAngle / 2
 		val rightRotAngle	= micAngle / 2
