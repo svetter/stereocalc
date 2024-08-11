@@ -85,16 +85,16 @@ Calculator. If not, see <https://www.gnu.org/licenses/>.
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-      
+
       <TextView
           android:id="@+id/appCreditText"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:autoLink="web"
           android:linksClickable="true"
-          android:text="Copyright 2024 Simon Vetter\n\nThe full source code of this App is available on GitHub:\nhttps://github.com/svetter/stereocalc"
+          android:text="Copyright 2024 Simon Vetter\n\nThe full source code of this app is available on GitHub:\nhttps://github.com/svetter/stereocalc"
           android:textSize="16sp" />
-      
+
       <TextView
           android:id="@+id/dataCreditText"
           android:layout_width="match_parent"
@@ -102,24 +102,32 @@ Calculator. If not, see <https://www.gnu.org/licenses/>.
           android:layout_marginTop="24dp"
           android:autoLink="web"
           android:linksClickable="true"
-          android:text="Full credit for the data underlying this app goes to Michael Williams and his paper &quot;The stereophonic zoom&quot;, available here:\nhttps://www.gracedesign.com/support/StereoZoom10.pdf\nThis is a short and very interesting read, recommended for every user of this app. It is the best way to fully understand what functionality this app provides and how to use it."
+          android:text="Full credit for the data on which this app is based goes to Michael Williams and his paper &quot;The stereophonic zoom&quot;, available here:\nhttps://www.gracedesign.com/support/StereoZoom10.pdf\nThis is a short and very interesting read, recommended for every user of this app. Reading it is the best way to fully understand what functionality this app provides and how to use it."
           android:textSize="16sp" />
-      
+
+      <TextView
+          android:id="@+id/licenseNoticeLabel"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="24dp"
+          android:text="License notice"
+          android:textSize="20sp" />
+
       <TextView
           android:id="@+id/licenseText"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="24dp"
+          android:layout_marginTop="8dp"
           android:autoLink="web"
           android:linksClickable="true"
-          android:text="This app is available under license X. TODO"
+          android:text="Stereophonic Calculator is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\nStereophonic Calculator is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\nFor a copy of the GNU General Public License, see https://www.gnu.org/licenses."
           android:textSize="16sp" />
 
       <Button
           android:id="@+id/licensesButton"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="24dp"
+          android:layout_marginTop="16dp"
           android:text="Show open source licenses"
           app:cornerRadius="5dp" />
 
