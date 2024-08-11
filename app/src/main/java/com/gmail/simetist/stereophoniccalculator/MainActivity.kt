@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 	
 	private var ignoreListeners			= false
 	
-	private val animationDuration		= 1500	// ms
+	private val animationDuration		= 150 // ms
 	
 	private var customPresets = Array<StereoConfiguration?>(3) { null }
 	
