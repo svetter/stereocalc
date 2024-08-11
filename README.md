@@ -2,7 +2,7 @@
 
 # Stereophonic Calculator
 
-[![Build](https://github.com/svetter/stereocalc/actions/workflows/build.yml/badge.svg)](https://github.com/svetter/stereocalc/actions/workflows/build-and-test.yml)
+[![Build](https://github.com/svetter/stereocalc/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/svetter/stereocalc/actions/workflows/build_and_test.yml)
 
 Quickly find stereo microphone configurations for specific recording angles with this Android app.
 
