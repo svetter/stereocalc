@@ -317,40 +317,34 @@
           app:layout_constraintBottom_toTopOf="@+id/applyBackButton"
           app:layout_constraintEnd_toEndOf="@+id/graphicsViewLayout"
           app:layout_constraintStart_toStartOf="@+id/graphicsViewLayout" />
-      
+
       <Button
           android:id="@+id/backButton"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:backgroundTint="#9A8C0000"
           android:text="Back"
-          android:textColor="@color/white"
           app:cornerRadius="5dp"
           app:layout_constraintBottom_toBottomOf="@+id/applyButton"
           app:layout_constraintStart_toStartOf="@+id/micInclinationLabel"
           app:layout_constraintTop_toTopOf="@+id/applyButton" />
-      
+
       <Button
           android:id="@+id/applyButton"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginEnd="16dp"
-          android:backgroundTint="#9A8C0000"
           android:text="Apply"
-          android:textColor="@android:color/white"
           app:cornerRadius="5dp"
           app:layout_constraintBottom_toBottomOf="@+id/applyBackButton"
           app:layout_constraintEnd_toStartOf="@+id/applyBackButton"
           app:layout_constraintTop_toTopOf="@+id/applyBackButton" />
-      
+
       <Button
           android:id="@+id/applyBackButton"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginBottom="16dp"
-          android:backgroundTint="#9A8C0000"
           android:text="Apply &amp; back"
-          android:textColor="@android:color/white"
           app:cornerRadius="5dp"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toEndOf="@+id/micInclinationValueLabel" />

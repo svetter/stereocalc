@@ -7,19 +7,17 @@
 		android:layout_height="match_parent"
 		android:layout_gravity="center"
 		tools:context=".MainActivity">
-	
+
 	<Button
-			android:id="@+id/aboutButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="16dp"
-			android:layout_marginTop="16dp"
-			android:backgroundTint="#9A8C0000"
-			android:text="About"
-			android:textColor="@color/white"
-			app:cornerRadius="5dp"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
+		android:id="@+id/aboutButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="16dp"
+		android:layout_marginTop="16dp"
+		android:text="About"
+		app:cornerRadius="5dp"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
 	
 	<TextView
 			android:id="@+id/metricLabel"
@@ -143,18 +141,16 @@
 				android:layout_height="wrap_content"
 				android:text="Hold" />
 	</LinearLayout>
-	
+
 	<Button
-			android:id="@+id/calcRecAngleButton"
-			android:layout_width="wrap_content"
-			android:layout_height="40dp"
-			android:layout_marginTop="8dp"
-			android:backgroundTint="#9A8C0000"
-			android:text="Calculate"
-			android:textColor="@color/white"
-			app:cornerRadius="5dp"
-			app:layout_constraintEnd_toEndOf="@+id/halfAnglesLabel"
-			app:layout_constraintTop_toBottomOf="@+id/settingsDivider" />
+		android:id="@+id/calcRecAngleButton"
+		android:layout_width="wrap_content"
+		android:layout_height="40dp"
+		android:layout_marginTop="8dp"
+		android:text="Calculate"
+		app:cornerRadius="5dp"
+		app:layout_constraintEnd_toEndOf="@+id/halfAnglesLabel"
+		app:layout_constraintTop_toBottomOf="@+id/settingsDivider" />
 	
 	<TextView
 			android:id="@+id/recAnglePlusMinusLabel"
@@ -619,46 +615,40 @@
 			app:layout_constraintBottom_toTopOf="@+id/customPresetsLabel"
 			app:layout_constraintEnd_toEndOf="@+id/angularDistIndicator"
 			app:layout_constraintStart_toStartOf="@+id/presetsLabel">
-		
+
 		<Button
-				android:id="@+id/ortfButton"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:layout_weight="1"
-				android:backgroundTint="#9A8C0000"
-				android:text="ORTF"
-				android:textColor="@color/white"
-				app:cornerRadius="0dp" />
+			android:id="@+id/ortfButton"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:layout_weight="1"
+			android:text="ORTF"
+			app:cornerRadius="0dp" />
 		
 		<Space
 				android:layout_width="16dp"
 				android:layout_height="match_parent"
 				android:layout_weight="0" />
-		
+
 		<Button
-				android:id="@+id/nosButton"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:layout_weight="1"
-				android:backgroundTint="#9A8C0000"
-				android:text="NOS"
-				android:textColor="@color/white"
-				app:cornerRadius="0dp" />
+			android:id="@+id/nosButton"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:layout_weight="1"
+			android:text="NOS"
+			app:cornerRadius="0dp" />
 		
 		<Space
 				android:layout_width="16dp"
 				android:layout_height="match_parent"
 				android:layout_weight="0" />
-		
+
 		<Button
-				android:id="@+id/dinButton"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:layout_weight="1"
-				android:backgroundTint="#9A8C0000"
-				android:text="DIN"
-				android:textColor="@color/white"
-				app:cornerRadius="0dp" />
+			android:id="@+id/dinButton"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:layout_weight="1"
+			android:text="DIN"
+			app:cornerRadius="0dp" />
 	
 	</LinearLayout>
 	
@@ -690,55 +680,49 @@
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="@+id/customPresetExplainLabel"
 			app:layout_constraintStart_toStartOf="@+id/customPresetsLabel">
-		
+
 		<Button
-				android:id="@+id/customPresetButton1"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:layout_weight="1"
-				android:backgroundTint="#9A8C0000"
-				android:paddingLeft="8dp"
-				android:paddingRight="8dp"
-				android:text="Empty"
-				android:textColor="@color/white"
-				android:textSize="12sp"
-				app:cornerRadius="0dp" />
+			android:id="@+id/customPresetButton1"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:layout_weight="1"
+			android:paddingLeft="8dp"
+			android:paddingRight="8dp"
+			android:text="Empty"
+			android:textSize="12sp"
+			app:cornerRadius="0dp" />
 		
 		<Space
 				android:layout_width="16dp"
 				android:layout_height="match_parent"
 				android:layout_weight="0" />
-		
+
 		<Button
-				android:id="@+id/customPresetButton2"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:layout_weight="1"
-				android:backgroundTint="#9A8C0000"
-				android:paddingLeft="8dp"
-				android:paddingRight="8dp"
-				android:text="Empty"
-				android:textColor="@color/white"
-				android:textSize="12sp"
-				app:cornerRadius="0dp" />
+			android:id="@+id/customPresetButton2"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:layout_weight="1"
+			android:paddingLeft="8dp"
+			android:paddingRight="8dp"
+			android:text="Empty"
+			android:textSize="12sp"
+			app:cornerRadius="0dp" />
 		
 		<Space
 				android:layout_width="16dp"
 				android:layout_height="match_parent"
 				android:layout_weight="0" />
-		
+
 		<Button
-				android:id="@+id/customPresetButton3"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:layout_weight="1"
-				android:backgroundTint="#9A8C0000"
-				android:paddingLeft="8dp"
-				android:paddingRight="8dp"
-				android:text="Empty"
-				android:textColor="@color/white"
-				android:textSize="12sp"
-				app:cornerRadius="0dp" />
+			android:id="@+id/customPresetButton3"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:layout_weight="1"
+			android:paddingLeft="8dp"
+			android:paddingRight="8dp"
+			android:text="Empty"
+			android:textSize="12sp"
+			app:cornerRadius="0dp" />
 	</LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -143,7 +143,11 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 	private fun init() {
 		// Microphone view
 		
-		linesPaint				.color			= Color.GRAY
+		if (mainActivity.isDarkMode()) {
+			linesPaint			.color			= Color.LTGRAY
+		} else {
+			linesPaint			.color			= Color.DKGRAY
+		}
 		linesPaint				.strokeWidth	= 5f
 		linesPaint				.strokeCap		= Paint.Cap.ROUND
 		linesPaint				.style			= Paint.Style.STROKE
@@ -156,7 +160,11 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		
 		// Graph view
 		
-		graphBorderPaint		.color			= Color.WHITE
+		if (mainActivity.isDarkMode()) {
+			graphBorderPaint	.color			= Color.LTGRAY
+		} else {
+			graphBorderPaint	.color			= Color.DKGRAY
+		}
 		graphBorderPaint		.strokeWidth	= 5f
 		graphBorderPaint		.strokeCap		= Paint.Cap.SQUARE
 		graphBorderPaint		.style			= Paint.Style.STROKE
@@ -201,7 +209,12 @@ class StereoConfigView(context: Context?, attrs: AttributeSet?) : View(context, 
 		graphCrossPaint			.strokeWidth	= 2f
 		graphCrossPaint			.style			= Paint.Style.STROKE
 		
-		graphReticulePaint		.color			= Color.RED
+		if (mainActivity.isDarkMode()) {
+			// R.color.dark_secondary
+			graphReticulePaint	.color			= ContextCompat.getColor(context!!, R.color.dark_secondary)
+		} else {
+			graphReticulePaint	.color			= ContextCompat.getColor(context!!, R.color.light_secondary)
+		}
 		graphReticulePaint		.style			= Paint.Style.FILL
 		graphReticulePaint		.isAntiAlias	= true
 	}

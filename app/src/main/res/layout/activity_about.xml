@@ -104,22 +104,18 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="24dp"
-          android:backgroundTint="#9A8C0000"
           android:text="Show open source licenses"
-          android:textColor="@color/white"
           app:cornerRadius="5dp" />
 
     </LinearLayout>
   </ScrollView>
-  
+
   <Button
       android:id="@+id/backButton"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginBottom="16dp"
-      android:backgroundTint="#9A8C0000"
       android:text="Back"
-      android:textColor="@color/white"
       app:cornerRadius="5dp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintStart_toStartOf="@+id/textscrollView" />

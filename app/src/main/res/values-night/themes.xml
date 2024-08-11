@@ -1,7 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.StereophonicCalculator" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/dark_primary</item>
+        <item name="colorOnPrimary">@color/dark_on_primary</item>
+        <item name="colorPrimaryVariant">#5A993E</item>
+        <item name="colorSecondary">@color/dark_secondary</item>
+        <item name="android:thumbTint">@color/dark_secondary</item>
+        <item name="android:textColorLink">@color/dark_links</item>
     </style>
 </resources>

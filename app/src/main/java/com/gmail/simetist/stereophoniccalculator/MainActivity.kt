@@ -20,7 +20,6 @@ import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.Switch
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -114,8 +113,6 @@ class MainActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main)
 		populateUIElementMembers()
-		// Show notification bar in the same color as the app's background
-		enableEdgeToEdge()
 		ViewCompat.setOnApplyWindowInsetsListener(mainLayout) { view, insets ->
 			val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 			view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -179,6 +176,15 @@ class MainActivity : AppCompatActivity() {
 			MIC_DISTANCE	-> micDistanceUpperBound
 			MIC_ANGLE		-> micAngleUpperBound
 		}
+	}
+	
+	
+	
+	// GET STATE
+	
+	fun isDarkMode(): Boolean {
+		val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+		return nightModeFlags == Configuration.UI_MODE_NIGHT_YES
 	}
 	
 	

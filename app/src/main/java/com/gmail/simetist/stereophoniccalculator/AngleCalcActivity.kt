@@ -8,7 +8,6 @@ import android.widget.FrameLayout
 import android.widget.ScrollView
 import android.widget.SeekBar
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
@@ -70,8 +69,6 @@ class AngleCalcActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_angle_calc)
 		populateUIElementMembers()
-		// Show notification bar in the same color as the app's background
-		enableEdgeToEdge()
 		var systemBarsHeight = 0
 		ViewCompat.setOnApplyWindowInsetsListener(mainLayout) { view, insets ->
 			val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
