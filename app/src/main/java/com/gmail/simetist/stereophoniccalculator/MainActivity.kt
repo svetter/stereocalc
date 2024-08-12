@@ -642,7 +642,10 @@ class MainActivity : AppCompatActivity() {
 	override fun onConfigurationChanged(newConfig: Configuration) {
 		super.onConfigurationChanged(newConfig)
 		
+		val minScreenAspectRatioForAltView = 1.4
 		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+			if (newConfig.screenHeightDp.toDouble() / newConfig.screenWidthDp < minScreenAspectRatioForAltView) return
+			
 			// Restore graphicsFrame's constraints
 			graphicsViewLayout.layoutParams = ConstraintLayout.LayoutParams(
 				portraitGraphicsFrameWidth,
@@ -661,6 +664,8 @@ class MainActivity : AppCompatActivity() {
 			graphicsViewLayout.setBackgroundColor(Color.TRANSPARENT)
 		}
 		else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			if (newConfig.screenWidthDp.toDouble() / newConfig.screenHeightDp < minScreenAspectRatioForAltView) return
+			
 			// Save layout values
 			portraitGraphicsFrameWidth			= graphicsViewLayout.width
 			portraitGraphicsFrameHeight			= graphicsViewLayout.height
