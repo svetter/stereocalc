@@ -27,6 +27,7 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -679,7 +680,10 @@ class MainActivity : AppCompatActivity() {
 				ViewGroup.LayoutParams.MATCH_PARENT
 			)
 			// Set background color for graphicsFrameLayout
-			graphicsViewLayout.setBackgroundColor(Color.BLACK)
+			val backgroundColorValue = TypedValue()
+			theme.resolveAttribute(android.R.attr.colorBackground, backgroundColorValue, true)
+			val backgroundColor = backgroundColorValue.data
+			graphicsViewLayout.setBackgroundColor(backgroundColor)
 		}
 		
 		graphicsView.resetCache()
