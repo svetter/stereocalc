@@ -6,9 +6,11 @@
 
 Quickly find stereo microphone configurations for specific recording angles with this Android app.
 
-Inspired by and based on the data of [Michael Williams](http://www.williamsmmad.com/)'s paper **"The stereophonic zoom"** ([PDF](https://www.gracedesign.com/support/StereoZoom10.pdf), [Citation](https://api.semanticscholar.org/CorpusID:202598177)).
+Inspired by and based on the data of [Michael Williams][williams]'s paper **"The stereophonic zoom"** ([PDF][paperpdf], [Citation][papercite]).
 
 > The "Stereophonic Zoom" enables the sound recording engineer to get much nearer to the optimum result in the great majority of recording environments.
+
+—Michael Williams, The stereophonic zoom, page 2
 
 ## Features
 
@@ -33,10 +35,22 @@ Main activity, showing the microphone view:
 
 Main activity with graph view activated:
 
-<img src="resources/screenshots/main_graph_view_dark.png" alt="Main activity, graph viwe" width="400" style="max-width: 100%; height: auto;">
+<img src="resources/screenshots/main_graph_view_dark.png" alt="Main activity, graph view" width="400" style="max-width: 100%; height: auto;">
 
 ---
 
 Calculating the best recording angle from distance measurements:
 
 <img src="resources/screenshots/angle_calc_dark.png" alt="Recording angle calculator activity" width="400" style="max-width: 100%; height: auto;">
+
+---
+
+Main activity in landscape mode, showing the microphone view in full screen:
+
+<img src="resources/screenshots/main_mic_view_landscape_dark.png" alt="Main activity, landscape mode">
+
+
+
+[williams]: http://www.williamsmmad.com
+[paperpdf]: https://www.gracedesign.com/support/StereoZoom10.pdf
+[papercite]: https://api.semanticscholar.org/CorpusID:202598177
