@@ -996,8 +996,8 @@ class MainActivity : AppCompatActivity() {
 		
 		val animationStartMD	= currentMicDistance
 		val animationStartMA	= currentMicAngle
-		animator.addUpdateListener {
-			val progress = it.animatedValue as Float
+		animator.addUpdateListener { animator ->
+			val progress = animator.animatedValue as Float
 			doAnimationStep(animationStartMD, animationStartMA, endMicDistance, endMicAngle, progress.toDouble())
 		}
 		animator.start()
@@ -1006,6 +1006,7 @@ class MainActivity : AppCompatActivity() {
 	private fun stopAnimation() {
 		animator.cancel()
 		animator.removeAllListeners()
+		animator.removeAllUpdateListeners()
 	}
 	
 	private fun doAnimationStep(
