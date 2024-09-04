@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
 	
 	private lateinit var micDistanceValueLabel:			TextView
 	private lateinit var micDistanceSlider:				SeekBar
-	private lateinit var micDistanceSliderTickLabels:	Array<Pair<Pair<Int, Int>, TextView>>
+	private lateinit var micDistanceSliderTickLabels:	Array<Triple<Int, Int, TextView>>
 	
 	private lateinit var micAngleValueLabel:			TextView
 	private lateinit var micAngleSlider:				SeekBar
@@ -472,25 +472,25 @@ class MainActivity : AppCompatActivity() {
 		useImperial = imperialNotMetric
 		
 		// Update the mic distance slider ticks
-		val maxTickCm = micDistanceSliderTickLabels.last().first.first.toFloat()
+		val maxTickCm = micDistanceSliderTickLabels.last().first.toFloat()
 		if (useImperial) {
-			micDistanceSliderTickLabels.forEach { (cmAndInches, label) ->
-				if (cmAndInches.second == -1) {
+			micDistanceSliderTickLabels.forEach { (_, inches, label) ->
+				if (inches == -1) {
 					label.text = ""
 				} else {
-					label.text = "${cmAndInches.second}in"
+					label.text = "${inches}in"
 				}
 				// Reposition the tick label
 				label.layoutParams = (label.layoutParams as ConstraintLayout.LayoutParams).apply {
-					horizontalBias = cmAndInches.second.toFloat() / (maxTickCm / cmPerInch.toFloat())
+					horizontalBias = inches.toFloat() / (maxTickCm / cmPerInch.toFloat())
 				}
 			}
 		} else {
-			micDistanceSliderTickLabels.forEach { (cmAndInches, label) ->
-				label.text = "${cmAndInches.first}cm"
+			micDistanceSliderTickLabels.forEach { (cms, _, label) ->
+				label.text = "${cms}cm"
 				// Reposition the tick label
 				label.layoutParams = (label.layoutParams as ConstraintLayout.LayoutParams).apply {
-					horizontalBias = cmAndInches.first.toFloat() / maxTickCm
+					horizontalBias = cms.toFloat() / maxTickCm
 				}
 			}
 		}
@@ -894,12 +894,12 @@ class MainActivity : AppCompatActivity() {
 		micDistanceValueLabel		= findViewById(R.id.micDistanceValueLabel)
 		micDistanceSlider			= findViewById(R.id.micDistanceSlider)
 		micDistanceSliderTickLabels = arrayOf(
-			(0	to 0)	to findViewById(R.id.micDistanceSliderTick0Label),
-			(10	to 5)	to findViewById(R.id.micDistanceSliderTick10Label),
-			(20	to 10)	to findViewById(R.id.micDistanceSliderTick20Label),
-			(30	to 15)	to findViewById(R.id.micDistanceSliderTick30Label),
-			(40	to -1)	to findViewById(R.id.micDistanceSliderTick40Label),
-			(50	to -1)	to findViewById(R.id.micDistanceSliderTick50Label)
+			Triple( 0,	 0,	findViewById(R.id.micDistanceSliderTick0Label)),
+			Triple(10,	 5,	findViewById(R.id.micDistanceSliderTick10Label)),
+			Triple(20,	10,	findViewById(R.id.micDistanceSliderTick20Label)),
+			Triple(30,	15,	findViewById(R.id.micDistanceSliderTick30Label)),
+			Triple(40,	-1,	findViewById(R.id.micDistanceSliderTick40Label)),
+			Triple(50,	-1,	findViewById(R.id.micDistanceSliderTick50Label))
 		)
 		
 		micAngleValueLabel			= findViewById(R.id.micAngleValueLabel)
