@@ -2,6 +2,8 @@
 
 # Stereophonic Calculator
 
+[![Get it on Google Play](https://raw.githubusercontent.com/pioug/google-play-badges/main/svg/en.svg)][playstore]
+
 [![Build](https://github.com/svetter/stereocalc/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/svetter/stereocalc/actions/workflows/build_and_test.yml)
 
 Quickly find stereo microphone configurations for specific recording angles with this Android app.
@@ -51,6 +53,7 @@ Main activity in landscape mode, showing the microphone view in full screen:
 
 
 
+[playstore]: https://play.google.com/store/apps/details?id=com.gmail.simetist.stereophoniccalculator
 [williams]: http://www.williamsmmad.com
 [paperpdf]: https://www.gracedesign.com/support/StereoZoom10.pdf
 [papercite]: https://api.semanticscholar.org/CorpusID:202598177
