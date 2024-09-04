@@ -19,9 +19,9 @@ Calculator. If not, see <https://www.gnu.org/licenses/>.
     <style name="Base.Theme.StereophonicCalculator" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/dark_primary</item>
         <item name="colorOnPrimary">@color/dark_on_primary</item>
-        <item name="colorPrimaryVariant">#5A993E</item>
         <item name="colorSecondary">@color/dark_secondary</item>
         <item name="android:thumbTint">@color/dark_secondary</item>
+        <item name="android:colorActivatedHighlight">@color/dark_button_active</item>
         <item name="android:textColorLink">@color/dark_links</item>
     </style>
 </resources>

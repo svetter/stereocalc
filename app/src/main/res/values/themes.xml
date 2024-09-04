@@ -20,9 +20,9 @@ Calculator. If not, see <https://www.gnu.org/licenses/>.
         <item name="android:colorBackground">@color/light_background</item>
         <item name="colorPrimary">@color/light_primary</item>
         <item name="colorOnPrimary">@color/light_on_primary</item>
-        <item name="colorPrimaryVariant">#E91E63</item>
         <item name="colorSecondary">@color/light_secondary</item>
         <item name="android:thumbTint">@color/light_secondary</item>
+        <item name="android:colorActivatedHighlight">@color/light_button_active</item>
         <item name="android:textColorLink">@color/light_links</item>
     </style>
     

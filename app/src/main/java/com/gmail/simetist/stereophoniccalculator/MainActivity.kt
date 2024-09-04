@@ -45,8 +45,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.gmail.simetist.stereophoniccalculator.MainActivity.FixedPreset.*
 import com.gmail.simetist.stereophoniccalculator.MainActivity.PrimaryValue.*
 import java.io.Serializable
+import kotlin.math.absoluteValue
+import kotlin.math.pow
 import kotlin.math.roundToInt
 
 
@@ -79,6 +82,9 @@ class MainActivity : AppCompatActivity() {
 	
 	private val animationDuration		= 150 // ms
 	
+	private val fixedPresets = Array(3) { index ->
+		StereoConfiguration(FixedPreset.entries[index])
+	}
 	private var customPresets = Array<StereoConfiguration?>(3) { null }
 	
 	
@@ -124,6 +130,28 @@ class MainActivity : AppCompatActivity() {
 	
 	private lateinit var sharedPreferences:		android.content.SharedPreferences
 	private lateinit var prefEditor:			android.content.SharedPreferences.Editor
+	
+	private var backgroundColor: Int? = null
+		get() = field ?: run {
+			val colorValue = TypedValue()
+			theme.resolveAttribute(android.R.attr.colorBackground, colorValue, true)
+			field = colorValue.data
+			return@run field
+		}
+	private var primaryColor: Int? = null
+		get() = field ?: run {
+			val colorValue = TypedValue()
+			theme.resolveAttribute(android.R.attr.colorPrimary, colorValue, true)
+			field = colorValue.data
+			return@run field
+		}
+	private var buttonActiveColor: Int? = null
+		get() = field ?: run {
+			val colorValue = TypedValue()
+			theme.resolveAttribute(android.R.attr.colorActivatedHighlight, colorValue, true)
+			field = colorValue.data
+			return@run field
+		}
 	
 	
 	
@@ -172,6 +200,7 @@ class MainActivity : AppCompatActivity() {
 			setCurrentMicAngle(micAngleDefault)
 			recalculateAngularDistortion()
 			recalculateReverbLimits()
+			updatePresetButtonActiveStates()
 		}
 		
 		setupUIListeners()
@@ -374,6 +403,7 @@ class MainActivity : AppCompatActivity() {
 		}
 		recalculateAngularDistortion()
 		recalculateReverbLimits()
+		updatePresetButtonActiveStates()
 		
 		if (changed != lastChangedPrimValue) {
 			secondToLastChangedPrimValue = lastChangedPrimValue
@@ -411,6 +441,7 @@ class MainActivity : AppCompatActivity() {
 		// Perform updates
 		recalculateAngularDistortion()
 		recalculateReverbLimits()
+		updatePresetButtonActiveStates()
 		
 		if (changed != lastChangedPrimValue) {
 			secondToLastChangedPrimValue = lastChangedPrimValue
@@ -572,10 +603,10 @@ class MainActivity : AppCompatActivity() {
 	
 	// PRESETS
 	
-	private fun applyNearCoincidentPreset(micDistance: Int, micAngle: Int) {
+	private fun applyNearCoincidentPreset(preset: FixedPreset) {
 		if (useOmni) micTypeSwitch.performClick()
 		
-		startAnimation(false, micDistance.toDouble(), micAngle.toDouble())
+		startAnimation(false, preset.micDistance, preset.micAngle)
 	}
 	
 	private fun setCustomPreset(index: Int) {
@@ -621,6 +652,36 @@ class MainActivity : AppCompatActivity() {
 		val preset = customPresets[index] ?: return
 		
 		startAnimation(preset.omniNotCardioid, preset.micDistance, preset.micAngle)
+	}
+	
+	private fun updatePresetButtonActiveStates() {
+		// Fixed presets
+		FixedPreset.entries.forEach { preset ->
+			val button = when (preset) {
+				ORTF	-> ortfButton
+				NOS		-> nosButton
+				DIN		-> dinButton
+			}
+			setPresetButtonActiveState(button, fixedPresets[preset.ordinal])
+		}
+		// Custom presets
+		customPresetButtons.forEachIndexed { index, button ->
+			if (customPresets[index] == null) return@forEachIndexed
+			setPresetButtonActiveState(button, customPresets[index]!!)
+		}
+	}
+	
+	private fun setPresetButtonActiveState(button: Button, preset: StereoConfiguration) {
+		val active = if (preset.omniNotCardioid != useOmni) {
+			false
+		} else {
+			val micDistanceDeltaRel	= (preset.micDistance	- currentMicDistance)	.absoluteValue / micDistanceUpperBound
+			val micAngleDeltaRel	= (preset.micAngle		- currentMicAngle)		.absoluteValue / micAngleUpperBound
+			val radius = (micDistanceDeltaRel.pow(2) + micAngleDeltaRel.pow(2)).pow(0.5)
+			radius < 0.01
+		}
+		
+		button.setBackgroundColor(if (active) buttonActiveColor!! else primaryColor!!)
 	}
 	
 	
@@ -685,10 +746,7 @@ class MainActivity : AppCompatActivity() {
 				ViewGroup.LayoutParams.MATCH_PARENT
 			)
 			// Set background color for graphicsFrameLayout
-			val backgroundColorValue = TypedValue()
-			theme.resolveAttribute(android.R.attr.colorBackground, backgroundColorValue, true)
-			val backgroundColor = backgroundColorValue.data
-			graphicsViewLayout.setBackgroundColor(backgroundColor)
+			graphicsViewLayout.setBackgroundColor(backgroundColor!!)
 		}
 		
 		graphicsView.resetCache()
@@ -727,6 +785,7 @@ class MainActivity : AppCompatActivity() {
 		
 		recalculateAngularDistortion()
 		recalculateReverbLimits()
+		updatePresetButtonActiveStates()
 		
 		val serializable = savedInstanceState.getSerializable("customPresets") as Array<*>
 		for (i in 0 until 3) {
@@ -776,6 +835,7 @@ class MainActivity : AppCompatActivity() {
 		
 		recalculateAngularDistortion()
 		recalculateReverbLimits()
+		updatePresetButtonActiveStates()
 		
 		for (i in 0 until 3) {
 			val neededKeys = arrayOf("omniNotCardioid", "recAngle", "micDistance", "micAngle")
@@ -934,13 +994,13 @@ class MainActivity : AppCompatActivity() {
 		})
 		
 		ortfButton.setOnClickListener {
-			applyNearCoincidentPreset(17, 110)
+			applyNearCoincidentPreset(ORTF)
 		}
 		nosButton.setOnClickListener {
-			applyNearCoincidentPreset(30, 90)
+			applyNearCoincidentPreset(NOS)
 		}
 		dinButton.setOnClickListener {
-			applyNearCoincidentPreset(20, 90)
+			applyNearCoincidentPreset(DIN)
 		}
 		
 		customPresetButtons.forEachIndexed { index, button ->
@@ -1031,6 +1091,7 @@ class MainActivity : AppCompatActivity() {
 		setCurrentRecAngle(newRecAngle)
 		recalculateAngularDistortion()
 		recalculateReverbLimits()
+		updatePresetButtonActiveStates()
 	}
 	
 	
@@ -1051,10 +1112,23 @@ class MainActivity : AppCompatActivity() {
 	
 	
 	
+	enum class FixedPreset (
+		val micDistance:	Double,
+		val micAngle:		Double
+	) {
+		ORTF	(17.0,	110.0),
+		NOS		(30.0,	90.0),
+		DIN		(20.0,	90.0)
+	}
+	
 	private class StereoConfiguration (
 		val omniNotCardioid:	Boolean,
 		val recAngle:			Double,
 		val micDistance:		Double,
 		val micAngle:			Double
-	) : Serializable
+	) : Serializable {
+		constructor(
+			preset:	FixedPreset
+		) : this(false, calculateCardioidRecordingAngle(preset.micDistance, preset.micAngle), preset.micDistance, preset.micAngle)
+	}
 }

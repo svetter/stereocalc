@@ -23,10 +23,12 @@ Calculator. If not, see <https://www.gnu.org/licenses/>.
     <color name="light_primary">#8C0000</color>
     <color name="light_on_primary">@color/white</color>
     <color name="light_secondary">#C51111</color>
+    <color name="light_button_active">#C80000</color>
     <color name="light_links">#640000</color>
 
     <color name="dark_primary">#8C0000</color>
     <color name="dark_on_primary">@color/white</color>
     <color name="dark_secondary">#C51111</color>
+    <color name="dark_button_active">#C80000</color>
     <color name="dark_links">#FF0000</color>
 </resources>
