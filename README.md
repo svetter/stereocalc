@@ -2,7 +2,7 @@
 
 # Stereophonic Calculator
 
-[![Get it on Google Play](https://raw.githubusercontent.com/pioug/google-play-badges/main/svg/en.svg)][playstore]
+[![Get it on Google Play](https://raw.githubusercontent.com/pioug/google-play-badges/refs/heads/main/svg/English.svg)][playstore]
 
 [![Build](https://github.com/svetter/stereocalc/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/svetter/stereocalc/actions/workflows/build_and_test.yml)
 
