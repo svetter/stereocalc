@@ -297,7 +297,7 @@ class MainActivity : AppCompatActivity() {
 		if (useHalfAngles) {
 			recAngleEdit.setText("%.1f".format(currentRecAngle / 2))
 		} else {
-			recAngleEdit.setText(currentRecAngle.roundToInt().toString())
+			recAngleEdit.setText("%d".format(currentRecAngle.roundToInt()))
 		}
 	}
 	
@@ -565,7 +565,7 @@ class MainActivity : AppCompatActivity() {
 		
 		if (currentValue < recAngleLowerBound || currentValue > recAngleUpperBound) {
 			currentValue = currentValue.coerceIn(recAngleLowerBound.roundToInt(), recAngleUpperBound.roundToInt())
-			recAngleEdit.setText(currentValue.toString())
+			recAngleEdit.setText("%d".format(currentValue))
 		}
 		
 		setCurrentRecAngle(currentValue.toDouble())

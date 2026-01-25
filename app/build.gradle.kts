@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.jetbrains.kotlin.android)
@@ -6,14 +8,14 @@ plugins {
 
 android {
 	namespace = "com.gmail.simetist.stereophoniccalculator"
-	compileSdk = 35
+	compileSdk = 36
 	
 	defaultConfig {
 		applicationId = "com.gmail.simetist.stereophoniccalculator"
 		minSdk = 24
 		targetSdk = 35
-		versionCode = 3
-		versionName = "1.0.0"
+		versionCode = 4
+		versionName = "1.0.1"
 		
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 	}
@@ -32,8 +34,14 @@ android {
 		sourceCompatibility = JavaVersion.VERSION_1_8
 		targetCompatibility = JavaVersion.VERSION_1_8
 	}
-	kotlinOptions {
-		jvmTarget = "1.8"
+	buildFeatures {
+		mlModelBinding = true
+	}
+}
+
+kotlin {
+	compilerOptions {
+		jvmTarget = JvmTarget.fromTarget("1.8")
 	}
 }
 
